@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.embed.swing.SwingNode?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane minHeight="500.0" minWidth="760.0" style="-fx-background-color: #ccc;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.pelengator.Controller">
+    <center>
+        <BorderPane fx:id="bpDetectorPaneHolder" minHeight="-Infinity" minWidth="-Infinity" prefHeight="431.0" prefWidth="431.0" style="-fx-background-color: #ccc;">
+         <center>
+            <SwingNode fx:id="snDetectorCapturedImage" BorderPane.alignment="CENTER_LEFT" />
+         </center>
+         <BorderPane.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </BorderPane.margin>
+        </BorderPane>
+    </center>
+   <left>
+      <HBox style="-fx-background-color: #ccc;" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+      </HBox>
+   </left>
+   <top>
+      <GridPane BorderPane.alignment="CENTER_RIGHT">
+         <BorderPane.margin>
+            <Insets bottom="5.0" left="5.0" top="5.0" />
+         </BorderPane.margin>
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="438.0" minWidth="10.0" prefWidth="438.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="288.0" minWidth="10.0" prefWidth="141.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="209.0" minWidth="10.0" prefWidth="186.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <ProgressBar fx:id="pb_exp" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="25.0" progress="0.0">
+               <GridPane.margin>
+                  <Insets left="5.0" right="5.0" />
+               </GridPane.margin>
+            </ProgressBar>
+            <ComboBox fx:id="cbDetectorOptions" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="157.0" promptText="Детектор" GridPane.columnIndex="2">
+               <GridPane.margin>
+                  <Insets left="5.0" right="6.0" />
+               </GridPane.margin>
+            </ComboBox>
+            <ComboBox fx:id="cbNetworkOptions" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="177.0" promptText="Источник сигнала" GridPane.columnIndex="1">
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin>
+            </ComboBox>
+         </children>
+      </GridPane>
+   </top>
+   <bottom>
+      <GridPane>
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="672.0" minWidth="10.0" prefWidth="672.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="380.0" minWidth="10.0" prefWidth="98.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="25.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label fx:id="lab_exp_status" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="25.0" text="Статус" textFill="#154a22">
+               <padding>
+                  <Insets left="5.0" right="5.0" />
+               </padding>
+            </Label>
+         </children>
+      </GridPane>
+   </bottom>
+   <right>
+      <ScrollPane fx:id="myPane" fitToWidth="true" prefHeight="438.0" stylesheets="@cp.css" BorderPane.alignment="CENTER">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" style="-fx-background-color: #ccc;">
+               <children>
+                  <VBox layoutX="-1.0" layoutY="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.topAnchor="-1.0">
+                     <children>
+                        <TitledPane text="Управление" underline="true">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="310.0">
+                                 <children>
+                                    <GridPane layoutY="5.0" vgap="3.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <columnConstraints>
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="225.0" minWidth="10.0" prefWidth="135.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="225.0" minWidth="5.0" prefWidth="51.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="225.0" minWidth="10.0" prefWidth="59.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="131.0" minWidth="10.0" prefWidth="56.0" />
+                                       </columnConstraints>
+                                       <rowConstraints>
+                                          <RowConstraints maxHeight="1.7976931348623157E308" minHeight="0.0" percentHeight="0.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" vgrow="SOMETIMES" />
+                                       </rowConstraints>
+                                       <children>
+                                          <Label text="Накопление, мкс" GridPane.halignment="LEFT" GridPane.rowIndex="4">
+                                             <font>
+                                                <Font size="13.0" />
+                                             </font>
+                                             <GridPane.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </GridPane.margin>
+                                          </Label>
+                                          <TextField fx:id="tfInt" onAction="#setInt" text="500" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4">
+                                             <GridPane.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </GridPane.margin>
+                                          </TextField>
+                                          <Label layoutX="20.0" layoutY="106.0" text="Скимминг, мВ" GridPane.rowIndex="6">
+                                             <font>
+                                                <Font size="13.0" />
+                                             </font>
+                                             <GridPane.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </GridPane.margin>
+                                          </Label>
+                                          <TextField fx:id="tfVOS" layoutX="111.0" layoutY="103.0" onAction="#setVOS" promptText="1600-5500" text="1600" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="6">
+                                             <GridPane.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </GridPane.margin>
+                                          </TextField>
+                                          <Separator maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnSpan="4" GridPane.rowIndex="3" />
+                                          <Label text="Смещение, отсчеты" GridPane.rowIndex="5">
+                                             <font>
+                                                <Font size="13.0" />
+                                             </font>
+                                             <GridPane.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </GridPane.margin>
+                                          </Label>
+                                          <TextField fx:id="tfVR0" layoutX="111.0" layoutY="133.0" onAction="#setVR0" promptText="0-127" text="2" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="5">
+                                             <GridPane.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </GridPane.margin>
+                                          </TextField>
+                                          <Label text="Коэф. усиления" GridPane.rowIndex="2">
+                                             <font>
+                                                <Font size="13.0" />
+                                             </font>
+                                             <GridPane.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </GridPane.margin>
+                                          </Label>
+                                          <ComboBox fx:id="cbCCCOptions" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="175.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="LEFT" GridPane.rowIndex="2">
+                                             <GridPane.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </GridPane.margin>
+                                          </ComboBox>
+                                          <ComboBox fx:id="cbDimOptions" layoutX="164.0" layoutY="254.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="174.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="LEFT" GridPane.rowIndex="1">
+                                             <GridPane.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </GridPane.margin>
+                                          </ComboBox>
+                                          <Label text="Питание">
+                                             <font>
+                                                <Font size="13.0" />
+                                             </font>
+                                             <GridPane.margin>
+                                                <Insets left="5.0" />
+                                             </GridPane.margin>
+                                          </Label>
+                                          <CheckBox fx:id="chPower" mnemonicParsing="false" GridPane.columnIndex="1">
+                                             <GridPane.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </GridPane.margin>
+                                          </CheckBox>
+                                          <Label text="Размер окна" GridPane.rowIndex="1">
+                                             <font>
+                                                <Font size="13.0" />
+                                             </font>
+                                             <GridPane.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </GridPane.margin>
+                                          </Label>
+                                       </children>
+                                    </GridPane>
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                        </TitledPane>
+                        <TitledPane expanded="false" text="Статистика" underline="true">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0">
+                                 <children>
+                                    <VBox maxWidth="300.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <children>
+                                          <Pane fx:id="pnGist" maxHeight="200.0" maxWidth="300.0" prefHeight="200.0" prefWidth="300.0">
+                                             <children>
+                                                <ImageView fx:id="iwGist" fitHeight="200.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" />
+                                             </children>
+                                          </Pane>
+                                          <ImageView fx:id="ivPolosa" fitHeight="10.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@colorPanel.png" />
+                                             </image>
+                                             <cursor>
+                                                <Cursor fx:constant="DEFAULT" />
+                                             </cursor>
+                                          </ImageView>
+                                          <GridPane alignment="CENTER" prefHeight="30.0" prefWidth="300.0">
+                                             <columnConstraints>
+                                                <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" minWidth="10.0" prefWidth="60.0" />
+                                                <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="151.99999618530273" minWidth="10.0" prefWidth="60.0" />
+                                                <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="59.666656494140625" minWidth="10.0" prefWidth="60.0" />
+                                                <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="247.3333282470703" minWidth="10.0" prefWidth="60.0" />
+                                                <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="247.3333282470703" minWidth="10.0" prefWidth="60.0" />
+                                             </columnConstraints>
+                                             <rowConstraints>
+                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                             </rowConstraints>
+                                             <children>
+                                                <Label text="0.0 B" GridPane.halignment="LEFT" GridPane.valignment="TOP" />
+                                                <Label text="5.0 B" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.valignment="TOP" />
+                                                <Label layoutX="86.0" layoutY="10.0" text="2.5 B" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="TOP" />
+                                             </children>
+                                          </GridPane>
+                                          <Separator prefWidth="200.0" />
+                                          <GridPane vgap="3.0">
+                                             <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="225.0" minWidth="10.0" prefWidth="135.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="225.0" minWidth="5.0" prefWidth="51.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="225.0" minWidth="10.0" prefWidth="59.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="131.0" minWidth="10.0" prefWidth="56.0" />
+                                             </columnConstraints>
+                                             <rowConstraints>
+                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                             </rowConstraints>
+                                             <children>
+                                                <Label contentDisplay="CENTER" prefWidth="199.0" text="Минимальный сигнал, мВ" textAlignment="CENTER" GridPane.columnSpan="2" GridPane.halignment="CENTER">
+                                                   <GridPane.margin>
+                                                      <Insets left="5.0" />
+                                                   </GridPane.margin>
+                                                </Label>
+                                                <Label fx:id="lbMin" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="000" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="LEFT" />
+                                                <Label contentDisplay="CENTER" prefHeight="17.0" prefWidth="190.0" text="Средний сигнал , мВ" textFill="#418307" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                                   <GridPane.margin>
+                                                      <Insets left="5.0" />
+                                                   </GridPane.margin>
+                                                </Label>
+                                                <Label fx:id="lbAverageSignal" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="000" textFill="#418307" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
+                                                <Label contentDisplay="CENTER" prefHeight="17.0" prefWidth="199.0" text="Максимальный сигнал, мВ" textAlignment="CENTER" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+                                                   <GridPane.margin>
+                                                      <Insets left="5.0" />
+                                                   </GridPane.margin>
+                                                </Label>
+                                                <Label contentDisplay="CENTER" prefHeight="17.0" prefWidth="199.0" text="СКО сигнала, мВ" GridPane.columnSpan="2" GridPane.rowIndex="3">
+                                                   <GridPane.margin>
+                                                      <Insets left="5.0" />
+                                                   </GridPane.margin>
+                                                </Label>
+                                                <Label fx:id="lbMax" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="48.0" text="000" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                                                <Label fx:id="lbSKO" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="48.0" text="000" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+                                             </children>
+                                          </GridPane>
+                                          <Separator prefWidth="200.0">
+                                             <VBox.margin>
+                                                <Insets bottom="5.0" top="5.0" />
+                                             </VBox.margin>
+                                          </Separator>
+                                          <VBox fx:id="pnFlash" prefHeight="200.0" prefWidth="100.0">
+                                             <children>
+                                                <StackPane alignment="CENTER_LEFT">
+                                                   <children>
+                                                      <ImageView fx:id="iwGistSKO_V" fitHeight="100.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER_LEFT" />
+                                                      <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="26.0" prefWidth="102.0" rotate="-90.0" text="Вертикаль" textAlignment="CENTER" translateX="40.0" StackPane.alignment="CENTER_RIGHT">
+                                                         <opaqueInsets>
+                                                            <Insets />
+                                                         </opaqueInsets>
+                                                      </Label>
+                                                   </children>
+                                                </StackPane>
+                                                <StackPane alignment="CENTER_LEFT" nodeOrientation="LEFT_TO_RIGHT">
+                                                   <children>
+                                                      <ImageView fx:id="iwGistSKO_H" fitHeight="100.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER_LEFT" />
+                                                      <Label alignment="CENTER" graphicTextGap="0.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="26.0" prefWidth="98.0" rotate="-90.0" text="Горизонталь" textAlignment="CENTER" translateX="40.0" StackPane.alignment="CENTER_RIGHT">
+                                                         <opaqueInsets>
+                                                            <Insets />
+                                                         </opaqueInsets>
+                                                      </Label>
+                                                   </children>
+                                                </StackPane>
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                        </TitledPane>
+                        <TitledPane layoutX="10.0" layoutY="253.0" text="Эксперимент" underline="true">
+                           <content>
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="321.0">
+                                 <children>
+                                    <GridPane layoutY="5.0" vgap="3.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <columnConstraints>
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="225.0" minWidth="10.0" prefWidth="135.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="225.0" minWidth="5.0" prefWidth="51.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="225.0" minWidth="10.0" prefWidth="59.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="131.0" minWidth="10.0" prefWidth="56.0" />
+                                       </columnConstraints>
+                                       <rowConstraints>
+                                          <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                       </rowConstraints>
+                                       <children>
+                                          <Label text="Ввод исходных параметров" GridPane.columnSpan="2">
+                                             <font>
+                                                <Font size="13.0" />
+                                             </font>
+                                             <GridPane.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </GridPane.margin>
+                                          </Label>
+                                          <Label text="Сбор эксп. данных" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                             <font>
+                                                <Font size="13.0" />
+                                             </font>
+                                             <GridPane.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </GridPane.margin>
+                                          </Label>
+                                          <Button fx:id="btnPotok" graphicTextGap="0.0" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#startPotok" style="-fx-background-color: orange;" text="Расчет" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.columnSpan="2">
+                                             <font>
+                                                <Font name="Segoe UI" size="12.0" fx:id="x1211" />
+                                             </font>
+                                          </Button>
+                                          <Button fx:id="btnGetData" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#startGetData" style="-fx-background-color: orange;" text="Сбор" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                             <font>
+                                                <Font name="Segoe UI" size="12.0" fx:id="x12" />
+                                             </font>
+                                          </Button>
+                                          <Label text="Обработка эксп. данных" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                                             <font>
+                                                <Font size="13.0" />
+                                             </font>
+                                             <GridPane.margin>
+                                                <Insets left="5.0" />
+                                             </GridPane.margin>
+                                          </Label>
+                                          <Button fx:id="btnParams" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#startParams" style="-fx-background-color: orange;" text="Результат" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                                             <font>
+                                                <Font name="Segoe UI" size="12.0" fx:id="x121" />
+                                             </font>
+                                          </Button>
+                                          <Label text="Стоп-кадр" GridPane.columnSpan="2" GridPane.rowIndex="4">
+                                             <font>
+                                                <Font size="13.0" />
+                                             </font>
+                                             <GridPane.margin>
+                                                <Insets left="5.0" />
+                                             </GridPane.margin>
+                                          </Label>
+                                          <Separator prefWidth="200.0" GridPane.columnSpan="4" GridPane.rowIndex="3" />
+                                          <Button fx:id="btnStartStop" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#stopDetector" text="Пауза" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="4">
+                                             <font>
+                                                <Font name="Segoe UI" size="12.0" fx:id="x11" />
+                                             </font>
+                                          </Button>
+                                       </children>
+                                    </GridPane>
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </TitledPane>
+                        <TitledPane expanded="false" layoutX="10.0" layoutY="680.0" text="Управление стендом" underline="true">
+                           <content>
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="321.0">
+                                 <children>
+                                    <GridPane layoutY="5.0" vgap="3.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <columnConstraints>
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="225.0" minWidth="10.0" prefWidth="135.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="225.0" minWidth="5.0" prefWidth="51.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="225.0" minWidth="10.0" prefWidth="59.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="131.0" minWidth="10.0" prefWidth="56.0" />
+                                       </columnConstraints>
+                                       <rowConstraints>
+                                          <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" vgrow="SOMETIMES" />
+                                       </rowConstraints>
+                                       <children>
+                                          <TextField fx:id="tfSpeedPlata" layoutX="164.0" layoutY="423.0" onAction="#setPauseOnPlate" promptText="50" text="50" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1">
+                                             <GridPane.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </GridPane.margin>
+                                          </TextField>
+                                          <TextField fx:id="tfFPS" disable="true" editable="false" layoutX="159.0" layoutY="523.0" text="---" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2">
+                                             <GridPane.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </GridPane.margin>
+                                          </TextField>
+                                          <Label text="Пауза опроса, мс" GridPane.rowIndex="1">
+                                             <font>
+                                                <Font size="13.0" />
+                                             </font>
+                                             <GridPane.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </GridPane.margin>
+                                          </Label>
+                                          <Label text="Текущий FPS" GridPane.rowIndex="2">
+                                             <font>
+                                                <Font size="13.0" />
+                                             </font>
+                                             <GridPane.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </GridPane.margin>
+                                          </Label>
+                                          <CheckBox fx:id="cbKvadrat" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" selected="true" text="Центральная зона [ш/в]" GridPane.columnSpan="2">
+                                             <GridPane.margin>
+                                                <Insets left="5.0" />
+                                             </GridPane.margin>
+                                          </CheckBox>
+                                          <TextField fx:id="tfKvadratWidth" layoutX="150.0" layoutY="43.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#setKvadratSize" promptText="32" text="32" GridPane.columnIndex="2">
+                                             <GridPane.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </GridPane.margin>
+                                          </TextField>
+                                          <TextField fx:id="tfKvadratHeight" layoutX="196.0" layoutY="13.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#setKvadratSize" promptText="32" text="32" GridPane.columnIndex="3">
+                                             <GridPane.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </GridPane.margin>
+                                          </TextField>
+                                       </children>
+                                    </GridPane>
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </TitledPane>
+                     </children>
+                     <padding>
+                        <Insets right="5.0" />
+                     </padding>
+                  </VBox>
+               </children></AnchorPane>
+        </content>
+      </ScrollPane>
+   </right>
+</BorderPane>

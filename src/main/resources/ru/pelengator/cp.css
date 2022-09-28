@@ -1,0 +1,6 @@
+.color-picker .color-picker-label .text {
+    -fx-fill: transparent;
+}
+.scroll-pane > .viewport  {
+ -fx-background-color: #ccc;
+  }
