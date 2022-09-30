@@ -501,18 +501,19 @@ public class DetectorPanel extends JPanel implements DetectorListener, PropertyC
                         }
                     } else {
                         //todo добавка
-                        try {
+                    /**    try {
                             if (!detector.isOpen()) {
-                                errored = !detector.open();
+                            //    errored = !detector.open();
+                                System.out.println("Открытие в добавке");
                             }
                         } catch (DetectorException e) {
                             errored = true;
                         } finally {
                             starting = false;
                             repaintPanel();
-                        }
+                        }*/
                         executor.schedule(this, 500, TimeUnit.MILLISECONDS);
-                        LOG.error("Автоматический повторный запуск детектора");
+                    //    LOG.error("Автоматический повторный запуск детектора");
                     }
                 } catch (RejectedExecutionException e) {
 
@@ -858,6 +859,7 @@ public class DetectorPanel extends JPanel implements DetectorListener, PropertyC
                 try {
                     if (!detector.isOpen()) {
                         errored = !detector.open();
+                        System.out.println("Открытие на старте");
                     }
                 } catch (DetectorException e) {
                     errored = true;
@@ -879,9 +881,9 @@ public class DetectorPanel extends JPanel implements DetectorListener, PropertyC
      */
     public void stop() {
 
-        //    if (!started.compareAndSet(true, false)) {
-        //        return;
-        //    }
+           if (!started.compareAndSet(true, false)) {
+                return;
+            }
 
         detector.removeDetectorListener(this);
 

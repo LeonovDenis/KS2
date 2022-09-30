@@ -1,5 +1,7 @@
 package ru.pelengator.API;
 
+import ru.pelengator.driver.FT_STATUS;
+
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
@@ -58,26 +60,29 @@ public interface DetectorDevice {
      */
     public static interface ChinaSource {
 
-        void setInt(int value);
-        void setVOS(int value);
-        void setVOS1(int value);
-        void setVOS2(int value);
+        FT_STATUS setInt(int value);
 
-        void setVR0(int value);
+        FT_STATUS setVOS(int value);
 
-        void setССС(boolean value);
+        FT_STATUS setVOS1(int value);
 
-        void setDim(boolean value);
+        FT_STATUS setVOS2(int value);
 
-        void setPower(boolean value);
+        FT_STATUS setVR0(int value);
+
+        FT_STATUS setССС(boolean value);
+
+        FT_STATUS setDim(boolean value);
+
+        FT_STATUS setPower(boolean value);
 
         int[][] getFrame();
 
-        void setPause(int pause);
+        FT_STATUS setPause(int pause);
 
-        void setRO(byte ro);
+        FT_STATUS setRO(byte ro);
 
-     //  boolean isConnected();
+        boolean isConnected();
     }
 
 
@@ -96,7 +101,7 @@ public interface DetectorDevice {
          * @param parameters - Карта параметров, изменяющих настройки устройства по умолчанию
          * @see Detector#setParameters(Map)
          */
-        void setParameters(Map<String, ?> parameters);
+        FT_STATUS setParameters(Map<String, ?> parameters);
     }
 
     /**

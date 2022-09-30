@@ -402,7 +402,6 @@ public class DataService extends Service<Void> implements DetectorListener {
         super.succeeded();
         Button btnGetData = controller.getBtnGetData();
 
-        controller.save();
         Platform.runLater(() -> {
             btnGetData.setStyle("-fx-background-color: green");
             controller.getBtnParams().setDisable(false);

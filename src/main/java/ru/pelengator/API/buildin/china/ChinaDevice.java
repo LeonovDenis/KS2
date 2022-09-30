@@ -2,6 +2,7 @@ package ru.pelengator.API.buildin.china;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.ls.LSOutput;
 import ru.pelengator.API.*;
 import ru.pelengator.driver.FT_STATUS;
 import ru.pelengator.driver.usb.Jna2;
@@ -60,25 +61,27 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
 
     private class ChengeParamTask extends DetectorTask {
 
-        private final AtomicReference<Map<String, ?>> result = new AtomicReference<Map<String, ?>>();
+        private final AtomicReference<FT_STATUS> result = new AtomicReference<FT_STATUS>();
+        private final AtomicReference<Map<String, ?>> value = new AtomicReference<>();
 
         public ChengeParamTask(DetectorDevice device) {
             super(device);
         }
 
-        public void setParameters(Map<String, ?> parameters) {
-            result.set(parameters);
+        public FT_STATUS setParameters(Map<String, ?> parameters) {
+            this.value.set(parameters);
             try {
                 process();
             } catch (InterruptedException e) {
                 LOG.error("Запрос на обновление параметров прерван", e);
             }
+            return result.get();
 
         }
 
         @Override
         protected void handle() {
-            grabber.setParameters(result.get());
+            result.set(grabber.setParameters(value.get()));
             LOG.trace("Результат на обновление параметров ");
         }
     }
@@ -119,6 +122,7 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
 
         public FT_STATUS setPower(boolean value) {
             this.value.set(value);
+            LOG.error("Запрос на включение питания ");
             try {
                 process();
             } catch (InterruptedException e) {
@@ -129,6 +133,7 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
 
         @Override
         protected void handle() {
+            LOG.error("Запрос на установку питания ");
             result.set(grabber.setPower(value.get()));
             LOG.trace("Результат по включению питания [{}] {}", value.get(), result.get());
         }
@@ -211,7 +216,9 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            LOG.trace("Запрос на получение Картинки ДО", result);
             result.set(grabber.getImage());
+            LOG.trace("Запрос на получение Картинки ПОСЛЕ", result);
         }
     }
 
@@ -496,7 +503,7 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
 
     private AtomicBoolean flafGrabFrames = new AtomicBoolean(false);
 
-   // private AtomicBoolean flagConnected = new AtomicBoolean(false);
+    private AtomicBoolean flagConnected = new AtomicBoolean(false);
 
     private Jna2 grabber = null;
     private Dimension size = null;
@@ -580,11 +587,11 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
         ByteBuffer buffer = getImageBytes();
 
         if (buffer == null) {
-      //      flagConnected.set(false);
+            flagConnected.set(false);
             return null;
         }
 
-    //    flagConnected.compareAndSet(false, true);
+        flagConnected.compareAndSet(false, true);
         byte[] bytes = new byte[size.width * size.height * 3];
         byte[][] data = new byte[][]{bytes};
         byte[] array = buffer.array();
@@ -656,7 +663,7 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
             try {
                 target[i] = aTarget.poll();
             } catch (Exception e) {
-                System.out.println("Выход по ошибке. Блок и программа с разными пикселями");
+                LOG.error("Выход по ошибке. Блок и программа с разными разрешениями");
                 throw new InterruptedException("Выход по ошибке. Блок и программа с разными пикселями");
             }
 
@@ -731,7 +738,7 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
 
         clearMemoryBuffer();
 
-        LOG.trace("Устройство {} открыто", this);
+        LOG.trace("Устройство {} открыто", this.fullname);
 
         open.set(true);
     }
@@ -751,6 +758,8 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
         }
 
         LOG.trace("Закрытие устройства");
+
+        new SetPowerTask(this).setPower(false);
 
         new CloseTask(this).stopSession();
     }
@@ -793,24 +802,27 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
 
         LOG.debug("Запуск сессии");
         FT_STATUS result = new CreateHendlerTask(this).create();
+/**
+ if (result != FT_STATUS.FT_OK) {
 
-        if (result != FT_STATUS.FT_OK) {
-            LOG.error("Error while create hendler: {}", result);
-            return false;
-        } else {
-            /**
-             * установка ID
-             */
-            result = new SetIDTask(this).setID();
+ LOG.error("Error while create hendler: {}", result);
+ LOG.debug("Сессия не удалась");
+ return false;
+ }*/
 
-            if (result != FT_STATUS.FT_OK) {
-                LOG.error("Error while setID: {}", result);
-                return false;
-            } else {
-                return true;
-            }
-        }
+        /**
+         * установка ID
+         */
+        LOG.debug("Запуск установки ID из сессии");
+        result = new SetIDTask(this).setID();
 
+        /**   if (result != FT_STATUS.FT_OK) {
+         LOG.error("Error while setID: {}", result);
+         LOG.debug("Сессия  не удалась");
+         return false;
+         }*/
+        LOG.debug("Сессия удалась");
+        return true;
     }
 
     @Override
@@ -818,102 +830,117 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
     }
 
     @Override
-    public void setParameters(Map<String, ?> parameters) {
-        new ChengeParamTask(this).setParameters(parameters);
+    public FT_STATUS setParameters(Map<String, ?> parameters) {
+
+        FT_STATUS result = new ChengeParamTask(this).setParameters(parameters);
+        if (result != FT_STATUS.FT_OK) {
+            LOG.error("Error while settingParams: {}", result);
+        }
+        return result;
     }
 
 
     @Override
-    public void setPause(int pause) {
+    public FT_STATUS setPause(int pause) {
 
         PAUSE = pause;
+        return FT_STATUS.FT_OK;
     }
 
     @Override
-    public void setRO(byte value) {
+    public FT_STATUS setRO(byte value) {
         FT_STATUS result = new SetRoTask(this).setRo(value);
         if (result != FT_STATUS.FT_OK) {
             LOG.error("Error while setRo[{}]: {}", value, result);
         }
+        return result;
     }
-/**
+
+
     @Override
     public boolean isConnected() {
 
         return flagConnected.get();
     }
-*/
+
     @Override
-    public void setInt(int value) {
+    public FT_STATUS setInt(int value) {
         FT_STATUS result = new SetIntTask(this).setInt(value);
         if (result != FT_STATUS.FT_OK) {
             LOG.error("Error while setInt[{}]: {}", value, result);
         }
+        return result;
     }
 
     @Override
-    public void setVOS(int value) {
+    public FT_STATUS setVOS(int value) {
         FT_STATUS result = new SetVOSTask(this).setVOS(value);
         if (result != FT_STATUS.FT_OK) {
             LOG.error("Error while setVOS[{}]: {}", value, result);
         }
+        return result;
     }
 
     @Override
-    public void setVOS1(int value) {
+    public FT_STATUS setVOS1(int value) {
         FT_STATUS result = new SetVOS1Task(this).setVOS1(value);
         if (result != FT_STATUS.FT_OK) {
             LOG.error("Error while setVOS1[{}]: {}", value, result);
         }
+        return result;
     }
 
     @Override
-    public void setVOS2(int value) {
+    public FT_STATUS setVOS2(int value) {
         FT_STATUS result = new SetVOS2Task(this).setVOS2(value);
         if (result != FT_STATUS.FT_OK) {
             LOG.error("Error while setVOS2[{}]: {}", value, result);
         }
+        return result;
     }
 
     @Override
-    public void setVR0(int value) {
+    public FT_STATUS setVR0(int value) {
         FT_STATUS result = new SetVR0Task(this).setInt(value);
         if (result != FT_STATUS.FT_OK) {
             LOG.error("Error while setVR0[{}]: {}", value, result);
         }
+        return result;
     }
 
     @Override
-    public void setССС(boolean value) {
+    public FT_STATUS setССС(boolean value) {
         FT_STATUS result = new SetCapasityTask(this).setCapacity(value);
         if (result != FT_STATUS.FT_OK) {
             LOG.error("Error while setССС[{}]: {}", value, result);
         }
+        return result;
     }
 
     @Override
-    public void setDim(boolean value) {
+    public FT_STATUS setDim(boolean value) {
         if (value) {
             size = DIMENSIONS[0];
-
         } else {
             size = DIMENSIONS[1];
-
         }
+        smodel = new ComponentSampleModel(DATA_TYPE, size.width, size.height, 3, size.width * 3, BAND_OFFSETS);
         FT_STATUS result = new SetDimemsionTask(this).setDimension(value);
         if (result != FT_STATUS.FT_OK) {
             LOG.error("Error while setDim[{}]: {}", value, result);
         }
+        return result;
     }
 
     @Override
-    public void setPower(boolean value) {
-    //    if (flagConnected.get() != value) {
-            FT_STATUS result = new SetPowerTask(this).setPower(value);
-            if (result != FT_STATUS.FT_OK) {
-                LOG.error("Error while setPower[{}]: {}", value, result);
-            }
-      //  }
+    public FT_STATUS setPower(boolean value) {
+        FT_STATUS result = null;
+        // if (flagConnected.get() != value) {
+        result = new SetPowerTask(this).setPower(value);
+        if (result != FT_STATUS.FT_OK) {
+            LOG.error("Error while setPower[{}]: {}", value, result);
+        }
+        return result;
     }
 
     @Override

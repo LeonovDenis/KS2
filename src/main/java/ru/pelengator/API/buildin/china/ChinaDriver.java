@@ -11,6 +11,7 @@ import ru.pelengator.driver.usb.Jna2;
 import ru.pelengator.model.StendParams;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -88,7 +89,7 @@ public class ChinaDriver implements DetectorDriver, DetectorDiscoverySupport {
      */
     private static final Logger LOG = LoggerFactory.getLogger(ChinaDriver.class);
 
-    private static StendParams params=null;
+    private static StendParams params = null;
     private static Jna2 grabber = null;
 
     @Override
@@ -106,18 +107,17 @@ public class ChinaDriver implements DetectorDriver, DetectorDiscoverySupport {
         }
         LOG.debug("Found device");
         List<DetectorDevice> devices = new GetDevicesTask(this).getDevices(grabber);
-        LOG.debug("Found device {}", devices);
+        LOG.debug("Found device {}", Arrays.asList(devices));
         if (LOG.isDebugEnabled()) {
             for (DetectorDevice device : devices) {
                 LOG.debug("Enabled devices {}", device.getName());
             }
         }
-
         return devices;
     }
 
     public ChinaDriver(StendParams params) {
-        this.params=params;
+        this.params = params;
 
     }
 

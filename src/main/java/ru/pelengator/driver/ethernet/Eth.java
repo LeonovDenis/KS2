@@ -258,9 +258,9 @@ public class Eth extends Jna2 {
     /**
      * Реконнект
      */
-    public synchronized void reconnect() {
+    public synchronized FT_STATUS reconnect() {
      //enpty
-    }
+    return null;}
 
     /**
      * Завершение работы
@@ -814,9 +814,9 @@ public class Eth extends Jna2 {
     }
 
 
-    public void setParameters(Map<String, ?> params) {
+    public FT_STATUS setParameters(Map<String, ?> params) {
 
-    }
+    return null;}
 
     public static byte[] getIncomingComand() {
         return incomingComand.get();

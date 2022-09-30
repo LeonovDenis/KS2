@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
 import ru.pelengator.API.*;
 import ru.pelengator.API.buildin.china.ChinaDriver;
 import ru.pelengator.API.buildin.china.ChinaDriverEth;
+import ru.pelengator.driver.FT_STATUS;
 import ru.pelengator.driver.NetworkInfo;
 import ru.pelengator.model.DetectorInfo;
 import ru.pelengator.model.ExpInfo;
@@ -257,6 +258,7 @@ public class Controller implements Initializable {
      */
     private StendParams params = new StendParams(this);
 
+
     /**
      * Запись параметров при выходе
      */
@@ -351,7 +353,6 @@ public class Controller implements Initializable {
 
 
     private volatile AtomicBoolean autoSet = new AtomicBoolean(true);
-    private volatile AtomicBoolean mychoise = new AtomicBoolean(true);
 
     /**
      * Инициализация всего
@@ -495,7 +496,7 @@ public class Controller implements Initializable {
                     }
                 }
                 resetBTNS();
-                params.save();
+
             }
         });
         /**
@@ -515,26 +516,21 @@ public class Controller implements Initializable {
         /**
          * Обработка отклика
          */
-        cbDimOptions.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+        cbDimOptions.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 
-                if ("92*90".equals(newValue)) {
-                    if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
-                        ((DetectorDevice.ChinaSource) selDetector.getDevice()).setDim(false);
-                        params.setDimention(newValue);
-                    }
-                } else {
-                    if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
-                        ((DetectorDevice.ChinaSource) selDetector.getDevice()).setDim(true);
-                        params.setDimention(newValue);
-                    }
+            if ("92*90".equals(newValue)) {
+                if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
+                    ((DetectorDevice.ChinaSource) selDetector.getDevice()).setDim(false);
+                    params.setDimention(newValue);
                 }
-
-                resetBTNS();
-                params.save();
-                reconnect();
+            } else {
+                if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
+                    ((DetectorDevice.ChinaSource) selDetector.getDevice()).setDim(true);
+                    params.setDimention(newValue);
+                }
             }
+
+            resetBTNS();
         });
 
         /**
@@ -544,9 +540,17 @@ public class Controller implements Initializable {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 
+                boolean connected = false;
+                /**
+                 * Запрос на статус
+                 */
+                if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
+                    connected = ((DetectorDevice.ChinaSource) selDetector.getDevice()).isConnected();
+                }
+
                 if (newValue) {
                     if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
-                        if (selDetector.isOpen()) {
+                      //  if (!connected) {
                             ((DetectorDevice.ChinaSource) selDetector.getDevice()).setPower(true);
                             params.setTempPower(true);
                             /**
@@ -554,18 +558,16 @@ public class Controller implements Initializable {
                              */
                             extStartSession();
                         }
-                    }
+                  //  }
                 } else {
                     if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
-                        if (selDetector.isOpen()) {
+                    //    if (connected) {
                             ((DetectorDevice.ChinaSource) selDetector.getDevice()).setPower(false);
                             params.setTempPower(false);
-                            autoSet.compareAndSet(false, true);
-                        }
+                     //   }
                     }
                 }
                 resetBTNS();
-                params.save();
             }
         });
 
@@ -605,27 +607,39 @@ public class Controller implements Initializable {
      */
     private void extStartSession() {
 
+        boolean selectedFullScr = cbDimOptions.getSelectionModel().isSelected(0);
 
-        if (autoSet.get()) {
 
-            Thread thread = new Thread(() -> {
+        if(FT_STATUS.FT_OK!= ((DetectorDevice.ChinaSource) selDetector.getDevice()).setDim(selectedFullScr?true:false)){
+            return;
+        }
+        if(setInt()!=FT_STATUS.FT_OK){
+            return;
+        }
+        if(setVOS1()!=FT_STATUS.FT_OK){
+            return;
+        }
+        if(setVOS()!=FT_STATUS.FT_OK){
+            return;
+        }
+        if(setVR0()!=FT_STATUS.FT_OK){
+            return;
+        }
 
-                setInt();
-                setVOS1();
-                setVOS();
-                setVR0();
-                boolean tempKU = params.isTempKU();
-                Platform.runLater(() -> {
-                    cbCCCOptions.getSelectionModel().select(!tempKU ? 1 : 0);
-
-                    cbCCCOptions.getSelectionModel().select(tempKU ? 1 : 0);
-                    autoSet.compareAndSet(true,false);
-                });
-
-            });
-            thread.setDaemon(true);
-            thread.start();
-
+        boolean tempKU = params.isTempKU();
+        for (int i = 0; i < 2; i++) {
+            try {
+                TimeUnit.MILLISECONDS.sleep(5);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            cbCCCOptions.getSelectionModel().select(!tempKU ? 1 : 0);
+            try {
+                TimeUnit.MILLISECONDS.sleep(5);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            cbCCCOptions.getSelectionModel().select(tempKU ? 1 : 0);
         }
     }
 
@@ -865,6 +879,8 @@ public class Controller implements Initializable {
         th.start();
     }
 
+    private volatile int countSkippedFrames = 0;
+
     /**
      * Отображение статистики
      */
@@ -921,10 +937,6 @@ public class Controller implements Initializable {
                             grabbedImageH.flush();
                             grabbedImageV.flush();
 
-
-                            if (autoSet.get()&&mychoise.compareAndSet(true,false)) {
-                                chPower.fire();
-                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -974,10 +986,13 @@ public class Controller implements Initializable {
     /**
      * Установка инта
      */
-    public void setInt() {
+    public FT_STATUS setInt() {
         if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
-            ((DetectorDevice.ChinaSource) selDetector.getDevice()).setInt(params.getTempInt());
+            FT_STATUS ft_status = ((DetectorDevice.ChinaSource) selDetector.getDevice()).setInt(params.getTempInt());
+            return ft_status;
+
         }
+        return null;
     }
 
 
@@ -999,10 +1014,12 @@ public class Controller implements Initializable {
     /**
      * Установка VOS
      */
-    public void setVOS() {
+    public FT_STATUS setVOS() {
         if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
-            ((DetectorDevice.ChinaSource) selDetector.getDevice()).setVOS(params.getTempVOS());
+            FT_STATUS ft_status =  ((DetectorDevice.ChinaSource) selDetector.getDevice()).setVOS(params.getTempVOS());
+            return ft_status;
         }
+        return null;
     }
 
     /**
@@ -1024,10 +1041,12 @@ public class Controller implements Initializable {
     /**
      * Установка референса VOS1
      */
-    public void setVOS1() {
+    public FT_STATUS setVOS1() {
         if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
-            ((DetectorDevice.ChinaSource) selDetector.getDevice()).setVOS1(params.getTempVOS1());
+            FT_STATUS ft_status =   ((DetectorDevice.ChinaSource) selDetector.getDevice()).setVOS1(params.getTempVOS1());
+            return ft_status;
         }
+        return null;
     }
 
 
@@ -1069,10 +1088,13 @@ public class Controller implements Initializable {
     /**
      * Установка VR0
      */
-    public void setVR0() {
+    public FT_STATUS setVR0() {
         if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
-            ((DetectorDevice.ChinaSource) selDetector.getDevice()).setVR0(params.getTempVR0());
-        }
+            FT_STATUS ft_status =   ((DetectorDevice.ChinaSource) selDetector.getDevice()).setVR0(params.getTempVR0());
+
+        return ft_status;
+    }
+        return null;
     }
 
 

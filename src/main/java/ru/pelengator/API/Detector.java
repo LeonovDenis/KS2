@@ -15,6 +15,8 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import org.jfree.data.json.JSONUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.pelengator.API.tasks.*;
@@ -115,7 +117,7 @@ public class Detector {
     /**
      * Автоматическое открытие включено?
      */
-    private static boolean autoOpen = true;
+    private static boolean autoOpen = false;
 
     /**
      * Слушатели детектора.
@@ -794,6 +796,7 @@ public class Detector {
         if (!open.get()) {
             if (autoOpen) {
                 open();
+                System.out.println("Открытие в автоопенере");
             } else {
                 return false;
             }
