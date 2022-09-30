@@ -1,4 +1,4 @@
-package ru.pelengator.API.buildin.china;
+package ru.pelengator.API.devises.china;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,7 +6,7 @@ import ru.pelengator.API.DetectorDevice;
 import ru.pelengator.API.DetectorDiscoverySupport;
 import ru.pelengator.API.DetectorDriver;
 import ru.pelengator.API.DetectorTask;
-import ru.pelengator.driver.ethernet.Eth;
+import ru.pelengator.API.driver.ethernet.Eth;
 import ru.pelengator.model.StendParams;
 
 import java.util.ArrayList;

@@ -1,11 +1,10 @@
-package ru.pelengator.API.buildin.china;
+package ru.pelengator.API.devises.china;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.ls.LSOutput;
 import ru.pelengator.API.*;
-import ru.pelengator.driver.FT_STATUS;
-import ru.pelengator.driver.usb.Jna2;
+import ru.pelengator.API.driver.FT_STATUS;
+import ru.pelengator.API.driver.usb.Jna2;
 
 import java.awt.*;
 import java.awt.color.ColorSpace;
@@ -18,99 +17,50 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 
-public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Configurable, DetectorDevice.ChinaSource {
+public class ChinaDevice implements DetectorDevice, DetectorDevice.ChinaSource {
 
     /**
-     * Логгер
+     * Логгер.
      */
     private static final Logger LOG = LoggerFactory.getLogger(ChinaDevice.class);
 
     /**
-     * Поддерживаемые разрешения
+     * Поддерживаемые разрешения.
      */
     private final static Dimension[] DIMENSIONS = new Dimension[]{
             DetectorResolution.CHINA.getSize(),
             DetectorResolution.CHINALOW.getSize(),
     };
 
-    static volatile long PAUSE = 50;
-
-    private class CreateHendlerTask extends DetectorTask {
+    /**
+     * Задача на открытие сессии.
+     */
+    private class StartSessionTask extends DetectorTask {
 
         private final AtomicReference<FT_STATUS> result = new AtomicReference<FT_STATUS>();
 
-        public CreateHendlerTask(DetectorDevice device) {
+        public StartSessionTask(DetectorDevice device) {
             super(device);
         }
 
-        public FT_STATUS create() {
+        public FT_STATUS startSession() {
             try {
                 process();
             } catch (InterruptedException e) {
-                LOG.error("Запрос на создание обработчика прерван", e);
+                LOG.error("Session not started", e);
             }
             return result.get();
         }
 
         @Override
         protected void handle() {
-            result.set(grabber.create());
-            LOG.trace("Результат по запросу на создание обработчика {}", result.get());
+            result.set(grabber.startSession());
         }
     }
 
-    private class ChengeParamTask extends DetectorTask {
-
-        private final AtomicReference<FT_STATUS> result = new AtomicReference<FT_STATUS>();
-        private final AtomicReference<Map<String, ?>> value = new AtomicReference<>();
-
-        public ChengeParamTask(DetectorDevice device) {
-            super(device);
-        }
-
-        public FT_STATUS setParameters(Map<String, ?> parameters) {
-            this.value.set(parameters);
-            try {
-                process();
-            } catch (InterruptedException e) {
-                LOG.error("Запрос на обновление параметров прерван", e);
-            }
-            return result.get();
-
-        }
-
-        @Override
-        protected void handle() {
-            result.set(grabber.setParameters(value.get()));
-            LOG.trace("Результат на обновление параметров ");
-        }
-    }
-
-
-    private class SetIDTask extends DetectorTask {
-
-        private final AtomicReference<FT_STATUS> result = new AtomicReference<FT_STATUS>();
-
-        public SetIDTask(DetectorDevice device) {
-            super(device);
-        }
-
-        public FT_STATUS setID() {
-            try {
-                process();
-            } catch (InterruptedException e) {
-                LOG.error("Запрос на установку ID прерван", e);
-            }
-            return result.get();
-        }
-
-        @Override
-        protected void handle() {
-            result.set(grabber.setID());
-            LOG.trace("Результат по установке ID {}", result.get());
-        }
-    }
-
+    /**
+     * Задача на включение детектора.
+     */
     private class SetPowerTask extends DetectorTask {
 
         private final AtomicReference<FT_STATUS> result = new AtomicReference<FT_STATUS>();
@@ -122,76 +72,25 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
 
         public FT_STATUS setPower(boolean value) {
             this.value.set(value);
-            LOG.error("Запрос на включение питания ");
             try {
                 process();
             } catch (InterruptedException e) {
-                LOG.error("Запрос на включение питания прерван", e);
+                LOG.error("Power not submitted", e);
             }
             return result.get();
         }
 
         @Override
         protected void handle() {
-            LOG.error("Запрос на установку питания ");
             result.set(grabber.setPower(value.get()));
-            LOG.trace("Результат по включению питания [{}] {}", value.get(), result.get());
         }
     }
 
-    private class SetResetTask extends DetectorTask {
+    private int PAUSE = 50;
 
-        private final AtomicReference<FT_STATUS> result = new AtomicReference<FT_STATUS>();
-        private final AtomicBoolean value = new AtomicBoolean(false);
-
-        public SetResetTask(DetectorDevice device) {
-            super(device);
-        }
-
-        public FT_STATUS setReset(boolean value) {
-            this.value.set(value);
-            try {
-                process();
-            } catch (InterruptedException e) {
-                LOG.error("Запрос на ресет прерван", e);
-            }
-            return result.get();
-        }
-
-        @Override
-        protected void handle() {
-            result.set(grabber.setReset(value.get()));
-            LOG.trace("Результат по ресету [{}] {}", value.get(), result.get());
-        }
-    }
-
-    private class SetRETask extends DetectorTask {
-
-        private final AtomicReference<FT_STATUS> result = new AtomicReference<FT_STATUS>();
-        private final AtomicBoolean value = new AtomicBoolean(false);
-
-        public SetRETask(DetectorDevice device) {
-            super(device);
-        }
-
-        public FT_STATUS setRE(boolean value) {
-            this.value.set(value);
-            try {
-                process();
-            } catch (InterruptedException e) {
-                LOG.error("Запрос на RE прерван", e);
-            }
-            return result.get();
-        }
-
-        @Override
-        protected void handle() {
-            result.set(grabber.setRE(value.get()));
-            LOG.trace("Результат по RE [{}] {}", value.get(), result.get());
-        }
-    }
-
-
+    /**
+     * Задание на получение картинки.
+     */
     private class GetDataImageTask extends DetectorTask {
 
         private final AtomicReference<ByteBuffer> result = new AtomicReference<>();
@@ -204,7 +103,7 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
             try {
                 process();
             } catch (InterruptedException e) {
-                LOG.error("Запрос на получение буфераданных кадра прерван", e);
+                LOG.error("GetImage interapted", e);
             }
             return result.get();
         }
@@ -212,16 +111,17 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
         @Override
         protected void handle() {
             try {
-                TimeUnit.MILLISECONDS.sleep(PAUSE);
+                TimeUnit.MILLISECONDS.sleep(PAUSE);//todo Проверить работу без паузы
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            LOG.trace("Запрос на получение Картинки ДО", result);
             result.set(grabber.getImage());
-            LOG.trace("Запрос на получение Картинки ПОСЛЕ", result);
         }
     }
 
+    /**
+     * Задание на подчистку буфера.
+     */
     private class ClearBufferTask extends DetectorTask {
 
         public ClearBufferTask(DetectorDevice device) {
@@ -232,7 +132,7 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
             try {
                 process();
             } catch (InterruptedException e) {
-                LOG.error("Запрос на очистку буфера прерван", e);
+                LOG.error("ClearBuffer interapted", e);
             }
         }
 
@@ -242,6 +142,9 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
         }
     }
 
+    /**
+     * Задание на закрытие устройства.
+     */
     private class CloseTask extends DetectorTask {
 
         public CloseTask(DetectorDevice device) {
@@ -262,6 +165,9 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
         }
     }
 
+    /**
+     * Задание на установку времени интегрирования.
+     */
     private class SetIntTask extends DetectorTask {
 
         private final AtomicReference<FT_STATUS> result = new AtomicReference<FT_STATUS>();
@@ -276,7 +182,7 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
             try {
                 process();
             } catch (InterruptedException e) {
-                LOG.error("Запрос на установку инта прерван", e);
+                LOG.error("Set Int time interapted", e);
             }
             return result.get();
         }
@@ -284,10 +190,12 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
         @Override
         protected void handle() {
             result.set(grabber.setIntTime(value.get()));
-            LOG.trace("Результат по установке инта [{}] {}", value.get(), result.get());
         }
     }
 
+    /**
+     * Задание на установку vos/скимминга.
+     */
     private class SetVOSTask extends DetectorTask {
 
         private final AtomicReference<FT_STATUS> result = new AtomicReference<FT_STATUS>();
@@ -302,7 +210,7 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
             try {
                 process();
             } catch (InterruptedException e) {
-                LOG.error("Запрос на установку VOS прерван", e);
+                LOG.error("Set VOS interapted", e);
             }
             return result.get();
         }
@@ -310,25 +218,27 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
         @Override
         protected void handle() {
             result.set(grabber.setVVA(value.get()));
-            LOG.trace("Результат по установке VOS [{}] {}", value.get(), result.get());
         }
     }
 
-    private class SetVOS1Task extends DetectorTask {
+    /**
+     * Задача на поставку референса. //todo Нужна ли?
+     */
+    private class SetReferenceTask extends DetectorTask {
 
         private final AtomicReference<FT_STATUS> result = new AtomicReference<FT_STATUS>();
         private final AtomicInteger value = new AtomicInteger(0);
 
-        public SetVOS1Task(DetectorDevice device) {
+        public SetReferenceTask(DetectorDevice device) {
             super(device);
         }
 
-        public FT_STATUS setVOS1(int value) {
+        public FT_STATUS setReference(int value) {
             this.value.set(value);
             try {
                 process();
             } catch (InterruptedException e) {
-                LOG.error("Запрос на установку VOS1 прерван", e);
+                LOG.error("Reference not setted", e);
             }
             return result.get();
         }
@@ -336,37 +246,12 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
         @Override
         protected void handle() {
             result.set(grabber.setVVA1(value.get()));
-            LOG.trace("Результат по установке VOS1 [{}] {}", value.get(), result.get());
         }
     }
 
-    private class SetVOS2Task extends DetectorTask {
-
-        private final AtomicReference<FT_STATUS> result = new AtomicReference<FT_STATUS>();
-        private final AtomicInteger value = new AtomicInteger(0);
-
-        public SetVOS2Task(DetectorDevice device) {
-            super(device);
-        }
-
-        public FT_STATUS setVOS2(int value) {
-            this.value.set(value);
-            try {
-                process();
-            } catch (InterruptedException e) {
-                LOG.error("Запрос на установку VOS2 прерван", e);
-            }
-            return result.get();
-        }
-
-        @Override
-        protected void handle() {
-            result.set(grabber.setVVA2(value.get()));
-            LOG.trace("Результат по установке VOS2 [{}] {}", value.get(), result.get());
-        }
-    }
-
-
+    /**
+     * Задача на установку смещения на фотодиодах.
+     */
     private class SetVR0Task extends DetectorTask {
 
         private final AtomicReference<FT_STATUS> result = new AtomicReference<FT_STATUS>();
@@ -376,12 +261,12 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
             super(device);
         }
 
-        public FT_STATUS setInt(int value) {
+        public FT_STATUS setVR0(int value) {
             this.value.set(value);
             try {
                 process();
             } catch (InterruptedException e) {
-                LOG.error("Запрос на установку VR0 прерван", e);
+                LOG.error("Error while setting VR0", e);
             }
             return result.get();
         }
@@ -389,10 +274,12 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
         @Override
         protected void handle() {
             result.set(grabber.setVR0(value.get()));
-            LOG.trace("Результат по установке VR0 [{}] {}", value.get(), result.get());
         }
     }
 
+    /**
+     * Задача на смену разрешения.
+     */
     private class SetDimemsionTask extends DetectorTask {
 
         private final AtomicReference<FT_STATUS> result = new AtomicReference<FT_STATUS>();
@@ -407,7 +294,7 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
             try {
                 process();
             } catch (InterruptedException e) {
-                LOG.error("Запрос на смену разрешения прерван", e);
+                LOG.error("Error while setting dimension", e);
             }
             return result.get();
         }
@@ -415,10 +302,12 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
         @Override
         protected void handle() {
             result.set(grabber.setDimension(value.get()));
-            LOG.trace("Результат по смену разрешения [{}] {}", value.get(), result.get());
         }
     }
 
+    /**
+     * Задача на смену ёмкостей.
+     */
     private class SetCapasityTask extends DetectorTask {
 
         private final AtomicReference<FT_STATUS> result = new AtomicReference<FT_STATUS>();
@@ -433,7 +322,7 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
             try {
                 process();
             } catch (InterruptedException e) {
-                LOG.error("Запрос на смену ёмности прерван", e);
+                LOG.error("Error while setting capacity", e);
             }
             return result.get();
         }
@@ -441,39 +330,10 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
         @Override
         protected void handle() {
             result.set(grabber.setCapacity(value.get()));
-            LOG.trace("Результат по смену ёмности [{}] {}", value.get(), result.get());
-        }
-    }
-
-    private class SetRoTask extends DetectorTask {
-
-        private final AtomicReference<FT_STATUS> result = new AtomicReference<FT_STATUS>();
-        private final AtomicReference<Byte> value = new AtomicReference<>();
-
-        public SetRoTask(DetectorDevice device) {
-            super(device);
-        }
-
-        public FT_STATUS setRo(byte value) {
-            this.value.set(value);
-            try {
-                process();
-            } catch (InterruptedException e) {
-                LOG.error("Запрос на установку Ro прерван", e);
-            }
-            return result.get();
-        }
-
-        @Override
-        protected void handle() {
-            result.set(grabber.setRo(value.get()));
-            LOG.trace("Результат по установке Ro [{}] {}", value.get(), result.get());
         }
     }
 
 
-    //todo
-    //todo
     /**
      * Смещение RGB.
      */
@@ -490,7 +350,7 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
     private static final int[] OFFSET = new int[]{0};
 
     /**
-     * Тип данных, используемый в изображении.
+     * Тип данных, используемых в изображении.
      */
     private static final int DATA_TYPE = DataBuffer.TYPE_BYTE;
 
@@ -498,26 +358,58 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
      * Цветовое пространство изображения.
      */
     private static final ColorSpace COLOR_SPACE = ColorSpace.getInstance(ColorSpace.CS_sRGB);
-
+    /**
+     * Буффер сырых данных.
+     */
     private AtomicReference<int[][]> BANK = new AtomicReference<>();
-
+    /**
+     * Флаг готовности буфера.
+     */
     private AtomicBoolean flafGrabFrames = new AtomicBoolean(false);
-
-    private AtomicBoolean flagConnected = new AtomicBoolean(false);
-
+    /***
+     * Ссылка на граббер/драйвер.
+     */
     private Jna2 grabber = null;
+    /**
+     * Разрешение.
+     */
     private Dimension size = null;
+    /**
+     * Моделька для картинки.
+     */
     private ComponentSampleModel smodel = null;
+    /**
+     * Моделька для картинки.
+     */
     private ColorModel cmodel = null;
+    /**
+     * Флаг несовпадения разрешений.
+     */
     private boolean failOnSizeMismatch = false;
-
+    /**
+     * Флаг удаления.
+     */
     private final AtomicBoolean disposed = new AtomicBoolean(false);
+    /**
+     * Флаг открытия.
+     */
     private final AtomicBoolean open = new AtomicBoolean(false);
-
+    /**
+     * Имя устройства.
+     */
     private String name = null;
-    private String id = null;
-    private String fullname = null;
+    /**
+     * ID устройства.
+     */
 
+    private String id = null;
+    /**
+     * Полное название.
+     */
+    private String fullname = null;
+    /**
+     * Таймеры для подсчета FPS.
+     */
     private long t1 = -1;
     private long t2 = -1;
 
@@ -526,6 +418,13 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
      */
     private volatile double fps = 0;
 
+    /**
+     * Конструктор
+     *
+     * @param name    Имя
+     * @param id      ID
+     * @param grabber драйвер
+     */
     public ChinaDevice(String name, String id, Jna2 grabber) {
         this.name = name;
         this.id = id;
@@ -563,16 +462,21 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
     public void setResolution(Dimension size) {
 
         if (size == null) {
-            throw new IllegalArgumentException("Разрешение не может быть нулевым");
+            throw new IllegalArgumentException("Dimension cant be null");
         }
 
         if (open.get()) {
-            throw new IllegalStateException("Невозможно поменять разрешение детектора, сначала необходимо его закрыть");
+            throw new IllegalStateException("Cant change dimension, 1st close it");
         }
 
         this.size = size;
     }
 
+    /**
+     * Помещение данных в буфер.
+     *
+     * @param tempData входные данные
+     */
     private void grabFrames(int[][] tempData) {
 
         if (flafGrabFrames.compareAndSet(false, true)) {
@@ -581,17 +485,18 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
         }
     }
 
+    /**
+     * Получение картинки с пикселем на 3 байта и реверсом по оси Y
+     *
+     * @return
+     */
     @Override
     public BufferedImage getImage() {
 
         ByteBuffer buffer = getImageBytes();
-
         if (buffer == null) {
-            flagConnected.set(false);
             return null;
         }
-
-        flagConnected.compareAndSet(false, true);
         byte[] bytes = new byte[size.width * size.height * 3];
         byte[][] data = new byte[][]{bytes};
         byte[] array = buffer.array();
@@ -603,18 +508,20 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
         } catch (InterruptedException e) {
             return null;
         }
-
         DataBufferByte dbuf = new DataBufferByte(data, bytes.length, OFFSET);
-
-
         WritableRaster raster = Raster.createWritableRaster(smodel, dbuf, null);
-
         BufferedImage bi = new BufferedImage(cmodel, raster, false, null);
         reverseImage(bi, size);
 
         return bi;
     }
 
+    /**
+     * Зеркалирование по оси Y.
+     *
+     * @param src  исходное изображение
+     * @param size разрешение
+     */
     private void reverseImage(BufferedImage src, Dimension size) {
 
         int width = size.width;
@@ -625,7 +532,7 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
                 try {
                     tempData[height - 1 - y][x] = src.getRGB(x, y) & 0xffffff;
                 } catch (Exception e) {
-                    System.out.println("Ошибка  в реверсе");
+                    LOG.error("Error while reverse Y");
                 }
 
             }
@@ -635,15 +542,16 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
                 src.setRGB(x, y, tempData[y][x]);
             }
         }
-        // System.out.println("//");
-        // System.out.println(Arrays.toString(tempData[2]));
-        //  System.out.println("///");
-        //  System.out.println(Arrays.toString(tempData[126]));
-
         grabFrames(tempData);
-
     }
 
+    /**
+     * Расширение цвета пикселя на 3 байта
+     *
+     * @param src    исходный массив по 2 байта на пиксель
+     * @param target конечный массив по 3 байта на пиксель
+     * @throws InterruptedException ошибка при расширении
+     */
     private void copyWith1Byte(byte[] src, byte[] target) throws InterruptedException {
         LinkedList<Byte> aSrc = new LinkedList<Byte>();
         LinkedList<Byte> aTarget = new LinkedList<Byte>();
@@ -663,22 +571,24 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
             try {
                 target[i] = aTarget.poll();
             } catch (Exception e) {
-                LOG.error("Выход по ошибке. Блок и программа с разными разрешениями");
-                throw new InterruptedException("Выход по ошибке. Блок и программа с разными пикселями");
+                LOG.error("Dimensions not dont match");
+                throw new InterruptedException("Dimensions not dont match");
             }
-
-
         }
     }
 
-
+    /**
+     * Получение картинки
+     *
+     * @return байтовый буфер
+     */
     public ByteBuffer getImageBytes() {
         if (disposed.get()) {
-            LOG.error("Детектор освобожден, картинка будет null");
+            LOG.error("Detector disposed, image null");
             return null;
         }
         if (!open.get()) {
-            LOG.error("Детектор закрыт, картинка будет null");
+            LOG.error("Detector closed, image null");
             return null;
         }
         ByteBuffer dataImage = new GetDataImageTask(this).getImage();
@@ -688,45 +598,40 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
         return dataImage;
     }
 
-
+    /**
+     * Открытие устройства
+     */
     @Override
     public void open() {
         if (disposed.get()) {
             return;
         }
-        LOG.trace("Открываю устройство: {}", getName());
-
+        LOG.trace("Opening detector: {}", getName());
         if (size == null) {
             size = getResolutions()[0];
         }
         if (size == null) {
-            throw new RuntimeException("Разрешение не может быть null");
+            throw new RuntimeException("Dimension cant be null");
         }
+        LOG.trace("Detector {} starting, dimension {}", fullname, size);
 
-        LOG.trace("Устройство {} стартует, размер {}", fullname, size);
-
-        LOG.trace("Устройство стартовало");
         boolean started = startSession(size.width, size.height, 50);
 
         if (!started) {
-            throw new DetectorException("Невозможно стартонуть сишную библиотеку!");
+            throw new DetectorException("Cant start JNA!");
         }
-
         Dimension size2 = new Dimension(grabber.getWidth(), grabber.getHeight());
-
         int w1 = size.width;
         int w2 = size2.width;
         int h1 = size.height;
         int h2 = size2.height;
 
         if (w1 != w2 || h1 != h2) {
-
             if (failOnSizeMismatch) {
-                throw new DetectorException(String.format("Различие в размере полученном и запрошенном - [%dx%d] vs [%dx%d]", w1, h1, w2, h2));
+                throw new DetectorException(String.format("Dimensions various - [%dx%d] vs [%dx%d]", w1, h1, w2, h2));
             }
-
             Object[] args = new Object[]{w1, h1, w2, h2, w2, h2};
-            LOG.trace("Различие в разрешениях полученном и запрошенном - [{}x{}] vs [{}x{}]. Установка корректного. Новое разрешение [{}x{}]", args);
+            LOG.trace("Dimensions various - [{}x{}] vs [{}x{}]. Setting correct. New Dimension [{}x{}]", args);
 
             size = new Dimension(w2, h2);
         }
@@ -734,22 +639,25 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
         smodel = new ComponentSampleModel(DATA_TYPE, size.width, size.height, 3, size.width * 3, BAND_OFFSETS);
         cmodel = new ComponentColorModel(COLOR_SPACE, BITS, false, false, Transparency.OPAQUE, DATA_TYPE);
 
-        LOG.trace("Очистка буфера");
+        LOG.trace("Clearing buffer");
 
         clearMemoryBuffer();
 
-        LOG.trace("Устройство {} открыто", this.fullname);
+        LOG.trace("Detector {} opened", this.fullname);
 
         open.set(true);
     }
 
     /**
-     * Очистка кадра на устройстве
+     * Очистка кадра на устройстве.
      */
     private void clearMemoryBuffer() {
         new ClearBufferTask(this).clearBuffer();
     }
 
+    /**
+     * Закрытие
+     */
     @Override
     public void close() {
 
@@ -757,27 +665,29 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
             return;
         }
 
-        LOG.trace("Закрытие устройства");
+        LOG.trace("Closing detector");
 
         new SetPowerTask(this).setPower(false);
 
         new CloseTask(this).stopSession();
     }
 
+    /**
+     * Удаление детектора
+     */
     @Override
     public void dispose() {
 
         if (!disposed.compareAndSet(false, true)) {
             return;
         }
-
-        LOG.trace("Освобождение ресурсов устройства {}", getName());
+        LOG.trace("Releasing resource {}", getName());
 
         close();
     }
 
     /**
-     * Определяет, должно ли устройство выйти из строя, если запрошенный размер изображения отличается от фактического
+     * Определяет должно ли устройство выйти из строя при несовпадении разрешений
      *
      * @param fail флаг сбоя при несоответствии размера, true или false
      */
@@ -785,6 +695,11 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
         this.failOnSizeMismatch = fail;
     }
 
+    /**
+     * Определяет открыто ли устройство
+     *
+     * @return
+     */
     @Override
     public boolean isOpen() {
         return open.get();
@@ -800,67 +715,26 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
      */
     private boolean startSession(int width, int height, int reqMillisPerFrame) {
 
-        LOG.debug("Запуск сессии");
-        FT_STATUS result = new CreateHendlerTask(this).create();
-/**
- if (result != FT_STATUS.FT_OK) {
-
- LOG.error("Error while create hendler: {}", result);
- LOG.debug("Сессия не удалась");
- return false;
- }*/
-
-        /**
-         * установка ID
-         */
-        LOG.debug("Запуск установки ID из сессии");
-        result = new SetIDTask(this).setID();
-
-        /**   if (result != FT_STATUS.FT_OK) {
-         LOG.error("Error while setID: {}", result);
-         LOG.debug("Сессия  не удалась");
-         return false;
-         }*/
-        LOG.debug("Сессия удалась");
+        LOG.trace("Start session");
+        FT_STATUS ft_status = new StartSessionTask(this).startSession();
+        if (ft_status != FT_STATUS.FT_OK) {
+            LOG.error("Error in startSession {}", ft_status);
+        }else{
+            LOG.trace("Session start normal {}", ft_status);
+        }
         return true;
     }
 
-    @Override
-    public void run() {
-    }
-
-    @Override
-    public FT_STATUS setParameters(Map<String, ?> parameters) {
-
-        FT_STATUS result = new ChengeParamTask(this).setParameters(parameters);
-        if (result != FT_STATUS.FT_OK) {
-            LOG.error("Error while settingParams: {}", result);
-        }
-        return result;
-    }
-
-
+    /**
+     * Установка паузы между кадрами
+     * @param pause в миллисекундах
+     * @return
+     */
     @Override
     public FT_STATUS setPause(int pause) {
 
         PAUSE = pause;
         return FT_STATUS.FT_OK;
-    }
-
-    @Override
-    public FT_STATUS setRO(byte value) {
-        FT_STATUS result = new SetRoTask(this).setRo(value);
-        if (result != FT_STATUS.FT_OK) {
-            LOG.error("Error while setRo[{}]: {}", value, result);
-        }
-        return result;
-    }
-
-
-    @Override
-    public boolean isConnected() {
-
-        return flagConnected.get();
     }
 
     @Override
@@ -882,26 +756,17 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
     }
 
     @Override
-    public FT_STATUS setVOS1(int value) {
-        FT_STATUS result = new SetVOS1Task(this).setVOS1(value);
+    public FT_STATUS setReference(int value) {
+        FT_STATUS result = new SetReferenceTask(this).setReference(value);
         if (result != FT_STATUS.FT_OK) {
-            LOG.error("Error while setVOS1[{}]: {}", value, result);
-        }
-        return result;
-    }
-
-    @Override
-    public FT_STATUS setVOS2(int value) {
-        FT_STATUS result = new SetVOS2Task(this).setVOS2(value);
-        if (result != FT_STATUS.FT_OK) {
-            LOG.error("Error while setVOS2[{}]: {}", value, result);
+            LOG.error("Error while setReference[{}]: {}", value, result);
         }
         return result;
     }
 
     @Override
     public FT_STATUS setVR0(int value) {
-        FT_STATUS result = new SetVR0Task(this).setInt(value);
+        FT_STATUS result = new SetVR0Task(this).setVR0(value);
         if (result != FT_STATUS.FT_OK) {
             LOG.error("Error while setVR0[{}]: {}", value, result);
         }
@@ -935,7 +800,6 @@ public class ChinaDevice implements DetectorDevice, Runnable, DetectorDevice.Con
     @Override
     public FT_STATUS setPower(boolean value) {
         FT_STATUS result = null;
-        // if (flagConnected.get() != value) {
         result = new SetPowerTask(this).setPower(value);
         if (result != FT_STATUS.FT_OK) {
             LOG.error("Error while setPower[{}]: {}", value, result);

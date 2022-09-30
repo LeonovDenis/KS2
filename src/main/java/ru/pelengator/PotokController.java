@@ -11,18 +11,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.pelengator.service.PotokService;
 
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.URL;
 import java.util.*;
 
-import static ru.pelengator.API.util.Utils.*;
+import static ru.pelengator.API.utils.Utils.*;
 
 public class PotokController implements Initializable {
 

@@ -1,4 +1,4 @@
-package ru.pelengator.API.util;
+package ru.pelengator.API.utils;
 
 import ru.pelengator.API.DetectorException;
 
@@ -11,7 +11,9 @@ import java.io.InputStream;
 import javax.imageio.ImageIO;
 
 
-
+/**
+ * Вспомогательный классдля работы сизображениями
+ */
 public class ImageUtils {
 
     /**
@@ -67,6 +69,11 @@ public class ImageUtils {
         return bytes;
     }
 
+    /**
+     * Чтение изображения из пути
+     * @param resource путь
+     * @return изображение
+     */
     public static BufferedImage readFromResource(String resource) {
         InputStream is = null;
         try {
@@ -84,6 +91,11 @@ public class ImageUtils {
         }
     }
 
+    /**
+     * Создание нового изображения
+     * @param source старое изображение
+     * @return
+     */
     public static BufferedImage createEmptyImage(final BufferedImage source) {
         return new BufferedImage(source.getWidth(), source.getHeight(), BufferedImage.TYPE_INT_RGB);
     }

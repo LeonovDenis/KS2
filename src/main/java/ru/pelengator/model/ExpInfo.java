@@ -1,8 +1,6 @@
 package ru.pelengator.model;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import ru.pelengator.API.util.Utils;
+import ru.pelengator.API.utils.Utils;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;

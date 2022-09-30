@@ -8,7 +8,6 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -42,10 +41,10 @@ import org.decimal4j.util.DoubleRounder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.pelengator.API.*;
-import ru.pelengator.API.buildin.china.ChinaDriver;
-import ru.pelengator.API.buildin.china.ChinaDriverEth;
-import ru.pelengator.driver.FT_STATUS;
-import ru.pelengator.driver.NetworkInfo;
+import ru.pelengator.API.devises.china.ChinaDriver;
+import ru.pelengator.API.devises.china.ChinaDriverEth;
+import ru.pelengator.API.driver.FT_STATUS;
+import ru.pelengator.API.driver.NetworkInfo;
 import ru.pelengator.model.DetectorInfo;
 import ru.pelengator.model.ExpInfo;
 import ru.pelengator.model.StatData;
@@ -53,8 +52,8 @@ import ru.pelengator.model.StendParams;
 import ru.pelengator.service.DataService;
 
 
-import static ru.pelengator.API.util.Utils.*;
-import static ru.pelengator.driver.ethernet.NetUtils.findInterfaces;
+import static ru.pelengator.API.utils.Utils.*;
+import static ru.pelengator.API.driver.ethernet.NetUtils.findInterfaces;
 
 public class Controller implements Initializable {
     /**
@@ -349,6 +348,7 @@ public class Controller implements Initializable {
     /**
      * Создание списка детекторов
      */
+    private volatile static AtomicBoolean isImageFrash = new AtomicBoolean(false);
     private static int detectorCounter = 0;
 
 
@@ -513,6 +513,11 @@ public class Controller implements Initializable {
         } else {
             cbDimOptions.getSelectionModel().select(optionsDimension.get(0));
         }
+        boolean tempKU;
+
+        if (tempKU = params.isTempKU()) {
+            cbCCCOptions.getSelectionModel().select(tempKU ? 1 : 0);
+        }
         /**
          * Обработка отклика
          */
@@ -550,21 +555,21 @@ public class Controller implements Initializable {
 
                 if (newValue) {
                     if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
-                      //  if (!connected) {
-                            ((DetectorDevice.ChinaSource) selDetector.getDevice()).setPower(true);
-                            params.setTempPower(true);
-                            /**
-                             *Установка стартовых параметров
-                             */
-                            extStartSession();
-                        }
-                  //  }
+                        //  if (!connected) {
+                        ((DetectorDevice.ChinaSource) selDetector.getDevice()).setPower(true);
+                        params.setTempPower(true);
+                        /**
+                         *Установка стартовых параметров
+                         */
+                        extStartSession();
+                    }
+                    //  }
                 } else {
                     if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
-                    //    if (connected) {
-                            ((DetectorDevice.ChinaSource) selDetector.getDevice()).setPower(false);
-                            params.setTempPower(false);
-                     //   }
+                        //    if (connected) {
+                        ((DetectorDevice.ChinaSource) selDetector.getDevice()).setPower(false);
+                        params.setTempPower(false);
+                        //   }
                     }
                 }
                 resetBTNS();
@@ -602,45 +607,57 @@ public class Controller implements Initializable {
         cbDetectorOptions.setItems(options);
     }
 
+    private void waitNewImage(){
+       try {
+              TimeUnit.MILLISECONDS.sleep(100);
+          } catch (InterruptedException e) {
+              throw new RuntimeException(e);
+          }
+
+
+    }
+
+
     /**
      * Инициализация работы детектора
      */
     private void extStartSession() {
 
-        boolean selectedFullScr = cbDimOptions.getSelectionModel().isSelected(0);
 
-
-        if(FT_STATUS.FT_OK!= ((DetectorDevice.ChinaSource) selDetector.getDevice()).setDim(selectedFullScr?true:false)){
-            return;
-        }
-        if(setInt()!=FT_STATUS.FT_OK){
-            return;
-        }
-        if(setVOS1()!=FT_STATUS.FT_OK){
-            return;
-        }
-        if(setVOS()!=FT_STATUS.FT_OK){
-            return;
-        }
-        if(setVR0()!=FT_STATUS.FT_OK){
-            return;
-        }
-
-        boolean tempKU = params.isTempKU();
-        for (int i = 0; i < 2; i++) {
-            try {
-                TimeUnit.MILLISECONDS.sleep(5);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        Thread thread = new Thread(() -> {
+            boolean selectedFullScr = cbDimOptions.getSelectionModel().isSelected(0);
+            waitNewImage();
+            if (FT_STATUS.FT_OK != ((DetectorDevice.ChinaSource) selDetector.getDevice()).setDim(selectedFullScr ? true : false)) {
+                return;
             }
-            cbCCCOptions.getSelectionModel().select(!tempKU ? 1 : 0);
-            try {
-                TimeUnit.MILLISECONDS.sleep(5);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            waitNewImage();
+            if (setInt() != FT_STATUS.FT_OK) {
+                return;
             }
-            cbCCCOptions.getSelectionModel().select(tempKU ? 1 : 0);
-        }
+            waitNewImage();
+            if (setReference() != FT_STATUS.FT_OK) {
+                return;
+            }
+            waitNewImage();
+            if (setVOS() != FT_STATUS.FT_OK) {
+                return;
+            }
+            waitNewImage();
+            if (setVR0() != FT_STATUS.FT_OK) {
+                return;
+            }
+            boolean selectedCcc = cbCCCOptions.getSelectionModel().isSelected(1);
+            waitNewImage();
+            if (FT_STATUS.FT_OK != ((DetectorDevice.ChinaSource) selDetector.getDevice()).setССС(selectedCcc ? true : false)) {
+                return;
+            }
+            waitNewImage();
+        });
+
+        thread.setDaemon(true);
+        thread.start();
+
+
     }
 
     /**
@@ -941,8 +958,6 @@ public class Controller implements Initializable {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
-
                 }
                 return null;
             }
@@ -1016,7 +1031,7 @@ public class Controller implements Initializable {
      */
     public FT_STATUS setVOS() {
         if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
-            FT_STATUS ft_status =  ((DetectorDevice.ChinaSource) selDetector.getDevice()).setVOS(params.getTempVOS());
+            FT_STATUS ft_status = ((DetectorDevice.ChinaSource) selDetector.getDevice()).setVOS(params.getTempVOS());
             return ft_status;
         }
         return null;
@@ -1027,46 +1042,26 @@ public class Controller implements Initializable {
      *
      * @param event
      */
-    public void setVOS1(ActionEvent event) {
+    public void setReference(ActionEvent event) {//todo проверить нужен ли метод для работы
 
         int i = parseIntText(event, true);
         if (i < 0) {
             return;
         }
         params.setTempVOS1(i);
-        setVOS1();
+        setReference();
         resetBTNS();
     }
 
     /**
      * Установка референса VOS1
      */
-    public FT_STATUS setVOS1() {
+    public FT_STATUS setReference() {
         if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
-            FT_STATUS ft_status =   ((DetectorDevice.ChinaSource) selDetector.getDevice()).setVOS1(params.getTempVOS1());
+            FT_STATUS ft_status = ((DetectorDevice.ChinaSource) selDetector.getDevice()).setReference(params.getTempVOS1());
             return ft_status;
         }
         return null;
-    }
-
-
-    /**
-     * Отработка установки VOS2
-     *
-     * @param event
-     */
-    public void setVOS2(ActionEvent event) {
-
-        TextField source = (TextField) event.getSource();
-        try {
-            if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
-                ((DetectorDevice.ChinaSource) selDetector.getDevice()).setVOS2(Integer.parseInt(source.getText()));
-            }
-        } catch (Exception e) {
-            LOG.error("VOS2 processing error", e);
-        }
-        source.getParent().requestFocus();
-        resetBTNS();
     }
 
 
@@ -1090,10 +1085,10 @@ public class Controller implements Initializable {
      */
     public FT_STATUS setVR0() {
         if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
-            FT_STATUS ft_status =   ((DetectorDevice.ChinaSource) selDetector.getDevice()).setVR0(params.getTempVR0());
+            FT_STATUS ft_status = ((DetectorDevice.ChinaSource) selDetector.getDevice()).setVR0(params.getTempVR0());
 
-        return ft_status;
-    }
+            return ft_status;
+        }
         return null;
     }
 

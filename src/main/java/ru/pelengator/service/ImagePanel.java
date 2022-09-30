@@ -2,25 +2,14 @@ package ru.pelengator.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.pelengator.API.*;
-import ru.pelengator.Controller;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.awt.RenderingHints.*;
-import static ru.pelengator.API.util.Utils.convertImageRGB;
-import static ru.pelengator.API.util.Utils.copyImage;
 
 
 public class ImagePanel extends JPanel {

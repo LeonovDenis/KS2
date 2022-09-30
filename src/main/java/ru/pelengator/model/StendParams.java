@@ -6,7 +6,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import ru.pelengator.App;
 import ru.pelengator.Controller;
-import ru.pelengator.driver.NetworkInfo;
+import ru.pelengator.API.driver.NetworkInfo;
 
 import java.io.BufferedWriter;
 import java.io.File;

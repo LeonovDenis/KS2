@@ -7,8 +7,13 @@ import ru.pelengator.API.DetectorDevice;
 import ru.pelengator.API.DetectorDriver;
 import ru.pelengator.API.DetectorTask;
 
+/**
+ * Класс обертка задания
+ */
 public class DetectorCloseTask extends DetectorTask {
-
+    /**
+     * Логгер.
+     */
     private static final Logger LOG = LoggerFactory.getLogger(DetectorCloseTask.class);
 
     public DetectorCloseTask(DetectorDriver driver, DetectorDevice device) {

@@ -1,6 +1,6 @@
 package ru.pelengator.API;
 
-import ru.pelengator.driver.FT_STATUS;
+import ru.pelengator.API.driver.FT_STATUS;
 
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
@@ -64,9 +64,7 @@ public interface DetectorDevice {
 
         FT_STATUS setVOS(int value);
 
-        FT_STATUS setVOS1(int value);
-
-        FT_STATUS setVOS2(int value);
+        FT_STATUS setReference(int value);
 
         FT_STATUS setVR0(int value);
 
@@ -80,9 +78,6 @@ public interface DetectorDevice {
 
         FT_STATUS setPause(int pause);
 
-        FT_STATUS setRO(byte ro);
-
-        boolean isConnected();
     }
 
 

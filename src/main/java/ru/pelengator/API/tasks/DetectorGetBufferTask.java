@@ -9,9 +9,13 @@ import ru.pelengator.API.DetectorDevice;
 import ru.pelengator.API.DetectorDriver;
 import ru.pelengator.API.DetectorTask;
 
-
+/**
+ * Класс обертка задания
+ */
 public class DetectorGetBufferTask extends DetectorTask {
-
+    /**
+     * Логгер.
+     */
     private static final Logger LOG = LoggerFactory.getLogger(DetectorGetBufferTask.class);
 
     private volatile ByteBuffer buffer = null;

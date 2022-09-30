@@ -1,4 +1,4 @@
-package ru.pelengator.driver;
+package ru.pelengator.API.driver;
 
 /**
  * Набор статусов от драйвера

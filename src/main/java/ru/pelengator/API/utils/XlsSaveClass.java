@@ -1,9 +1,5 @@
-package ru.pelengator.API.util;
+package ru.pelengator.API.utils;
 
-import javafx.collections.ObservableList;
-import javafx.scene.Node;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -14,12 +10,19 @@ import ru.pelengator.service.ParamsService;
 import java.io.*;
 import java.util.*;
 
+/**
+ * Класс для работы в Exel.
+ */
 public class XlsSaveClass {
     /**
      * Логгер.
      */
     private static final Logger LOG = LoggerFactory.getLogger(XlsSaveClass.class);
 
+    /**
+     * Чтение из файла.
+     * @param fName
+     */
     public static void readXlFile(String fName) {
         File myFile = new File(fName);//C://temp/Employee.xlsx
         try (FileInputStream fis = new FileInputStream(myFile);) {
@@ -61,9 +64,17 @@ public class XlsSaveClass {
         } catch (IOException ie) {
             ie.printStackTrace();
         }
-        System.out.println("Done");
     }
 
+    /**
+     * Запись в файл
+     * @param fName
+     * @param averageSignal
+     * @param shum
+     * @param header
+     * @param count
+     * @param zakladka
+     */
     public void saveXlFile(String fName, Map<Integer, Double[]> averageSignal, Map<Integer, Double[]> shum,
                            Map<Integer, Double[]> header, int count, String... zakladka) {
 
@@ -101,15 +112,21 @@ public class XlsSaveClass {
 
             myWorkBook.write(os);
         } catch (FileNotFoundException fe) {
-            LOG.error("С файлом для записи проблема {}", fe);
+            LOG.error("FileNotFound {}", fe);
             fe.printStackTrace();
         } catch (IOException ie) {
             ie.printStackTrace();
-            LOG.error("С файлом для записи проблема {}", ie);
+            LOG.error("IOException {}", ie);
         }
         LOG.trace("Writing on XLSX file Finished ...");
     }
 
+    /**
+     * Заполнение строк и столбцов.
+     * @param averageSignal
+     * @param signalSheet
+     * @param signalRows
+     */
     private static void fillRowsAndCells(Map<Integer, Double[]> averageSignal, XSSFSheet signalSheet, Set<Integer> signalRows) {
         int rownum0 = 1;
         for (Integer key : signalRows) {
@@ -126,15 +143,25 @@ public class XlsSaveClass {
         }
     }
 
+    /**
+     * Заполнение шапки.
+     * @param header0
+     * @param headers
+     * @param i
+     */
     private void fillHeader(Row header0, Double[] headers, int i) {
         int cellnumh = i;
         for (Double obj : headers) {
             Cell cell = header0.createCell(cellnumh++);
-
             cell.setCellValue(obj);
         }
     }
 
+    /**
+     * Создание стиля ячеек.
+     * @param style
+     * @return
+     */
     private CellStyle createCellStyle(CellStyle style) {
         BorderStyle thin = BorderStyle.THIN;
         short black = IndexedColors.BLACK.getIndex();
@@ -148,7 +175,7 @@ public class XlsSaveClass {
     }
 
     /**
-     * Сохранение всех матиц в exel
+     * Сохранение всех матиц в exel.
      *
      * @param service
      * @param pdfFile
@@ -221,16 +248,20 @@ public class XlsSaveClass {
              */
             myWorkBook.write(os);
         } catch (FileNotFoundException fe) {
-            LOG.error("С файлом для записи проблема {}", fe);
+            LOG.error("FileNotFound {}", fe);
             fe.printStackTrace();
         } catch (IOException ie) {
             ie.printStackTrace();
-            LOG.error("С файлом для записи проблема {}", ie);
+            LOG.error("IOException {}", ie);
         }
         LOG.trace("Writing on XLSX file Finished ...");
     }
 
-
+    /**
+     * Заполнение мапы данными.
+     * @param map
+     * @param dataArray
+     */
     private void fillMap(Map<Integer, Double[]> map, double[][] dataArray) {
         for (int i = 0; i < dataArray.length; i++) {
             Double[] objects = new Double[dataArray.length + 1];

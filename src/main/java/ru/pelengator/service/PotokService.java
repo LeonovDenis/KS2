@@ -1,30 +1,16 @@
 package ru.pelengator.service;
 
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.Node;
-import javafx.scene.chart.BarChart;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextArea;
-import javafx.scene.image.Image;
-import javafx.scene.layout.Pane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.pelengator.API.util.XlsSaveClass;
 import ru.pelengator.Controller;
 import ru.pelengator.PotokController;
 
-import java.awt.image.BufferedImage;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
-import static ru.pelengator.API.util.Utils.*;
+import static ru.pelengator.API.utils.Utils.*;
 
 /**
  * Сервис

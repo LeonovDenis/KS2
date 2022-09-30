@@ -6,13 +6,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import ru.pelengator.API.DetectorUtils;
 
 import javax.swing.*;
 import java.io.*;
-import java.net.URLDecoder;
 
-import static ru.pelengator.API.util.Utils.*;
+import static ru.pelengator.API.utils.Utils.*;
 
 /**
  * JavaFX App
@@ -32,7 +30,7 @@ public class App extends Application {
         root = loader.load();
         scene = new Scene(root);
 
-        String crc32 = calkCRC32(getClass(),".jar");
+        String crc32 = calkCRC32();
         stage.setTitle("Стенд ИС2. CRC-32: " + crc32);
         stage.setScene(scene);
         stage.centerOnScreen();

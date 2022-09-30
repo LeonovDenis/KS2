@@ -5,10 +5,12 @@ import ru.pelengator.API.DetectorDriver;
 import ru.pelengator.API.DetectorTask;
 
 /**
- * Освобождение ресурсов устройства.
+ * Класс обертка задания
  */
 public class DetectorDisposeTask extends DetectorTask {
-
+    /**
+     * Логгер.
+     */
     public DetectorDisposeTask(DetectorDriver driver, DetectorDevice device) {
         super(driver, device);
     }

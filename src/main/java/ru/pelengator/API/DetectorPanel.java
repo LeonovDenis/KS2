@@ -34,13 +34,13 @@ import org.slf4j.LoggerFactory;
 import ru.pelengator.Controller;
 
 import static java.awt.RenderingHints.*;
-import static ru.pelengator.API.util.Utils.*;
+import static ru.pelengator.API.utils.Utils.*;
 
 
 /**
  * Простая реализация JPanel, позволяющая пользователям отображать изображения
  */
-public class DetectorPanel extends JPanel implements DetectorListener, PropertyChangeListener {
+public class DetectorPanel extends JPanel implements DetectorListener {
 
     /**
      * Это перечисление предназначено для управления тем, как изображение будет отображаться в границах панели.
@@ -174,9 +174,9 @@ public class DetectorPanel extends JPanel implements DetectorListener, PropertyC
 
             String str;
 
-            final String strInitDevice = rb.getString("INITIALIZING_DEVICE");
-            final String strNoImage = rb.getString("NO_IMAGE");
-            final String strDeviceError = rb.getString("DEVICE_ERROR");
+            final String strInitDevice = "INITIALIZING_DEVICE";
+            final String strNoImage = "NO_IMAGE";
+            final String strDeviceError ="DEVICE_ERROR";
 
             if (errored) {
                 str = strDeviceError;
@@ -609,11 +609,6 @@ public class DetectorPanel extends JPanel implements DetectorListener, PropertyC
 
 
     /**
-     * Пакет ресурсов.
-     */
-    private ResourceBundle rb = null;
-
-    /**
      * Режим того, как изображение будет изменено, чтобы соответствовать границам панели. По умолчанию
      * {@link DrawMode#FIT}
      *
@@ -783,11 +778,8 @@ public class DetectorPanel extends JPanel implements DetectorListener, PropertyC
         this.detector = detector;
         this.updater = new ImageUpdater();
         this.supplier = supplier;
-        this.rb = DetectorUtils.loadRB(DetectorPanel.class, getLocale());
 
-        //setDoubleBuffered(true);
-
-        addPropertyChangeListener("locale", this);
+     //   setDoubleBuffered(true);
 
         if (size == null) {
             Dimension r = detector.getViewSize();
@@ -1177,14 +1169,6 @@ public class DetectorPanel extends JPanel implements DetectorListener, PropertyC
      */
     public Painter getDefaultPainter() {
         return defaultPainter;
-    }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        Locale lc = (Locale) evt.getNewValue();
-        if (lc != null) {
-            rb = DetectorUtils.loadRB(DetectorPanel.class, lc);
-        }
     }
 
     @Override

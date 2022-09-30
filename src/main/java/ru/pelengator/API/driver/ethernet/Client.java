@@ -1,11 +1,9 @@
-package ru.pelengator.driver.ethernet;
+package ru.pelengator.API.driver.ethernet;
 
-import org.apache.commons.codec.binary.Hex;
-import ru.pelengator.driver.NetworkInfo;
+import ru.pelengator.API.driver.NetworkInfo;
 
 import java.io.IOException;
 import java.net.*;
-import java.util.Locale;
 
 public class Client {
 

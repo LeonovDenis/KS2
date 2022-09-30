@@ -1,6 +1,6 @@
 package ru.pelengator.model;
 
-import ru.pelengator.API.util.StatisticsUtils;
+import ru.pelengator.API.utils.StatisticsUtils;
 import ru.pelengator.Controller;
 
 /**

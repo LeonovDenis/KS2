@@ -1,6 +1,5 @@
 package ru.pelengator.service;
 
-import at.favre.lib.bytes.Bytes;
 import org.apache.pdfbox.cos.COSArray;
 import org.apache.pdfbox.cos.COSDictionary;
 import org.apache.pdfbox.cos.COSName;
@@ -16,7 +15,6 @@ import org.apache.pdfbox.pdmodel.interactive.form.PDTextField;
 import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.fx.ChartViewer;
-import ru.pelengator.Controller;
 import ru.pelengator.model.ExpInfo;
 
 import java.awt.*;
@@ -25,7 +23,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static ru.pelengator.API.util.Utils.bpInCentral;
+import static ru.pelengator.API.utils.Utils.bpInCentral;
 import static ru.pelengator.App.loadFilePath;
 
 public class DocMaker {

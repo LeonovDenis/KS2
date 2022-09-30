@@ -3,21 +3,17 @@ package ru.pelengator.service;
 import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Screen;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.pelengator.API.DetectorEvent;
 import ru.pelengator.API.DetectorListener;
-import ru.pelengator.API.util.StatisticsUtils;
-import ru.pelengator.API.util.Utils;
+import ru.pelengator.API.utils.StatisticsUtils;
+import ru.pelengator.API.utils.Utils;
 import ru.pelengator.Controller;
 
 import java.awt.image.BufferedImage;
@@ -25,7 +21,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static ru.pelengator.API.util.Utils.*;
+import static ru.pelengator.API.utils.Utils.*;
 
 /**
  * Сервис сбора данных

@@ -1,4 +1,4 @@
-package ru.pelengator.driver;
+package ru.pelengator.API.driver;
 
 import java.net.InetAddress;
 import java.net.InterfaceAddress;
@@ -6,35 +6,39 @@ import java.net.NetworkInterface;
 import java.util.List;
 
 /**
- * Подкласс для списка
+ * Класс для списка сетевых интерфейсов.
  */
 public class NetworkInfo {
     /**
-     * Адрес адаптера
+     * Адрес адаптера.
      */
     InetAddress address;
     /**
-     * Бродкаст адрес
+     * Бродкаст адрес.
      */
     InetAddress broadcast;
 
     /**
-     * Наименование
+     * Наименование.
      */
     private String name;
     /**
-     * Наименование,отображаемое
+     * Наименование,отображаемое.
      */
     private String displayName;
     /**
-     * Индекс детектора в списке
+     * Индекс детектора в списке.
      */
     private int index;
     /**
-     * Интерфейс сетевой
+     * Интерфейс сетевой.
      */
     private NetworkInterface networkInterface;
 
+    /**
+     * Конструктор для USB
+     * @param index
+     */
     public NetworkInfo(int index) {
         this.name = "USB 3.0";
         this.index = index;
@@ -45,6 +49,12 @@ public class NetworkInfo {
 
     }
 
+    /**
+     * Конструктор для ethernet
+     * @param name наименование
+     * @param networkInterface интерфейс
+     * @param index
+     */
     public NetworkInfo(String name, NetworkInterface networkInterface, int index) {
         this.name = name;
         this.index = index;
@@ -61,38 +71,6 @@ public class NetworkInfo {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public InetAddress getAddress() {
-        return address;
-    }
-
-    public void setAddress(InetAddress address) {
-        this.address = address;
-    }
-
-    public InetAddress getBroadcast() {
-        return broadcast;
-    }
-
-    public void setBroadcast(InetAddress broadcast) {
-        this.broadcast = broadcast;
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-
-    public NetworkInterface getNetworkInterface() {
-        return networkInterface;
-    }
-
-    public void setNetworkInterface(NetworkInterface networkInterface) {
-        this.networkInterface = networkInterface;
     }
 
     public int getIndex() {

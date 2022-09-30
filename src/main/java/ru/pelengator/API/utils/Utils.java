@@ -1,4 +1,4 @@
-package ru.pelengator.API.util;
+package ru.pelengator.API.utils;
 
 import at.favre.lib.bytes.Bytes;
 import javafx.application.Platform;
@@ -72,22 +72,21 @@ public class Utils {
 
 
     /**
-     * Расчет контрольной суммы
-     *
-     * @return
+     * Расчет контрольной суммы архива.
+     * @return значение.
      */
-    public static String calkCRC32(Class clazz, String type) {
+    public static String calkCRC32() {
         File currentClass = getFileToClass(App.class);
-      //  String classDirectory = currentClass.getParent();
-      //  System.out.println("!!!!!!!!!!!" + classDirectory);
-     //   System.out.println("!!!!!!!!!!!2" + currentClass.getAbsolutePath());
         String absolutePath = currentClass.getAbsolutePath();
-        //   String pkg = findFileInPath(classDirectory, type);
-        String s = Long.toHexString(calculate(absolutePath)).toUpperCase();
-
-        return s;
+        String value = Long.toHexString(calculate(absolutePath)).toUpperCase();
+        return value;
     }
 
+    /**
+     * Создание объекта FIle по пути.
+     * @param clazz класс в архиве.
+     * @return строкапути.
+     */
     public static File getFileToClass(Class clazz) {
         File currentClass = null;
         try {
@@ -104,10 +103,10 @@ public class Utils {
     }
 
     /**
-     * Загрузка DLL файла библиотеки во временную директорию
+     * Загрузка DLL файла библиотеки во временную директорию.
      *
-     * @param name имя библиотеки драйвера USB
-     * @return путь расположения файла dll библиотеки
+     * @param name имя библиотеки драйвера USB.
+     * @return путь расположения файла dll библиотеки.
      */
     public static String loadJarDll(String name) {
         InputStream in = App.class.getResourceAsStream(name);//загрузка файла
@@ -133,8 +132,13 @@ public class Utils {
         }
         return temp.getAbsolutePath();//ссылка на временный файл
     }
-
-
+   public static String separator = System.getProperty("file.separator");
+    /**
+     * Поиск файла в директории.
+     * @param path путь.
+     * @param find расширение файла.
+     * @return
+     */
     public static String findFileInPath(String path, String find) {
         File f = new File(path);
         //список файлов в текущей папке
@@ -145,7 +149,7 @@ public class Utils {
         if (list != null) {
             for (String file : list) {
                 if (file.endsWith(find)) {
-                    String PATH = path + "\\" + file;
+                    String PATH = path + separator + file;
                     return PATH;
                 }
             }
@@ -155,13 +159,13 @@ public class Utils {
 
 
     /**
-     * Расчет контрольной суммы
-     *
-     * @return
+     * Расчет контрольной суммы по методу CRC-32.
+     * @param szPath путь к файлу.
+     * @return значение суммы.
      */
     public static long calculate(String szPath) {
         CRC32 cs = new CRC32();
-        long s = 0;
+        long value = 0;
         byte[] buf = new byte[8000];
         int nLength = 0;
 
@@ -174,16 +178,19 @@ public class Utils {
                 cs.update(buf, 0, nLength);
             }
         } catch (IOException e) {
-            System.out.println("CRC =0 так как работаем в IDE");
+            //ignore
         }
-        s = cs.getValue();
-        return s;
+        value = cs.getValue();
+        return value;
     }
 
-    public static void saveFileToDisk(String fileName, byte[] bytes) throws IOException {
-        //  ByteBuffer buffer = ByteBuffer.allocate(bytes.length);
-        //   buffer.put(bytes);
-        //   buffer.flip();
+    /**
+     * Сохранение файла на диск.
+     * @param fileName путь файла.
+     * @param data массив данных.
+     * @throws IOException
+     */
+    public static void saveFileToDisk(String fileName, byte[] data) throws IOException {
 
         FileOutputStream stream = new FileOutputStream(fileName, false);
         FileChannel channel = stream.getChannel();
@@ -195,8 +202,7 @@ public class Utils {
             channel.close();
 
         }
-        // channel.write(buffer);
-        stream.write(bytes);
+        stream.write(data);
         lock.release();
         stream.close();
         channel.close();
@@ -204,15 +210,15 @@ public class Utils {
 
 
     /**
-     * Конвертер байтового массива в интовый с изменением порядка байт. Значения по 2 байта
+     * Конвертер байтового массива в интовый с изменением порядка байт. Значения по 2 байта.
      *
-     * @param bb Байтовый необработанный массив
-     * @return Интовый обработанный массив
+     * @param source Байтовый необработанный массив.
+     * @return Интовый обработанный массив.
      */
-    public static Bytes convertBytesArrayToIntArray(Bytes bb) {
-        byte[] bbArray = bb.array();
+    public static Bytes convertBytesArrayToIntArray(Bytes source) {
+        byte[] bbArray = source.array();
         Bytes intArray = Bytes.from(new int[0]);
-        for (int i = 0; i < bb.length(); i = i + 2) {
+        for (int i = 0; i < source.length(); i = i + 2) {
             char c = Bytes.from(new byte[]{bbArray[i], bbArray[i + 1]}).reverse().toChar();
             intArray = intArray.append((int) c);
         }
@@ -220,8 +226,8 @@ public class Utils {
     }
 
     /**
-     * Замена порядка строк
-     * Выполнение квантования
+     * Замена порядка строк.
+     * Выполнение квантования.
      *
      * @param src
      */
@@ -244,40 +250,40 @@ public class Utils {
     }
 
     /**
-     * Квантователь
-     *
-     * @param rgb
+     * Квантователь.
+     *Раскраска значений в цвета.
+     * @param source
      * @return
      */
-    public static int qvantFilterRGB(int rgb) {
+    public static int qvantFilterRGB(int source) {
 
         int BITBYTE = 255;
         double koef = 16384.0 / (BITBYTE * 4.0 + 1.0);
-        rgb = (int) (rgb / koef);
+        source = (int) (source / koef);
         int a = 0xff000000;
         int r = 0;
         int g = 0;
         int b = 0;
 
-        if (rgb <= BITBYTE) {
+        if (source <= BITBYTE) {
             new Color(0, 0, BITBYTE);
             r = 0;
-            g = rgb;
+            g = source;
             b = BITBYTE;
-        } else if (rgb > BITBYTE && rgb <= BITBYTE * 2) {
+        } else if (source > BITBYTE && source <= BITBYTE * 2) {
             new Color(0, BITBYTE, BITBYTE);
             r = 0;
             g = BITBYTE;
-            b = BITBYTE - (rgb - BITBYTE);
-        } else if (rgb > BITBYTE * 2 && rgb <= BITBYTE * 3) {
+            b = BITBYTE - (source - BITBYTE);
+        } else if (source > BITBYTE * 2 && source <= BITBYTE * 3) {
             new Color(0, BITBYTE, 0);
-            r = rgb - BITBYTE * 2;
+            r = source - BITBYTE * 2;
             g = BITBYTE;
             b = 0;
-        } else if (rgb > BITBYTE * 3 && rgb <= BITBYTE * 4) {
+        } else if (source > BITBYTE * 3 && source <= BITBYTE * 4) {
             new Color(BITBYTE, BITBYTE, 0);
             r = BITBYTE;
-            g = BITBYTE - (rgb - BITBYTE * 3);
+            g = BITBYTE - (source - BITBYTE * 3);
             b = 0;
         } else {
             new Color(BITBYTE, 0, 0);
@@ -290,9 +296,9 @@ public class Utils {
     }
 
     /**
-     * Конвертер изображения в массив
+     * Конвертер изображения в массив.
      *
-     * @param src BufferedImage
+     * @param src BufferedImage.
      * @return int[][]
      */
     public static int[][] convertImageToArray(BufferedImage src) {
@@ -310,10 +316,10 @@ public class Utils {
     }
 
     /**
-     * Клонирование BufferedImage
+     * Клонирование BufferedImage.
      *
-     * @param source BufferedImage
-     * @return BufferedImage.clone
+     * @param source BufferedImage.
+     * @return
      */
     public static BufferedImage copyImage(BufferedImage source) {
         ColorModel cm = source.getColorModel();
@@ -329,10 +335,10 @@ public class Utils {
 
 
     /**
-     * Подготовка массива данных для представления в качестве гистограммы распределения
+     * Подготовка массива данных для представления в качестве гистограммы распределения.
      *
-     * @param dataArrays Массив для обработки
-     * @return массив вхождений для отображения
+     * @param dataArrays Массив для обработки.
+     * @return массив вхождений для отображения.
      */
 
     public static RaspredData makeRaspred(double[][] dataArrays, String DEFAULT_FORMAT, boolean noCorrection, double persent) {
@@ -401,8 +407,6 @@ public class Utils {
                     maxValue2 = tempArray[i];
                 }
             }
-            //   String DEFAULT_FORMAT = "#.###";
-            //   String DEFAULT_FORMAT2 = "#.##E00";
             NumberFormat FORMATTER;
             FORMATTER = new DecimalFormat(DEFAULT_FORMAT);
             Map<String, Number> map = new LinkedHashMap<>();
@@ -417,6 +421,9 @@ public class Utils {
         }
     }
 
+    /**
+     * Класс данных для постройки распределения
+     */
     public static class RaspredData {
         int[] array;
         int maxValue;
@@ -426,10 +433,6 @@ public class Utils {
             this.array = array;
             this.map = map;
             this.maxValue = maxValue;
-        }
-
-        public int[] getArray() {
-            return array;
         }
 
         public Map<String, Number> getMap() {
@@ -442,12 +445,13 @@ public class Utils {
     }
 
     /**
-     * Стандартная гистограмма
-     *
-     * @param raspred
-     * @return
+     * Стандартная гистограмма.
+     * @param nameXaxis подпись по оси X.
+     * @param nameYaxis подписьпо оси Y.
+     * @param raspred данные для отображения.
+     * @return Гистограмму распределения.
      */
-    public static BarChart<String, Number> getBar_chart(Pane nm, String nameXaxis,
+    public static BarChart<String, Number> getBar_chart(String nameXaxis,
                                                         String nameYaxis,
                                                         RaspredData raspred) {
         CategoryAxis categoryAxis;
@@ -525,9 +529,7 @@ public class Utils {
 
         }
         stringNumberBarChart.setPrefSize(535, 320);
-
         stringNumberBarChart.setMinSize(535, 320);
-        // nm.getChildren().add(stringNumberBarChart);
 
         for (Node n : stringNumberBarChart.lookupAll(".default-color0.chart-bar")) {
             n.setStyle("-fx-bar-fill: #000000;");
@@ -539,6 +541,12 @@ public class Utils {
         return stringNumberBarChart;
     }
 
+    /**
+     * Заполнение изображения дефектными пикселями
+     * @param src пустое изображение
+     * @param bpList перечень дефектных пикселей
+     * @return
+     */
     public static BufferedImage fillTempImage(BufferedImage src, ArrayList<BadPoint> bpList) {
 
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -576,7 +584,17 @@ public class Utils {
         return copyImage(src);
     }
 
-
+    /**
+     * Отрисовка динамического квадрата.
+     * @param g2 ссылка на русурс.
+     * @param wNature реальное разрешение по ширине.
+     * @param hNature реальное разрешение по высоте.
+     * @param rectW ширина квадрата.
+     * @param rectH высота квадрата.
+     * @param x1 начальное положение по Х.
+     * @param y1 начальное положение по У.
+     * @param sizeKoef коэфициент пикселя.
+     */
     public static void drawRect(Graphics2D g2, int wNature, int hNature, int rectW, int rectH,
                           int x1, int y1, double sizeKoef) {
 
@@ -589,7 +607,12 @@ public class Utils {
     }
 
 
-
+    /**
+     * Заполнение пустого изображения дефектными пикселями
+     * @param src исходное пустоее изображение
+     * @param bpList перечень дефектов
+     * @return
+     */
     public static BufferedImage fillTempImage(BufferedImage src, List<BadBigPoint> bpList) {
 
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -625,7 +648,7 @@ public class Utils {
     }
 
     /**
-     * Кадр с дефектами
+     * Кадр с дефектами.
      */
     public static class Frame {
         int sizeY;
@@ -644,24 +667,12 @@ public class Utils {
             return sizeY;
         }
 
-        public void setSizeY(int sizeY) {
-            this.sizeY = sizeY;
-        }
-
         public int getSizeX() {
             return sizeX;
         }
 
-        public void setSizeX(int sizeX) {
-            this.sizeX = sizeX;
-        }
-
         public ArrayList<BadPoint> getBpList() {
             return bpList;
-        }
-
-        public void setBpList(ArrayList<BadPoint> bpList) {
-            this.bpList = bpList;
         }
 
         public String getName() {
@@ -674,7 +685,7 @@ public class Utils {
     }
 
     /**
-     * Типы дефектов
+     * Типы дефектов.
      */
     public enum DEF_TYPE {
 
@@ -706,7 +717,9 @@ public class Utils {
         }
     }
 
-
+    /**
+     * Класс общих дефектов. //todo переделать на более эфективное
+     */
     public static class BadBigPoint {
         private Color color;
         private List<DEF_TYPE> list;
@@ -765,32 +778,19 @@ public class Utils {
             this.color = color;
         }
 
-        public static int getCenterCount() {
-            return centerCount;
-        }
-
-        public static void setCenterCount(int centerCount) {
-            BadBigPoint.centerCount = centerCount;
-        }
-
         public int getX() {
             return X;
-        }
-
-        public void setX(int x) {
-            X = x;
         }
 
         public int getY() {
             return size - Y;
         }
 
-        public void setY(int y) {
-            Y = y;
-        }
     }
 
-
+    /**
+     * Класс дефекта.
+     */
     public static class BadPoint {
 
         private Color color;
@@ -813,10 +813,6 @@ public class Utils {
             return X;
         }
 
-        public void setX(int x) {
-            X = x;
-        }
-
         public int getY() {
             return Y;
         }
@@ -832,10 +828,6 @@ public class Utils {
 
         public void setSize(int size) {
             this.size = size;
-        }
-
-        public void setY(int y) {
-            Y = y;
         }
 
         public double getValue() {
@@ -858,10 +850,6 @@ public class Utils {
             return type;
         }
 
-        public void setType(DEF_TYPE type) {
-            this.type = type;
-        }
-
         @Override
         public String toString() {
             return "BadPoint{" +
@@ -874,6 +862,13 @@ public class Utils {
         }
     }
 
+    /**
+     * Получение максимального, среднего и минимального значения выборки.
+     * @param dataArrays входные данные.
+     * @param noCorrection исключение пустых значений.
+     * @param FALSE пустое значение.
+     * @return
+     */
     public static double[] makeMaxMeanMin(double[][] dataArrays, boolean noCorrection, double FALSE) {
 
         ArrayList<Double> doubleArrayList = new ArrayList<>();
@@ -910,11 +905,11 @@ public class Utils {
     }
 
     /**
-     * Расчет неоднородности вольтовой чувствительности
+     * Расчет неоднородности вольтовой чувствительности.
      *
-     * @param voltWatka
-     * @param noCorrection
-     * @param persent
+     * @param voltWatka исходные данные
+     * @param noCorrection исключать ли пустые пиксили
+     * @param persent процент отбраковки
      * @return
      */
     public static Double calculateHeterogeneity(double[][] voltWatka, boolean noCorrection, double persent) {
@@ -957,12 +952,12 @@ public class Utils {
     }
 
     /**
-     * Расчет облученности ПОИ от АЧТ
+     * Расчет облученности ПОИ от АЧТ.
      * <p>
      * Ее=(eps*sigma*T4*Dist2)/(4*L2)
      *
-     * @param potok
-     * @param areaFPU
+     * @param potok значение потока.
+     * @param areaFPU площать элемента.
      * @return
      */
     public static double exposure(double potok, double areaFPU) {
@@ -970,22 +965,20 @@ public class Utils {
     }
 
     /**
-     * Расчет эффективной величины потока с АЧТ с двумя температурами
+     * Расчет эффективной величины потока с АЧТ с двумя температурами.
      *
-     * @param diamACHT диаметр диафрагмы АЧТ, мм
+     * @param diamACHT диаметр диафрагмы АЧТ, мм.
      * @param l        расстояние между диафрагмой АЧТ и плоскостью фоточувствительного элемента испытуемого
-     *                 образца, см
-     * @param betta    коэффициент , отн. ед.
-     * @param T1       температура вторая, К
-     * @param T0       температура первая, К
-     * @return поток излучения, Вт. При некорректных исходных данных возвращает -1
+     *                 образца, см.
+     * @param betta    коэффициент , отн. ед..
+     * @param T1       температура вторая, К.
+     * @param T0       температура первая, К.
+     * @return поток излучения, Вт. При некорректных исходных данных возвращает -1.
      */
     public static double potokTemp(double diamACHT, double l, double betta, double T1, double T0) {
         if (diamACHT <= 0 || l <= 0 || betta <= 0 || T1 <= 0 || T0 <= 0 || T0 >= T1) {
             return -1;
         }
-        //  double fi1=0.089767;
-        //   double fi0=0.007535;
         double plank = 5.669E-8;// постоянная Стефана-Больцмана, Вт/(м2 ·К4);
         double eps = 0.95;//коэффициент излучения полости АЧТ, отн. ед
         double areaFCHe = 9.0E-10;//эффективная фоточувствительная площадь испытуемого образца, м2 ;
@@ -997,22 +990,20 @@ public class Utils {
     }
 
     /**
-     * Расчет эффективной величины потока с АЧТ с двумя диафрагмами
+     * Расчет эффективной величины потока с АЧТ с двумя диафрагмами.
      *
-     * @param diamACHT1 диаметр диафрагмы АЧТ, мм
-     * @param diamACHT0 диаметр диафрагмы АЧТ, мм
+     * @param diamACHT1 диаметр диафрагмы АЧТ, мм.
+     * @param diamACHT0 диаметр диафрагмы АЧТ, мм.
      * @param l         расстояние между диафрагмой АЧТ и плоскостью фоточувствительного элемента испытуемого
-     *                  образца, см
-     * @param betta     коэффициент , отн. ед.
-     * @param T         температура ачт, К
-     * @return поток излучения, Вт. При некорректных исходных данных возвращает -1
+     *                  образца, см.
+     * @param betta     коэффициент , отн. ед..
+     * @param T         температура ачт, К.
+     * @return поток излучения, Вт. При некорректных исходных данных возвращает -1.
      */
     public static double potokDiam(double diamACHT1, double diamACHT0, double l, double betta, double T) {
         if (diamACHT1 <= 0 || l <= 0 || betta <= 0 || T <= 0 || diamACHT0 >= diamACHT1) {
             return -1;
         }
-        //  double fi1=0.089767;
-        //   double fi0=0.007535;
         double plank = 5.669E-8;// постоянная Стефана-Больцмана, Вт/(м2 ·К4);
         double eps = 0.95;//коэффициент излучения полости АЧТ, отн. ед
         double areaFCHe = 9.0E-10;//эффективная фоточувствительная площадь испытуемого образца, м2 ;
@@ -1024,7 +1015,24 @@ public class Utils {
         return Fe * betta;
     }
 
-
+    /**
+     * Расчет итогового потока разницы температур.
+     * @param T0 температура АЧТ
+     * @param plank0 постоянная Планка
+     * @param epsilin0 коэф. поглощения
+     * @param areaACHT0 площадь АЧТ
+     * @param L0 Расстояние между источником и приёмником
+     * @param betta0 поэффициент поправки
+     * @param areaFPU0 площадь элемента
+     * @param T1 температура АЧТ
+     * @param plank1 постоянная Планка
+     * @param epsilin1 коэф. поглощения
+     * @param areaACHT1 площадь АЧТ
+     * @param L1 Расстояние между источником и приёмником
+     * @param betta1 поэффициент поправки
+     * @param areaFPU1 площадь элемента
+     * @return
+     */
     public static double potok(double T0, double plank0, double epsilin0, double areaACHT0, double L0, double betta0, double areaFPU0,
                                double T1, double plank1, double epsilin1, double areaACHT1, double L1, double betta1, double areaFPU1) {
 
@@ -1034,6 +1042,17 @@ public class Utils {
         return F1 - F0;
     }
 
+    /**
+     * Расчет потока одной температуры.
+     * @param T
+     * @param plank
+     * @param epsilin
+     * @param areaACHT
+     * @param L
+     * @param betta
+     * @param areaFPU
+     * @return
+     */
     public static double potok(double T, double plank, double epsilin, double areaACHT, double L, double betta, double areaFPU) {
 
         double F = betta * ((plank * epsilin * Math.pow(T, 4) * areaFPU * areaACHT) / (Math.PI * Math.pow(L + 0.000_000_001, 2)));
@@ -1043,14 +1062,14 @@ public class Utils {
 
 
     /**
-     * Расчет вольт-ваттной характеристики
+     * Расчет вольт-ваттной характеристики.
      *
-     * @param MeanValue_1 Кадры при большем потоке
-     *                    Среднееквадратичное значение в вольтах
-     * @param MeanValue_0 Кадры при меньшнм потоке
-     *                    Среднееквадратичное значение в вольтах
-     * @param potok       Поток излучения Вт
-     * @return Массив  В/Вт
+     * @param MeanValue_1 Кадры при большем потоке.
+     *                    Среднееквадратичное значение в вольтах.
+     * @param MeanValue_0 Кадры при меньшнм потоке.
+     *                    Среднееквадратичное значение в вольтах.
+     * @param potok       Поток излучения Вт.
+     * @return Массив  В/Вт.
      */
     public static double[][] voltWatka(double[][] MeanValue_1, double[][] MeanValue_0, double potok) {
 
@@ -1070,17 +1089,17 @@ public class Utils {
     }
 
     /**
-     * Расчет обнаружительной способности
+     * Расчет обнаружительной способности.
      *
-     * @param MeanValue_1 Кадры при большем потоке
-     *                    Среднееквадратичное значение в вольтах
-     * @param MeanValue_0 Кадры при меньшнм потоке
-     *                    Среднееквадратичное значение в вольтах
-     * @param SKOValue    Шум в кадре
-     *                    значение в вольтах
-     * @param potok       Поток излучения Вт
-     * @param fEfect      Эквивалентная шумовая полоса частот Гц
-     * @return Вт-1*Гц-1/2
+     * @param MeanValue_1 Кадры при большем потоке.
+     *                    Среднееквадратичное значение в вольтах.
+     * @param MeanValue_0 Кадры при меньшнм потоке.
+     *                    Среднееквадратичное значение в вольтах.
+     * @param SKOValue    Шум в кадре.
+     *                    значение в вольтах.
+     * @param potok       Поток излучения Вт.
+     * @param fEfect      Эквивалентная шумовая полоса частот Гц.
+     * @return Вт-1*Гц-1/2.
      */
     public static double[][] detectivity(double[][] MeanValue_1, double[][] MeanValue_0, double[][] SKOValue,
                                          double potok, double fEfect) {
@@ -1103,19 +1122,19 @@ public class Utils {
     }
 
     /**
-     * Расчет Удельной обнаружительной способности
+     * Расчет Удельной обнаружительной способности.
      *
-     * @param MeanValue_1 Кадры при большем потоке
-     *                    Среднееквадратичное значение в вольтах
-     * @param MeanValue_0 Кадры при меньшнм потоке
-     *                    Среднееквадратичное значение в вольтах
-     * @param SKOValue    Шум в кадре
-     *                    значение в вольтах
-     * @param potok       Поток излучения Вт
-     * @param fEfect      Эквивалентная шумовая полоса частот Гц
-     * @param areaFPU     Эффективная площадь фотоприёмника
-     *                    значение в м
-     * @return Вт-1*Гц-1/2*см
+     * @param MeanValue_1 Кадры при большем потоке.
+     *                    Среднееквадратичное значение в вольтах.
+     * @param MeanValue_0 Кадры при меньшнм потоке.
+     *                    Среднееквадратичное значение в вольтах.
+     * @param SKOValue    Шум в кадре.
+     *                    значение в вольтах.
+     * @param potok       Поток излучения Вт.
+     * @param fEfect      Эквивалентная шумовая полоса частот Гц.
+     * @param areaFPU     Эффективная площадь фотоприёмника.
+     *                    значение в м.
+     * @return Вт-1*Гц-1/2*см.
      */
     public static double[][] detectivityStar(double[][] MeanValue_1, double[][] MeanValue_0, double[][] SKOValue,
                                              double potok, double fEfect, double areaFPU) {
@@ -1140,8 +1159,8 @@ public class Utils {
 
 
     /**
-     * Перевод массива с АЦП отсчетами в Вольты
-     * с масштабированием
+     * Перевод массива с АЦП отсчетами в Вольты.
+     * с масштабированием.
      *
      * @param massiv
      * @return
@@ -1163,17 +1182,17 @@ public class Utils {
 
 
     /**
-     * Расчет порога чувствительности
+     * Расчет порога чувствительности.
      *
-     * @param MeanValue_1 Кадры при большем потоке
-     *                    Среднееквадратичное значение в вольтах
-     * @param MeanValue_0 Кадры при меньшнм потоке
-     *                    Среднееквадратичное значение в вольтах
+     * @param MeanValue_1 Кадры при большем потоке.
+     *                    Среднееквадратичное значение в вольтах.
+     * @param MeanValue_0 Кадры при меньшнм потоке.
+     *                    Среднееквадратичное значение в вольтах.
      * @param SKOValue    Шум в кадре
-     *                    значение в вольтах
-     * @param potok       Поток излучения Вт
-     * @param fEfect      Эквивалентная шумовая полоса частот Гц
-     * @return Вт*Гц-1/2
+     *                    значение в вольтах.
+     * @param potok       Поток излучения Вт.
+     * @param fEfect      Эквивалентная шумовая полоса частот Гц.
+     * @return Вт*Гц-1/2.
      */
     public static double[][] porogSensivity(double[][] MeanValue_1, double[][] MeanValue_0, double[][] SKOValue,
                                             double potok, double fEfect) {
@@ -1198,19 +1217,19 @@ public class Utils {
     }
 
     /**
-     * Расчет удельного порога чувствительности
+     * Расчет удельного порога чувствительности.
      *
-     * @param MeanValue_1 Кадры при большем потоке
-     *                    Среднееквадратичное значение в вольтах
-     * @param MeanValue_0 Кадры при меньшнм потоке
-     *                    Среднееквадратичное значение в вольтах
+     * @param MeanValue_1 Кадры при большем потоке.
+     *                    Среднееквадратичное значение в вольтах.
+     * @param MeanValue_0 Кадры при меньшнм потоке.
+     *                    Среднееквадратичное значение в вольта.х
      * @param SKOValue    Шум в кадре
-     *                    значение в вольтах
-     * @param potok       Поток излучения Вт
-     * @param fEfect      Эквивалентная шумовая полоса частот Гц
-     * @param areaFPU     Эффективная площадь фотоприёмника
-     *                    значение в м
-     * @return Вт*Гц-1/2*см-1
+     *                    значение в вольтах.
+     * @param potok       Поток излучения Вт.
+     * @param fEfect      Эквивалентная шумовая полоса частот Гц.
+     * @param areaFPU     Эффективная площадь фотоприёмника.
+     *                    значение в м.
+     * @return Вт*Гц-1/2*см-1.
      */
     public static double[][] porogSensivityStar(double[][] MeanValue_1, double[][] MeanValue_0, double[][] SKOValue,
                                                 double potok, double fEfect, double areaFPU) {
@@ -1235,17 +1254,17 @@ public class Utils {
     }
 
     /**
-     * Расчет разности температур, эквивалентной шума (NETD)
+     * Расчет разности температур, эквивалентной шума (NETD).
      *
-     * @param MeanValue_1 Кадры при большем потоке
-     *                    Среднееквадратичное значение в вольтах
-     * @param MeanValue_0 Кадры при меньшнм потоке
-     *                    Среднееквадратичное значение в вольтах
-     * @param SKOValue    Шум в кадре
-     *                    значение в вольтах
-     * @param T1          большая температура, К
-     * @param T0          меньшая температура, К
-     * @return К
+     * @param MeanValue_1 Кадры при большем потоке.
+     *                    Среднееквадратичное значение в вольтах.
+     * @param MeanValue_0 Кадры при меньшнм потоке.
+     *                    Среднееквадратичное значение в вольтах.
+     * @param SKOValue    Шум в кадре.
+     *                    значение в вольтах.
+     * @param T1          большая температура, К.
+     * @param T0          меньшая температура, К.
+     * @return К.
      */
     public static double[][] NETD(double[][] MeanValue_1, double[][] MeanValue_0, double[][] SKOValue,
                                   double T1, double T0) {
@@ -1268,16 +1287,16 @@ public class Utils {
     }
 
     /**
-     * Расчет пороговой облученности
+     * Расчет пороговой облученности.
      *
-     * @param MeanValue_1 Кадры при большем потоке
-     *                    Среднееквадратичное значение в вольтах
-     * @param MeanValue_0 Кадры при меньшнм потоке
-     *                    Среднееквадратичное значение в вольтах
-     * @param SKOValue    Шум в кадре
-     *                    значение в вольтах
-     * @param Exposure    облученность Вт/см2
-     * @return Вт/см2
+     * @param MeanValue_1 Кадры при большем потоке.
+     *                    Среднееквадратичное значение в вольтах.
+     * @param MeanValue_0 Кадры при меньшнм потоке.
+     *                    Среднееквадратичное значение в вольтах.
+     * @param SKOValue    Шум в кадре.
+     *                    значение в вольтах.
+     * @param Exposure    облученность Вт/см2.
+     * @return Вт/см2.
      */
     public static double[][] exposure(double[][] MeanValue_1, double[][] MeanValue_0, double[][] SKOValue, double Exposure) {
 
@@ -1301,10 +1320,10 @@ public class Utils {
 
 
     /**
-     * Проверка и распарсивание целого числа
+     * Проверка и распарсивание целого числа.
      *
      * @param event
-     * @return Положительное целое значение. -1 при ошибке парса. -2 если число отрицательное
+     * @return Положительное целое значение. -1 при ошибке парса. -2 если число отрицательное.
      */
     public static int parseIntText(ActionEvent event, boolean select) {
         TextField source = (TextField) event.getSource();
@@ -1318,7 +1337,7 @@ public class Utils {
         try {
             i = Integer.parseInt(text);
         } catch (Exception e) {
-            LOG.error("Инт не распарсился");
+            LOG.error("Int value not valid");
             setError(source, "Error");
             return -1;
         }
@@ -1331,10 +1350,10 @@ public class Utils {
     }
 
     /**
-     * Проверка и распарсивание дробного числа
+     * Проверка и распарсивание дробного числа.
      *
      * @param event
-     * @return Положительное дробное значение. -1 при ошибке парса. -2 если число отрицательное
+     * @return Положительное дробное значение. -1 при ошибке парса. -2 если число отрицательное.
      */
     public static double parseDoubleText(ActionEvent event) {
         TextField source = (TextField) event.getSource();
@@ -1344,7 +1363,7 @@ public class Utils {
         try {
             d = Double.parseDouble(text);
         } catch (Exception e) {
-            LOG.error("Дубль не распарсился");
+            LOG.error("Double value not valid");
             setError(source, "Error");
             return -1;
         }
@@ -1357,24 +1376,19 @@ public class Utils {
     }
 
     /**
-     * Вывод в поле ресурса сообщения об ошибке ввода
+     * Вывод в поле ресурса сообщения об ошибке ввода.
      *
-     * @param source ресурс
-     * @param Error  текст ошибки
+     * @param source ресурс.
+     * @param Error  текст ошибки.
      */
     public static void setError(TextField source, String Error) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                source.setText(Error);
-            }
-        });
+        Platform.runLater(() -> source.setText(Error));
     }
 
     /**
-     * Проверка правильности ip
+     * Проверка правильности ip. шаблон
      * @param ipAddress
-     * @return
+     * @return true, если ip адрес имеет правильную форму
      */
     public static boolean ipv4Check(String ipAddress){
 
@@ -1407,22 +1421,22 @@ public class Utils {
 
 
     /**
-     * Обработка  надписей кнопок
+     * Обработка  надписей кнопок.
      *
-     * @param but кнопка
-     * @param TXT сообщение
+     * @param but кнопка.
+     * @param TXT сообщение.
      */
     public static void checkBT(Button but, String TXT) {
         checkBT(true, but, TXT, "");
     }
 
     /**
-     * Обработка  надписей кнопок
+     * Обработка  надписей кнопок.
      *
-     * @param res     случай
-     * @param but     кнопка
-     * @param goodTXT при tru
-     * @param badTXT  при false
+     * @param res     случай.
+     * @param but     кнопка.
+     * @param goodTXT при tru.
+     * @param badTXT  при false.
      */
     public static void checkBT(boolean res, Button but, String goodTXT, String badTXT) {
         String text = but.getText();
@@ -1448,6 +1462,16 @@ public class Utils {
 
     public static double FALSE = -111.0;
 
+    /**
+     * Добавка элементов в список.
+     * @param bpList
+     * @param data
+     * @param noCorrection
+     * @param persent
+     * @param color
+     * @param type
+     * @return
+     */
     public static double addBpToList(ArrayList<BadPoint> bpList, double[][] data,
                                      boolean noCorrection, double persent,
                                      String color, DEF_TYPE type) {
@@ -1482,6 +1506,11 @@ public class Utils {
         return mean;
     }
 
+    /**
+     * Конвертер типов цвета.
+     * @param color
+     * @return
+     */
     public static Color convertcolor(String color) {
         javafx.scene.paint.Color webColor = javafx.scene.paint.Color.web(color);
         Color awtColor = new java.awt.Color((float) webColor.getRed(),
@@ -1491,7 +1520,13 @@ public class Utils {
         return awtColor;
     }
 
-
+    /**
+     * Замена  дефектного значения конкретным.
+     * @param data ресурс.
+     * @param persent процентовка.
+     * @param mean среднее значение.
+     * @return отфильтрованный массив.
+     */
     public static double[][] zamenaData(double[][] data, double persent, double mean) {
         double[][] tempData = new double[data.length][data[0].length];
         //заменить исходные данные
@@ -1509,12 +1544,28 @@ public class Utils {
         return tempData;
     }
 
+    /**
+     * Очистка перечня элементов панели
+     * @param pane
+     */
     public static void clearPane(VBox pane) {
         if (pane.getChildren().size() > 0) {
             pane.getChildren().clear();
         }
     }
 
+    /**
+     * Создание гистограммы и квадрата в панели
+     * @param pane панель
+     * @param Xname подпись по Х
+     * @param Yname подпись по У
+     * @param raspredData данные
+     * @param tempImage пустой снимок
+     * @param bpList перечень днфектов
+     * @param scList лист дефектов
+     * @param controller ссылка на контролер
+     * @return
+     */
     public static HBox showGistAndImageBox(VBox pane, String Xname, String Yname,
                                            RaspredData raspredData, BufferedImage tempImage, ArrayList<BadPoint> bpList,
                                            ArrayList<BufferedImage> scList, ParamsController controller) {
@@ -1525,7 +1576,7 @@ public class Utils {
         int h = Integer.parseInt(splitedSize[1]);
 
 
-        BarChart<String, Number> bar_chart = getBar_chart(pane, Xname, Yname, raspredData);
+        BarChart<String, Number> bar_chart = getBar_chart(Xname, Yname, raspredData);
 
         ImageView imageView = new ImageView();
         BufferedImage badImage2 = fillTempImage(tempImage, bpList);
@@ -1575,6 +1626,15 @@ public class Utils {
         return null;
     }
 
+    /**
+     * Создание квадратов.
+     * @param pane
+     * @param tempImage
+     * @param bpList
+     * @param scList
+     * @param controller
+     * @return
+     */
     public static HBox showImageBox(VBox pane, BufferedImage tempImage, List<BadBigPoint> bpList,
                                     ArrayList<BufferedImage> scList, ParamsController controller) {
         String selectedDist = controller.getController().getCbDimOptions().getSelectionModel().getSelectedItem();
@@ -1620,7 +1680,7 @@ public class Utils {
 
 
     /**
-     * Отображение увеличенного рисунка
+     * Отображение увеличенного рисунка.
      *
      * @param iw
      * @param w
@@ -1642,6 +1702,12 @@ public class Utils {
         stage.show();
     }
 
+    /**
+     * Построение окна с квадратом.
+     * @param iw
+     * @param w
+     * @param h
+     */
     public static void showBigImage(BufferedImage iw, int w, int h) {
 
         Stage stage = new Stage();
@@ -1661,6 +1727,12 @@ public class Utils {
 
     }
 
+    /**
+     * Обрисовка картинки осями.
+     * @param image
+     * @param bgColor
+     * @return
+     */
     public static BufferedImage saveImg(BufferedImage image, boolean bgColor) {
 
         int pw = 325;
@@ -1779,8 +1851,15 @@ public class Utils {
         return bi;
     }
 
+    /**
+     * Сохранение отчета
+     * @param exp эксперимента
+     * @param src узел в которомвсе картинки
+     * @param pdfFile пдф файл
+     * @return
+     */
     public static boolean saveOrder(ExpInfo exp, Node src, File pdfFile) {
-        LOG.trace("Сохранение Pdf файла");
+        LOG.trace("Startsaving PDF file");
         DocMaker docMaker = new DocMaker(exp, pdfFile);
         boolean b = docMaker.savePDF();
         if (!b) {
@@ -1902,8 +1981,10 @@ public class Utils {
                         PDPageContentStream.AppendMode.APPEND, true)) {
                     contentStream.beginText();
 
+                    String fontPATH="API"+separator+"utils"+separator+"fonts"+separator+"ARIALUNI.TTF";
+
                     PDFont font = PDType0Font.load(pDDocument,
-                            App.class.getResourceAsStream("API/util/fonts/ARIALUNI.TTF"));
+                            App.class.getResourceAsStream(fontPATH));
 
                     contentStream.setFont(font, 12);
                     contentStream.setLeading(14.5f);
@@ -1943,7 +2024,7 @@ public class Utils {
                         }
 
                     } catch (Exception e) {
-                        LOG.error("Проблема с распечпткой перечня в pdf");
+                        LOG.error("Error while printing list pdf");
                     }
 
                     contentStream.endText();
@@ -1975,10 +2056,15 @@ public class Utils {
         return true;
     }
 
-
+    /**
+     * Сохранение TXT файла с перечнем дефектов.
+     * @param expInfo эксперимент.
+     * @param pdfFile путь к файлу.
+     * @throws IOException
+     */
     public static void saveTxt(ExpInfo expInfo, File pdfFile) throws IOException {
         byte[] buff = expInfo.getBuffToTXT();
-        LOG.trace("Сохранение Txt файла");
+        LOG.trace("Saving Txt file");
         String PATH = pdfFile.getAbsolutePath();
         String tempPATH = PATH.substring(0, PATH.length() - 4);
         String FINALPATH = tempPATH + "_bpList.txt";
@@ -1987,12 +2073,24 @@ public class Utils {
 
     }
 
+    /**
+     * Сохранение Exel файла
+     * @param service
+     * @param pdfFile
+     */
     public static void saveExel(ParamsService service, File pdfFile) {
-        LOG.trace("Сохранение Exel файла");
+        LOG.trace("Saving Exel file");
         XlsSaveClass xlsSaveClass = new XlsSaveClass();
         xlsSaveClass.saveXlFile(service, pdfFile);
     }
 
+    /**
+     * Подсчет дефектов в цинтральной зоне.
+     * @param frList перечень кадров .
+     * @param position позиция в перечне.
+     * @param areaSize размер стороны квадрата.
+     * @return
+     */
     public static int bpInCentral(ArrayList<Utils.Frame> frList, int position, int areaSize) {
         Frame frame = frList.get(position);
         ArrayList<BadPoint> bpList = frame.getBpList();
@@ -2014,6 +2112,14 @@ public class Utils {
         return count;
     }
 
+    /**
+     * Подсчет дефектности в центральной области
+     * @param frList перечень
+     * @param areaSize размер зоны
+     * @param w размер матрицы по ширине
+     * @param h размер матрицы по высоте
+     * @return
+     */
     public static int bbpInCentral(List<BadBigPoint> frList, int areaSize, int w, int h) {
 
         int count = 0;
@@ -2034,30 +2140,26 @@ public class Utils {
     }
 
     /**
-     * Takes a BufferedImage and resizes it according to the provided targetSize
+     * Масштабирование рисунка
      *
-     * @param src        the source BufferedImage
-     * @param targetSize maximum height (if portrait) or width (if landscape)
-     * @return a resized version of the provided BufferedImage
+     * @param src        источник BufferedImage
+     * @param targetSize максимальная выстота (портрет) или ширина (альбом)
+     * @return масштабированная версия BufferedImage
      */
     private static BufferedImage resize(BufferedImage src, int targetSize) {
         if (targetSize <= 0) {
-            return src; //this can't be resized
+            return src; //невозможно масштабировать
         }
         int targetWidth = targetSize;
         int targetHeight = targetSize;
         float ratio = ((float) src.getHeight() / (float) src.getWidth());
-        if (ratio <= 1) { //square or landscape-oriented image
+        if (ratio <= 1) { //определение ориентации
             targetHeight = (int) Math.ceil((float) targetWidth * ratio);
-        } else { //portrait image
+        } else { //портрет
             targetWidth = Math.round((float) targetHeight / ratio);
         }
         BufferedImage bi = new BufferedImage(targetWidth, targetHeight, src.getTransparency() == Transparency.OPAQUE ? BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = bi.createGraphics();
-        //     g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-        //             RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        //     g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
-        //    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_DEFAULT);
 
         g2d.drawImage(src, 0, 0, targetWidth, targetHeight, null);
         g2d.dispose();

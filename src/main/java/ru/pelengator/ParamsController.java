@@ -23,7 +23,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.*;
 
-import static ru.pelengator.API.util.Utils.*;
+import static ru.pelengator.API.utils.Utils.*;
 
 public class ParamsController implements Initializable {
 

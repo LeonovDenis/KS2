@@ -8,9 +8,13 @@ import ru.pelengator.API.DetectorDevice;
 import ru.pelengator.API.DetectorDriver;
 import ru.pelengator.API.DetectorTask;
 
-
+/**
+ * Класс обертка задания
+ */
 public class DetectorGetImageTask extends DetectorTask {
-
+    /**
+     * Логгер.
+     */
     private static final Logger LOG = LoggerFactory.getLogger(DetectorGetImageTask.class);
 
     private volatile BufferedImage image = null;

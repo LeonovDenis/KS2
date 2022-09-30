@@ -9,9 +9,13 @@ import java.nio.ByteBuffer;
 
 
 
-
+/**
+ * Класс обертка задания
+ */
 public class DetectorReadBufferTask extends DetectorTask {
-
+    /**
+     * Логгер.
+     */
     private volatile ByteBuffer target = null;
 
     public DetectorReadBufferTask(DetectorDriver driver, DetectorDevice device, ByteBuffer target) {

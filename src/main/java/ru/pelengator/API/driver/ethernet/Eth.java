@@ -1,125 +1,234 @@
-package ru.pelengator.driver.usb;
+package ru.pelengator.API.driver.ethernet;
 
 import at.favre.lib.bytes.Bytes;
 import at.favre.lib.bytes.BytesTransformer;
-import com.sun.jna.Memory;
-import com.sun.jna.Native;
-import com.sun.jna.Pointer;
-import com.sun.jna.Structure;
-import com.sun.jna.ptr.LongByReference;
-import com.sun.jna.win32.StdCallLibrary;
-import org.apache.commons.logging.Log;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.pelengator.API.DetectorDevice;
-import ru.pelengator.API.DetectorException;
 import ru.pelengator.API.DetectorResolution;
-import ru.pelengator.API.buildin.china.ChinaDevice;
-import ru.pelengator.driver.FT_STATUS;
-
+import ru.pelengator.API.devises.china.ChinaDevice;
+import ru.pelengator.API.driver.FT_STATUS;
+import ru.pelengator.API.driver.usb.Jna2;
+import ru.pelengator.model.StendParams;
 
 import java.awt.*;
+import java.io.IOException;
+import java.net.DatagramSocket;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static ru.pelengator.App.getFtd3XX;
-
-/**
- * Драйвер с java на c++
- */
-public class Jna2 {
-
+public class Eth extends Jna2 {
     /**
      * Логгер.
      */
-    private static final Logger LOG = LoggerFactory.getLogger(Jna2.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Eth.class);
 
-    //Размер буфера для отправки сообщения
-    private static final int MB = 1024 * 1024;
-    //буфер для передачи байтов
-    private static volatile Pointer pBuff = new Memory(MB);
-    //обработчик устройства
-    private static volatile Pointer hendler = new Memory(MB);
     //количество переданных байтов
-    private static volatile LongByReference byteTrans = new LongByReference(0);
-    private static AtomicBoolean online = new AtomicBoolean(false);
-    private static AtomicBoolean isMessageSend = new AtomicBoolean(false);
-    private boolean isTest = false;
+    private static long byteTrans = 0;
+    private StendParams params = null;
+    private boolean isTest = true;
+
+    /**
+     * Флаг остановки сервисов
+     */
+    private boolean isPause = true;
 ///////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Конструктор
      */
-    public Jna2() {
+    public Eth(StendParams params) {
+        this.params = params;
     }
 
-
-    /**
-     * Нативный интерфейс
-     */
-    public interface FTD3XX extends StdCallLibrary {
-
-        FTD3XX FTD3XX_INSTANCE = (FTD3XX) Native.loadLibrary(getFtd3XX(), FTD3XX.class);
-
-        /////////////////////////////////////////////////////методы интерфейса//////////////////////////
-        //создание интерфейса
-        int FT_Create(String pvArg, byte dwFlags, Pointer pftHandle);
-
-        //синхронная запись
-        int FT_WritePipe(Pointer ftHandle, byte ucPipeID, Pointer pucBuffer, long ulBufferLength, LongByReference pulBytesTransferred, Structure pOverlapped);
-
-        //синхронное чтение
-        int FT_ReadPipe(Pointer ftHandle, byte ucPipeID, Pointer pucBuffer, long ulBufferLength, LongByReference pulBytesTransferred, Structure pOverlapped);
-
-        //закрытие интерфейса
-        int FT_Close(Pointer ftHandle);
-
-    }
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////
-    //
     //рабочие методы
     //////////////////////////////////////////////////////////////
 
     /**
-     * Создание обработчика
      * Инициализация работы
      *
      * @return Статус FT_
      */
     public FT_STATUS create() {
-        int i = FTD3XX.FTD3XX_INSTANCE.FT_Create("FTDI SuperSpeed-FIFO Bridge", (byte) 0x0A, hendler);
-        //тест
+
+        int i = upConnections(params);
+
         if (isTest) {
             i = 0;
         }
 
-        FT_STATUS value = FT_STATUS.values()[i];
-        LOG.error("Открытие обработчика обработчика {}", value);
-        return value;
+        FT_STATUS status = FT_STATUS.values()[i];
+        return status;
     }
 
+    private int upConnections(StendParams params) {
+
+        if (isPause) {
+            boolean b = startUDPServers(params);//старт UDP
+            if (b) {
+                isPause = false;
+                return 0;
+            }
+        }
+        return 3;
+    }
+
+
+    private ExecutorService service;
+    ComandClient comandClient = null;
+    CommandServer comandServer = null;
+    VideoServer videoServer = null;
+
+
+    static private int MP;
+    static volatile ObjectProperty<byte[]> incomingComand = new SimpleObjectProperty();
+    static volatile ObjectProperty<byte[]> outComand = new SimpleObjectProperty();
+    static volatile ObjectProperty<byte[]> video = new SimpleObjectProperty(new byte[0]);
+
+
+    {
+        MP = Runtime.getRuntime().availableProcessors();
+    }
+
+    private boolean startUDPServers(StendParams params) {
+
+        service = Executors.newFixedThreadPool(MP);
+
+        //запуск серверов
+        try {
+            videoServer = new VideoServer(params);
+
+        } catch (SocketException e) {
+            LOG.error("Не удалось запустить видео сервер. Сокет занят", e);
+            return false;
+        } catch (IOException e) {
+            LOG.error("Не удалось запустить видео сервер", e);
+        }
+        Future<Void> future1 = service.submit(videoServer);
+        try {
+            comandServer = new CommandServer(params);
+        } catch (SocketException e) {
+            LOG.error("Не удалось запустить командный сервер. Сокет занят", e);
+            return false;
+        } catch (IOException e) {
+            LOG.error("Не удалось запустить командный сервер", e);
+        }
+        Future<Void> future2 = service.submit(comandServer);
+
+        outComand.addListener((observable, oldValue, newValue) -> {
+
+            try {
+                comandClient = new ComandClient(params, comandServer);
+            } catch (SocketException e) {
+                LOG.error("Не удалось запустить командный клиент. Сокет занят", e);
+            } catch (UnknownHostException e) {
+                LOG.error("Не удалось запустить командный клиент. ip не известен", e);
+            }
+            Future<Boolean> future3 = service.submit(comandClient);
+        });
+        return true;
+    }
+
+
+    class VideoServer implements Callable<Void> {
+
+        Server server;
+
+        public VideoServer(StendParams params) throws IOException {
+            this.server = new Server(params.getDetPortVideo(), params.getServerVideoBuff(), params.getSelNetworkInterface());
+        }
+
+        @Override
+        public Void call() throws Exception {
+            while (true) {
+                byte[] listen = server.listen();
+                setVideo(listen);
+            }
+        }
+
+    }
+
+    class CommandServer implements Callable<Void> {
+
+        Server server;
+
+        public CommandServer(StendParams params) throws IOException {
+            this.server = new Server(params.getDetPortCommand(), params.getCommandBuff(), params.getSelNetworkInterface());
+        }
+
+        @Override
+        public Void call() throws Exception {
+
+            while (true) {
+                byte[] listen = server.listen();
+                setIncomingComand(listen);
+            }
+        }
+
+        public DatagramSocket getServerDS() {
+
+            return this.server.getSS();
+        }
+
+        @Override
+        protected void finalize() throws Throwable {
+            super.finalize();
+            server.stop();
+        }
+    }
+
+    class ComandClient implements Callable<Boolean> {
+
+        Client client;
+
+        public ComandClient(StendParams params) throws SocketException, UnknownHostException {
+            this.client = new Client(params.getDetIP(), params.getDetPortCommand(), params.getSelNetworkInterface());
+        }
+
+        public ComandClient(StendParams params, CommandServer cs) throws SocketException, UnknownHostException {
+            this.client = new Client(params.getDetIP(), params.getDetPortCommand(), params.getSelNetworkInterface(), cs.getServerDS());
+        }
+
+        @Override
+        public Boolean call() throws IOException {
+            boolean b = client.sendMsg(getOutComand());
+            return b;
+        }
+    }
+
+
     /**
-     * Синхронная запись по обработчику **hendler**
+     * Синхронная запись
      *
      * @param data Массив для записи
      * @return
      */
     public FT_STATUS writePipe(Bytes data) {
-        pBuff.write(0, data.array(), 0, data.length());//запись данных в буфер
-        int i = FTD3XX.FTD3XX_INSTANCE.FT_WritePipe(hendler.getPointer(0), (byte) 0x02, pBuff, data.length(), byteTrans, (Structure) null);
+
+        setOutComand(data.array());
+        int i = 0; //i FT_Status
+        //todo доделать оповещение о статусе отправки сообщения
+
         //тест
         if (isTest) {
             i = 0;
         }
+
         FT_STATUS status = FT_STATUS.values()[i];
+
         return status;
     }
 
     long tt = 0;
+
+    byte[] lastVideo = null;
 
     /**
      * чтение массива
@@ -127,78 +236,52 @@ public class Jna2 {
      * @return Обернутый массив
      */
     public Bytes readPipe() {
-        try {
-            TimeUnit.MILLISECONDS.sleep(50);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        if (online.get()) {
-            int i = FTD3XX.FTD3XX_INSTANCE.FT_ReadPipe(hendler.getPointer(0), (byte) 0x82, pBuff, MB, byteTrans, (Structure) null);
-            byte[] byteArray = pBuff.getByteArray(0, (int) byteTrans.getValue());// из буфера в массив
-            Bytes from = Bytes.from(byteArray);
-            //тест
-            if (isTest) {
-                i = 0;
-            }
-           // Byte[] bytes = from.toBoxedArray();
-            FT_STATUS status = FT_STATUS.values()[i];
-            if (status != FT_STATUS.FT_OK||from.isEmpty()) {
-                online.compareAndSet(true, false);
-                LOG.error("From READPIPE FT_notOK{}", online.get());
-            }else{
-                online.compareAndSet(false, true);
-            }
-            return from;
-        } else {
-            LOG.error("From READPIPE Null{}", online.get());
-            return null;
-        }
-    }
+        //создание конннекта
+        int i = 0; //i FT_Status
 
-    private FT_STATUS lastFT = null;
+        byte[] byteArray = getVideo();// из буфера в массив
+
+        if (byteArray != lastVideo) {
+            lastVideo=byteArray;
+            Bytes from = Bytes.from(byteArray);
+            return from;
+        }
+
+        //тест
+        if (isTest) {
+            i = 0;
+        }
+
+        return Bytes.empty();
+    }
 
     /**
      * Реконнект
      */
     public synchronized FT_STATUS reconnect() {
-        LOG.error("Реконнект");
-
-        stopSession();
-        try {
-            TimeUnit.MILLISECONDS.sleep(200);
-        } catch (InterruptedException e) {
-            LOG.error("Ошибка при реконнекте {}", e);
-            e.printStackTrace();
-        }
-        if (create() != FT_STATUS.FT_OK) {
-            return FT_STATUS.FT_DEVICE_LIST_NOT_READY;
-        }
-
-        FT_STATUS ft_status = setID();
-
-        try {
-            TimeUnit.MILLISECONDS.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        if(ft_status==FT_STATUS.FT_OK){
-            online.compareAndSet(false,true);
-        }
-
-        return FT_STATUS.FT_OK;
-    }
+     //enpty
+    return null;}
 
     /**
      * Завершение работы
-     * Закрытие обработчика
      *
      * @return Статус FT_
      */
     public FT_STATUS close() {
-        int i = FTD3XX.FTD3XX_INSTANCE.FT_Close(hendler.getPointer(0));
-        FT_STATUS value = FT_STATUS.values()[i];
-        LOG.error("Закрытие обработчика {}", value);
-        return value;
+
+        try {
+            service.shutdown();
+            service.awaitTermination(2, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            LOG.error("Экстренное завершение");
+        } finally {
+            if (!service.isTerminated()) {
+                LOG.error("Отмена незаконченных задач");
+                service.shutdownNow();
+            }
+        }
+        int i = 0; //i FT_Status
+        return FT_STATUS.values()[i];
     }
 
     //////////////////////////////////////////////////////////////////////////////////
@@ -209,16 +292,10 @@ public class Jna2 {
     private String id = "ЕАНГ.468424.012";
 
     private static volatile AtomicBoolean flag_device_connected = new AtomicBoolean(true);
-
     private static volatile AtomicBoolean flag_frame_ready = new AtomicBoolean(false);
-
     private static volatile LinkedList<Bytes> bufferVideoParts = new LinkedList<Bytes>();
-
     private static volatile LinkedList<Bytes> currentFrames = new LinkedList<Bytes>();
-
-
     private static Dimension size = DetectorResolution.CHINA.getSize();
-
     private static Map<String, ?> properties = new HashMap<>();
 
 //todo
@@ -229,7 +306,8 @@ public class Jna2 {
      * @param devices пустой список устройств
      * @return заполненный список устройств
      */
-    public List<DetectorDevice> getDDevices(List<DetectorDevice> devices) {
+    public java.util.List<DetectorDevice> getDDevices(List<DetectorDevice> devices) {
+
 
         if (flag_device_connected.get()) {
             ChinaDevice device = new ChinaDevice(name, id, this);
@@ -247,15 +325,13 @@ public class Jna2 {
      * @return Обернутый массив сырого изображения инт
      */
     public ByteBuffer getImage() {
-        LOG.trace("Запрос на получение Картинки из getImage до nextFrame");
+
         ByteBuffer bytes = null;
         Bytes frame = nextFrame();
-        LOG.trace("Вывод полного кадра из getImage после nextFrame {}", frame);
         if (frame == null) {
             return null;
         }
         bytes = frame.buffer();
-        LOG.trace("Вывод полного кадра {}", bytes);
         return bytes;
     }
 
@@ -283,20 +359,8 @@ public class Jna2 {
      * Закрытие устройства
      */
     public void stopSession() {
-        LOG.trace("Старт остановки сессии");
-        waitToClearUSB();
-
         LOG.trace("Остановка сессии");
         close();
-    }
-
-    private void waitToClearUSB() {
-        Bytes bytes = null;
-        do {
-            bytes = nextFrame();
-
-        } while (bytes != null);
-        isMessageSend.compareAndSet(false, true);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////
@@ -326,8 +390,7 @@ public class Jna2 {
      * @return
      */
     public FT_STATUS setDimension(boolean set) {
-        online.set(true);
-        isMessageSend.set(false);
+
         byte data;
         if (set) {
             data = (byte) 0xFF;//128*128
@@ -341,11 +404,7 @@ public class Jna2 {
                 .append((byte) 0x02)    //размер[команда+данные]||
                 .append(SETDIM[1])    //команда               |
                 .append(data);          //данные               _|
-        FT_STATUS ft_status = writePipe(msg);
-        while (!isMessageSend.get()) {
-            nextFrame();
-        }
-        return ft_status;
+        return writePipe(msg);
 
     }
 
@@ -356,8 +415,7 @@ public class Jna2 {
      * @return
      */
     public FT_STATUS setCapacity(boolean set) {
-        online.set(true);
-        isMessageSend.set(false);
+
         byte data;
         if (set) {
             data = (byte) 0xFF;//3
@@ -369,11 +427,7 @@ public class Jna2 {
                 .append((byte) 0x02)    //размер[команда+данные]||
                 .append(SETCCC[1])    //команда               |
                 .append(data);          //данные               _|
-        FT_STATUS ft_status = writePipe(msg);
-        while (!isMessageSend.get()) {
-            nextFrame();
-        }
-        return ft_status;
+        return writePipe(msg);
 
     }
 
@@ -384,8 +438,7 @@ public class Jna2 {
      * @return
      */
     public FT_STATUS setRE(boolean set) {
-        online.set(true);
-        isMessageSend.set(false);
+
         byte data;
         if (set) {
             data = (byte) 0xFF;//on
@@ -397,11 +450,7 @@ public class Jna2 {
                 .append((byte) 0x02)    //размер[команда+данные]||
                 .append(SETRE[1])    //команда               |
                 .append(data);          //данные               _|
-        FT_STATUS ft_status = writePipe(msg);
-        while (!isMessageSend.get()) {
-            nextFrame();
-        }
-        return ft_status;
+        return writePipe(msg);
 
     }
 
@@ -412,9 +461,6 @@ public class Jna2 {
      * @return
      */
     public FT_STATUS setPower(boolean set) {
-
-        online.set(true);
-        isMessageSend.set(false);
         byte data;
         if (set) {
             data = (byte) 0xFF;//on
@@ -426,28 +472,19 @@ public class Jna2 {
                 .append((byte) 0x02)    //размер[команда+данные]||
                 .append(SETPOWER[1])    //команда               |
                 .append(data);          //данные               _|
-        FT_STATUS ft_status = writePipe(msg);
+        return writePipe(msg);
 
-        while (!isMessageSend.get()) {
-            nextFrame();
-        }
-        return ft_status;
     }
 
     public FT_STATUS setIntTime(int time) {
-        online.set(true);
-        isMessageSend.set(false);
+
         byte[] data = Bytes.from(time).resize(2).reverse().array();
         Bytes msg = HEADER            //маска+ID
                 .append(SETINT[0])    //функция
                 .append((byte) 0x03)  //размер[команда+данные]||
                 .append(SETINT[1])    //команда               |
                 .append(data);        //данные               _|
-        FT_STATUS ft_status = writePipe(msg);
-        while (!isMessageSend.get()) {
-            nextFrame();
-        }
-        return ft_status;
+        return writePipe(msg);
     }
 
     /**
@@ -457,19 +494,15 @@ public class Jna2 {
      * @return
      */
     public FT_STATUS setVR0(int value) {
-        online.set(true);
-        isMessageSend.set(false);
+        // float floatValue = value / 1000f;
+        //byte[] data = Bytes.from(floatValue).reverse().array();
         byte data = Bytes.from(value).resize(1).toByte();
         Bytes msg = HEADER            //маска+ID
                 .append(SETVR0[0])    //функция
                 .append((byte) 0x02)  //размер[команда+данные]||
                 .append(SETVR0[1])    //команда               |
                 .append(data);        //данные               _|
-        FT_STATUS ft_status = writePipe(msg);
-        while (!isMessageSend.get()) {
-            nextFrame();
-        }
-        return ft_status;
+        return writePipe(msg);
     }
 
 
@@ -480,18 +513,13 @@ public class Jna2 {
      * @return
      */
     public FT_STATUS setRo(byte value) {
-        online.set(true);
-        isMessageSend.set(false);
+
         Bytes msg = HEADER            //маска+ID
                 .append(SETRO[0])    //функция
                 .append((byte) 0x02)  //размер[команда+данные]||
                 .append(SETRO[1])    //команда               |
                 .append(value);        //данные               _|
-        FT_STATUS ft_status = writePipe(msg);
-        while (!isMessageSend.get()) {
-            nextFrame();
-        }
-        return ft_status;
+        return writePipe(msg);
     }
 
 
@@ -502,8 +530,6 @@ public class Jna2 {
      * @return
      */
     public FT_STATUS setVVA(int value) {
-        online.set(true);
-        isMessageSend.set(false);
         float floatValue = value / 1000f;
         byte[] data = Bytes.from(floatValue).reverse().array();
         Bytes msg = HEADER            //маска+ID
@@ -511,11 +537,7 @@ public class Jna2 {
                 .append((byte) 0x05)  //размер[команда+данные]||
                 .append(SETVVA[1])    //команда               |
                 .append(data);        //данные               _|
-        FT_STATUS ft_status = writePipe(msg);
-        while (!isMessageSend.get()) {
-            nextFrame();
-        }
-        return ft_status;
+        return writePipe(msg);
     }
 
     /**
@@ -525,8 +547,6 @@ public class Jna2 {
      * @return
      */
     public FT_STATUS setVVA1(int value) {
-        online.set(true);
-        isMessageSend.set(false);
         float floatValue = value / 1000f;
         byte[] data = Bytes.from(floatValue).reverse().array();
         Bytes msg = HEADER            //маска+ID
@@ -534,11 +554,7 @@ public class Jna2 {
                 .append((byte) 0x05)  //размер[команда+данные]||
                 .append(SETVVA1[1])    //команда               |
                 .append(data);        //данные               _|
-        FT_STATUS ft_status = writePipe(msg);
-        while (!isMessageSend.get()) {
-            nextFrame();
-        }
-        return ft_status;
+        return writePipe(msg);
     }
 
     /**
@@ -548,8 +564,6 @@ public class Jna2 {
      * @return
      */
     public FT_STATUS setVVA2(int value) {
-        online.set(true);
-        isMessageSend.set(false);
         float floatValue = value / 1000f;
         byte[] data = Bytes.from(floatValue).reverse().array();
         Bytes msg = HEADER            //маска+ID
@@ -557,11 +571,7 @@ public class Jna2 {
                 .append((byte) 0x05)  //размер[команда+данные]||
                 .append(SETVVA2[1])    //команда               |
                 .append(data);        //данные               _|
-        FT_STATUS ft_status = writePipe(msg);
-        while (!isMessageSend.get()) {
-            nextFrame();
-        }
-        return ft_status;
+        return writePipe(msg);
     }
 
     /**
@@ -571,8 +581,6 @@ public class Jna2 {
      * @return
      */
     public FT_STATUS setReset(boolean isReset) {
-        online.set(true);
-        isMessageSend.set(false);
         byte data;
         if (!isReset) {
             data = (byte) 0xFF;//work
@@ -584,11 +592,7 @@ public class Jna2 {
                 .append((byte) 0x02)    //размер[команда+данные]||
                 .append(SETRESET[1])    //команда               |
                 .append(data);          //данные               _|
-        FT_STATUS ft_status = writePipe(msg);
-        while (!isMessageSend.get()) {
-            nextFrame();
-        }
-        return ft_status;
+        return writePipe(msg);
     }
 
     /**
@@ -597,18 +601,13 @@ public class Jna2 {
      * @return
      */
     public FT_STATUS setID() {
-        online.set(true);
-        isMessageSend.set(false);
+
         Bytes msg = HEADER           //маска+ID
                 .append(SETID[0])    //функция
                 .append((byte) 0x02) //размер[команда+данные]||
                 .append(SETID[1])    //команда               |
                 .append(DEV_ID);     //данные               _|
         FT_STATUS ft_status = writePipe(msg);
-        LOG.info("ID установлено {}", ft_status);
-        while (!isMessageSend.get()) {
-            nextFrame();
-        }
 
         return ft_status;
     }
@@ -628,7 +627,7 @@ public class Jna2 {
         //тест
 
         if (isTest) {
-            bytes = testData(bytes);
+         //   bytes = testData(bytes);
         }
 
         return bytes;
@@ -676,22 +675,14 @@ public class Jna2 {
 
     public Bytes nextFrame() {
 
-        LOG.trace("Запрос на получение данных из nextFrame");
+
         Bytes bytesData = readData();
-        LOG.trace("Запрос на получение данных после nextFrame");
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //проверка на пустой массив
-        if (bytesData == null) {
-            LOG.trace("Запрос на получение данных после nextFrame пустой{}",bytesData);
-            return null;
-        }
         if (bytesData.isEmpty()) {
-            LOG.trace("Запрос на получение данных после нулл {}",bytesData);
-
             return null;
         }
-        online.compareAndSet(false,true);
-        LOG.trace("Запрос на получение данных после норм nextFrame{}",bytesData);
+
         /**
          * Есть заголовок?
          */
@@ -717,31 +708,17 @@ public class Jna2 {
                             e.printStackTrace();
                         }
                         Bytes btData = readData();
-                        if (bytesData == null) {
-                            clearBuffer();
-                            return null;
-                        }
                         if (bytesData.isEmpty()) {
                             clearBuffer();
                             return null;
                         }
                         tempSize = parse2bdOartOfFrame(btData);
                     } while ((fsize = (fsize - tempSize)) > 0);
-
-                    Bytes bytes = summPartsOfFrame();
-                    if (bytes.length() < (2 * getWidth() * getHeight())) {
-
-                        LOG.error("Разрешение картинки и конфигурация детектора не совпадают!");
-                        return null;
-                    }
-                    return bytes;
+                    return summPartsOfFrame();
                 case 0x00://отработка отображения всех параметров
-                    System.out.println("0x00 " + bytesData);
                     //todo
-                    isMessageSend.set(true);
                 default:
-                    System.out.println("Ответ на команду " + bytesData);
-                    isMessageSend.set(true);
+                    //todo
                     return null;
             }
         } else {
@@ -761,16 +738,13 @@ public class Jna2 {
         if (bufferVideoParts.isEmpty()) {
             return Integer.MAX_VALUE;
         }
-    //    if (bytesData==null) {
-    //        return 0;
-    //    }
         if (bytesData.isEmpty()) {
             return 0;
         }
         int length = bytesData.length();
         bytesData = reversBytes(bytesData);
         bufferVideoParts.add(bytesData);
-        // LOG.trace("размер второй части {}", length);
+        LOG.trace("размер второй части {}", length);
         return length / 2;
     }
 
@@ -792,7 +766,7 @@ public class Jna2 {
         Bytes resized = bytesData.resize(box_length - headers);
         resized = reversBytes(resized);
         bufferVideoParts.add(resized);
-        //  LOG.trace("размер первой части {}", resized);
+        LOG.trace("размер первой части {}", resized);
         return frameSize - (resized.length()) / 2;
     }
 
@@ -841,7 +815,42 @@ public class Jna2 {
 
 
     public FT_STATUS setParameters(Map<String, ?> params) {
-        return FT_STATUS.FT_OK;
+
+    return null;}
+
+    public static byte[] getIncomingComand() {
+        return incomingComand.get();
+    }
+
+    public static ObjectProperty<byte[]> incomingComandProperty() {
+        return incomingComand;
+    }
+
+    public static void setIncomingComand(byte[] incomingComand) {
+        Eth.incomingComand.set(incomingComand);
+    }
+
+    public static byte[] getOutComand() {
+        return outComand.get();
+    }
+
+    public static ObjectProperty<byte[]> outComandProperty() {
+        return outComand;
+    }
+
+    public static void setOutComand(byte[] outComand) {
+        Eth.outComand.set(outComand);
+    }
+
+    public static byte[] getVideo() {
+        return video.get();
+    }
+
+    public static ObjectProperty<byte[]> videoProperty() {
+        return video;
+    }
+
+    public static void setVideo(byte[] video) {
+        Eth.video.set(video);
     }
 }
-

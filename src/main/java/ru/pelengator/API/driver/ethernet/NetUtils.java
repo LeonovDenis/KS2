@@ -1,4 +1,4 @@
-package ru.pelengator.driver.ethernet;
+package ru.pelengator.API.driver.ethernet;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;

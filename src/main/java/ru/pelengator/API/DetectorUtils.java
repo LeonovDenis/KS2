@@ -1,13 +1,12 @@
 package ru.pelengator.API;
 
-import ru.pelengator.API.util.ImageUtils;
+import ru.pelengator.API.utils.ImageUtils;
+import ru.pelengator.API.utils.Utils;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Locale;
-import java.util.Properties;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
@@ -78,8 +77,10 @@ public class DetectorUtils {
      * @return Пакет ресурсов
      */
     public static final ResourceBundle loadRB(Class<?> clazz, Locale locale) {
+        String PACAGE="PATH";
         String pkg = DetectorUtils.class.getPackage().getName().replaceAll("\\.", "/");
-        return PropertyResourceBundle.getBundle(String.format("%s/i18n/%s", pkg, clazz.getSimpleName()));
+        return PropertyResourceBundle.getBundle(String.format("%s"+
+                Utils.separator+PACAGE+Utils.separator+"%s", pkg, clazz.getSimpleName()));
     }
 
 }

@@ -14,8 +14,8 @@ import ru.pelengator.ParamsController;
 import java.io.File;
 import java.util.concurrent.*;
 
-import static ru.pelengator.API.util.Utils.*;
-import static ru.pelengator.API.util.Utils.saveOrder;
+import static ru.pelengator.API.utils.Utils.*;
+import static ru.pelengator.API.utils.Utils.saveOrder;
 
 /**
  * Сервис сбора данных

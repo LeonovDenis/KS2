@@ -11,8 +11,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.pelengator.API.util.StatisticsUtils;
-import ru.pelengator.API.util.Utils;
+import ru.pelengator.API.utils.StatisticsUtils;
+import ru.pelengator.API.utils.Utils;
 import ru.pelengator.ParamsController;
 import ru.pelengator.model.ExpInfo;
 import ru.pelengator.model.StendParams;
@@ -23,7 +23,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static ru.pelengator.API.util.Utils.*;
+import static ru.pelengator.API.utils.Utils.*;
 
 /**
  * Сервис расчета параметров
@@ -431,11 +431,11 @@ public class ParamsService extends Service<Void> {
         for (int h = 0; h < sizeY; h++) {
             for (int w = 0; w < sizeX; w++) {
                 arifmeticMeanValue_0[h][w] = dataArrayStat_0[h][w].getMean() * MASHTAB / 1000.0;
-                quadraticMeanValue_0[h][w] = dataArrayStat_0[h][w].getSK() * MASHTAB / 1000.0;
+                quadraticMeanValue_0[h][w] = dataArrayStat_0[h][w].getQvadraricMean() * MASHTAB / 1000.0;
                 SKOValue[h][w] = dataArrayStat_0[h][w].getStdDev() * MASHTAB / 1000;
 
                 arifmeticMeanValue_1[h][w] = dataArrayStat_1[h][w].getMean() * MASHTAB / 1000.0;
-                quadraticMeanValue_1[h][w] = dataArrayStat_1[h][w].getSK() * MASHTAB / 1000.0;
+                quadraticMeanValue_1[h][w] = dataArrayStat_1[h][w].getQvadraricMean() * MASHTAB / 1000.0;
             }
         }
         for (int h = 0; h < sizeY; h++) {
@@ -663,7 +663,8 @@ public class ParamsService extends Service<Void> {
     }
 
     /**
-     * Заполнение поля брака
+     * Заполнение полей брака
+     * @param pane панель
      */
     private void fillItogpane(VBox pane) {
         Platform.runLater(() -> {
@@ -674,7 +675,12 @@ public class ParamsService extends Service<Void> {
 
     }
 
-    private List<BadBigPoint> bedPxToList(String itogColor) {
+    /**
+     * Переделать //todo супер переделка
+     * @param color цвет пикселя.
+     * @return
+     */
+    private List<BadBigPoint> bedPxToList(String color) {
 
 
         String lineseparator = System.getProperty("line.separator");
@@ -691,7 +697,7 @@ public class ParamsService extends Service<Void> {
                 }
                 for (BadPoint bp :
                         fr.getBpList()) {
-                    BadBigPoint badbBigPoint = new BadBigPoint(bp, convertcolor(itogColor));
+                    BadBigPoint badbBigPoint = new BadBigPoint(bp, convertcolor(color));
                     int indexOf = list.indexOf(badbBigPoint);
                     if (indexOf < 0) {
                         list.add(badbBigPoint);
@@ -707,6 +713,12 @@ public class ParamsService extends Service<Void> {
         return list;
     }
 
+    /**
+     * Создание строки дефектных элементов для печати.
+     * @param lineseparator
+     * @param list
+     * @return
+     */
     private byte[] extructTextLine(String lineseparator, List<BadBigPoint> list) {
         StringBuilder tempStr = new StringBuilder();
         if (list != null) {
@@ -723,7 +735,7 @@ public class ParamsService extends Service<Void> {
     }
 
     /**
-     * Заполнение полей брака
+     * Заполнение полей брака.
      */
     private void fillTextLabels() {
         ///////////////////  full
@@ -755,7 +767,7 @@ public class ParamsService extends Service<Void> {
     }
 
     /**
-     * Заполнение текстовых полей
+     * Заполнение текстовых полей.
      */
     private void fillTextFields() {
 
@@ -800,7 +812,7 @@ public class ParamsService extends Service<Void> {
     }
 
     /**
-     * Сохраняем полученные данные
+     * Сохраняем полученные данные.
      */
     public boolean saveExpData() {
 

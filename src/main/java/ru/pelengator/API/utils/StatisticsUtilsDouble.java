@@ -1,4 +1,4 @@
-package ru.pelengator.API.util;
+package ru.pelengator.API.utils;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -28,7 +28,10 @@ public class StatisticsUtilsDouble {
         this.lastFailureReason = reason;
         this.failureCount++;
     }
-
+    /**
+     * Добавление значения в массив
+     * @param x
+     */
     public synchronized void addValue(double x) {
         sum += x;
         squares += x * x;
@@ -40,7 +43,9 @@ public class StatisticsUtilsDouble {
             reset();
         }
     }
-
+    /**
+     * Очистка
+     */
     public synchronized void reset() {
         sum = 0L;
         squares = 0L;
@@ -50,7 +55,10 @@ public class StatisticsUtilsDouble {
         last = 0L;
         this.resetCount++;
     }
-
+    /**
+     * Получение среднего арифметического
+     * @return
+     */
     public synchronized double getMean() {
         double mean = 0.0;
         if (count > 0L) {
@@ -58,6 +66,10 @@ public class StatisticsUtilsDouble {
         }
         return mean;
     }
+    /**
+     * Возврат среднеквадратичного значения
+     * @return
+     */
     public synchronized double getSK() {
         double sk = 0.0;
         if (count > 0L) {
@@ -65,7 +77,10 @@ public class StatisticsUtilsDouble {
         }
         return sk;
     }
-
+    /**
+     * Дисперсия
+     * @return
+     */
     public synchronized double getVariance() {
         double variance = 0.0;
         if (count > 1L) {
@@ -73,15 +88,24 @@ public class StatisticsUtilsDouble {
         }
         return variance;
     }
-
+    /**
+     * Среднее квадратичное отклонение
+     * @return
+     */
     public synchronized double getStdDev() {
         return Math.sqrt(this.getVariance());
     }
-
+    /**
+     * Максимальное из выборки
+     * @return
+     */
     public synchronized double getMax() {
         return max;
     }
-
+    /**
+     * Минимальное из выборки
+     * @return
+     */
     public synchronized double getMin() {
         return min;
     }

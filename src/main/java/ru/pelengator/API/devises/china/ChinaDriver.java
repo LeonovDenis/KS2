@@ -1,4 +1,4 @@
-package ru.pelengator.API.buildin.china;
+package ru.pelengator.API.devises.china;
 
 
 import org.slf4j.Logger;
@@ -7,7 +7,7 @@ import ru.pelengator.API.DetectorDevice;
 import ru.pelengator.API.DetectorDiscoverySupport;
 import ru.pelengator.API.DetectorDriver;
 import ru.pelengator.API.DetectorTask;
-import ru.pelengator.driver.usb.Jna2;
+import ru.pelengator.API.driver.usb.Jna2;
 import ru.pelengator.model.StendParams;
 
 import java.util.ArrayList;
@@ -18,11 +18,13 @@ import java.util.concurrent.atomic.AtomicReference;
 
 
 /**
- * Реализация китайского детектора через USB 3.0
+ * Реализация китайского детектора через USB 3.0.
  */
 public class ChinaDriver implements DetectorDriver, DetectorDiscoverySupport {
 
-
+    /**
+     * Задание на создание драйвера.
+     */
     private static class DetectorNewGrabberTask extends DetectorTask {
 
         private AtomicReference<Jna2> grabber = new AtomicReference<Jna2>();
@@ -47,6 +49,9 @@ public class ChinaDriver implements DetectorDriver, DetectorDiscoverySupport {
         }
     }
 
+    /**
+     * Задание на получение списка найденных устройств.
+     */
     private static class GetDevicesTask extends DetectorTask {
 
         private volatile List<DetectorDevice> devices = null;
@@ -57,9 +62,9 @@ public class ChinaDriver implements DetectorDriver, DetectorDiscoverySupport {
         }
 
         /**
-         * Возврат устройств.
+         * Возврат списка устройств.
          *
-         * @param grabber собственный граббер для поиска
+         * @param grabber собственный граббер для поиска.
          * @return Устройство.
          */
         public List<DetectorDevice> getDevices(Jna2 grabber) {
@@ -88,8 +93,13 @@ public class ChinaDriver implements DetectorDriver, DetectorDiscoverySupport {
      * Логгер.
      */
     private static final Logger LOG = LoggerFactory.getLogger(ChinaDriver.class);
-
+    /**
+     * Параметры стенда.
+     */
     private static StendParams params = null;
+    /**
+     * Драйвер.
+     */
     private static Jna2 grabber = null;
 
     @Override
@@ -116,11 +126,19 @@ public class ChinaDriver implements DetectorDriver, DetectorDiscoverySupport {
         return devices;
     }
 
+    /**
+     * Конструктор
+     * @param params стендовые параметры
+     */
     public ChinaDriver(StendParams params) {
         this.params = params;
 
     }
 
+    /**
+     * Возврат значения интервала поиска устройств
+     * @return
+     */
     @Override
     public long getScanInterval() {
         return DEFAULT_SCAN_INTERVAL;
