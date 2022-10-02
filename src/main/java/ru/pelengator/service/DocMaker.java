@@ -14,7 +14,8 @@ import org.apache.pdfbox.pdmodel.interactive.form.PDPushButton;
 import org.apache.pdfbox.pdmodel.interactive.form.PDTextField;
 import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.fx.ChartViewer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.pelengator.model.ExpInfo;
 
 import java.awt.*;
@@ -26,7 +27,14 @@ import java.util.*;
 import static ru.pelengator.API.utils.Utils.bpInCentral;
 import static ru.pelengator.App.loadFilePath;
 
+/**
+ * Заполнение форм в pdf файле.
+ */
 public class DocMaker {
+    /**
+     * Логгер.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(DocMaker.class);
     Map<String, Object> map;
     PDDocument pDDocument;
     PDAcroForm pDAcroForm;
@@ -41,14 +49,13 @@ public class DocMaker {
     }
 
     /**
-     * Набивка полей
+     * Набивка полей.
      *
      * @return
      */
     private Map<String, Object> createList(ExpInfo exp) {
 
         HashMap<String, Object> hashMap = new HashMap<>();
-
 
         hashMap.put("zakaz", exp.getParams().getZakaz());
         hashMap.put("dogovor", exp.getParams().getDogovor());
@@ -90,7 +97,7 @@ public class DocMaker {
         hashMap.put("VDET_ADJ", "-");
         hashMap.put("VOUTREF", "1.6");
         hashMap.put("VREF", "1.6");
-        hashMap.put("VOS", String.valueOf(exp.getParams().getTempVOS()/1000.0));
+        hashMap.put("VOS", String.valueOf(exp.getParams().getTempVOS() / 1000.0));
         hashMap.put("VNEG", "GND");
         hashMap.put("VPOS", "5.0");
 
@@ -239,12 +246,16 @@ public class DocMaker {
             hashMap.put("TXT_4_9", String.valueOf(exp.getFrList().get(9).getBpList().size()));
         }
 
-              hashMap.put("WITHBP", exp.isWithDefPx()?"Примечание - Результаты приведены с учетом дефектных элементов.":
-                      "Примечание - Результаты приведены без учета дефектных элементов.");
+        hashMap.put("WITHBP", exp.isWithDefPx() ? "Примечание - Результаты приведены с учетом дефектных элементов." :
+                "Примечание - Результаты приведены без учета дефектных элементов.");
 
         return hashMap;
     }
 
+    /**
+     * Флаг подчистки форм из файла.
+     */
+    private boolean cleadForms = false;
 
     /**
      * Метод заполнения отчета
@@ -263,94 +274,69 @@ public class DocMaker {
                 String key = item.getKey();
                 PDField field = pDAcroForm.getField(key);
                 if (field != null) {
-                    //    System.out.print("Form field with placeholder name: '" + key + "' found");
+                    LOG.debug("Form field with placeholder name: '" + key + "' found");
 
                     if (field instanceof PDTextField) {
-                        //      System.out.println("(type: " + field.getClass().getSimpleName() + ")");
+                        LOG.debug("(type: " + field.getClass().getSimpleName() + ")");
                         saveField(key, (String) item.getValue());
-                        //        System.out.println("value is set to: '" + item.getValue() + "'");
+                        LOG.debug("value is set to: '" + item.getValue() + "'");
 
                     } else if (field instanceof PDPushButton) {
                         System.out.println("(type: " + field.getClass().getSimpleName() + ")");
                         PDPushButton pdPushButton = (PDPushButton) field;
-                        saveImage2(key, 4 + Integer.parseInt(String.valueOf(key.charAt(key.length() - 1))), (JFreeChart) item.getValue());
+                        convertChartToImage(key, 4 + Integer.parseInt(String.valueOf(key.charAt(key.length() - 1))), (JFreeChart) item.getValue());
                     } else {
-                        //   System.err.print("Unexpected form field type found with placeholder name: '" + key + "'");
+                        LOG.error("Unexpected form field type found with placeholder name: '" + key + "'");
                     }
                 } else {
-                    //  System.err.println("No field found with name:" + key);
+                    LOG.error("No field found with name:" + key);
                 }
             }
-
-            //pDAcroForm.flatten(); если нужно убрать отсатки форм
-            //   SimpleDateFormat simpleDateFormat = new SimpleDateFormat("[dd.MM]_HH.mm_");
-            //  String daTE = simpleDateFormat.format(new Timestamp(System.currentTimeMillis()));
+            if (cleadForms) {
+                pDAcroForm.flatten();// если нужно убрать отсатки форм
+            }
             pDDocument.save(pdfFile);
             pDDocument.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error("Error while saving {}", e);
             return false;
         }
         return true;
     }
 
     /**
-     * Сохранение поля
+     * Сохранение поля.
      *
-     * @param name  имя поля
-     * @param value Значение
+     * @param name  имя поля.
+     * @param value Значение.
      * @throws IOException
      */
     public void saveField(String name, String value) throws IOException {
         PDField field = pDAcroForm.getField(name);
         pDAcroForm.setNeedAppearances(false);
-        //  pDAcroForm.refreshAppearances();
         field.setValue(value);
-        //   System.out.println("saved " + name + ":" + value);
+        LOG.debug("saved " + name + ":" + value);
     }
 
-    /**
-     * Сохранение графика
-     *
-     * @param name        имя поля
-     * @param pageNumb    номер страницы
-     * @param chartViewer график
-     * @throws IOException
-     */
-    public void saveImage(String name, int pageNumb, ChartViewer chartViewer) throws IOException {
-        ByteArrayOutputStream image = new ByteArrayOutputStream();
-        ChartUtils.writeChartAsPNG(image, chartViewer.getCanvas().getChart(), (int) chartViewer.getWidth(),
-                (int) chartViewer.getHeight());
-        PDImageXObject pdImage = PDImageXObject.createFromByteArray(pDDocument, image.toByteArray(),
-                "myImage.jpg");
-        setField(pDDocument, name, pageNumb, pdImage);
-        //  System.out.println("Image inserted Successfully.");
-    }
-
-    public void saveImage2(String name, int pageNumb, JFreeChart chart) throws IOException {
+    public void convertChartToImage(String name, int pageNumb, JFreeChart chart) throws IOException {
 
         chart.getPlot().setBackgroundPaint(Color.lightGray);
-
-        //  XYPlot xyPlot = chart.getXYPlot();
-        //  XYItemRenderer renderer = xyPlot.getRenderer();
-        //  renderer.setSeriesPaint(0, Color.BLACK);
-
         ByteArrayOutputStream image = new ByteArrayOutputStream();
         ChartUtils.writeChartAsPNG(image, chart, 1600,
                 800);
         PDImageXObject pdImage = PDImageXObject.createFromByteArray(pDDocument, image.toByteArray(),
                 "myImage.jpg");
         setField(pDDocument, name, pageNumb, pdImage);
-        //   System.out.println("Image inserted Successfully.");
+        LOG.debug("Image inserted Successfully.");
     }
 
     /**
-     * Вставка картинки в форму
+     * Вставка картинки в форму.
      *
-     * @param document документ
-     * @param name     имя формы
-     * @param page     номер страницы с 0
-     * @param image    картинка
+     * @param document документ.
+     * @param name     имя формы.
+     * @param page     номер страницы с 0.
+     * @param image    картинка.
      * @throws IOException
      */
     public void setField(PDDocument document, String name, int page, PDImageXObject image)
@@ -371,9 +357,9 @@ public class DocMaker {
     }
 
     /**
-     * Получение габаритов поля
+     * Получение габаритов поля.
      *
-     * @param field имя поля
+     * @param field имя поля.
      * @return
      */
     private PDRectangle getFieldArea(PDField field) {

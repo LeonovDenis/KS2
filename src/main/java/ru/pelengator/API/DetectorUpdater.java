@@ -18,46 +18,43 @@ import org.slf4j.LoggerFactory;
 import ru.pelengator.API.tasks.DetectorGetImageTask;
 
 
-
 /**
- * Целью класса средства обновления детектора является параллельное обновление изображения, поэтому все вызовы для получения изображения
- * вызванный на экземпляре детектора, будет неблокирующим (немедленно вернется).
- *
+ * Паралельное обновление картинки.  Неблокирующий режим (Картинка немедленно вернется).
  */
 public class DetectorUpdater implements Runnable {
 
     /**
-     * Реализация этого интерфейса отвечает за расчет задержки между двумя изображениями.
-     * выборка, когда включен неблокирующий (асинхронный) доступ к детектору.
+     * Реализация этого интерфейса отвечает за расчет задержки между двумя запросами изображения.
+     * Неблокирующий (асинхронный) доступ к детектору.
      */
     public static interface DelayCalculator {
 
         /**
-         * Рассчитывает задержку перед получением следующего изображения с детектора. Должен вернуться
-         * число больше или равно 0.
+         * Рассчитывает задержку перед получением следующего изображения с детектора.
+         * Должно вернуться число больше или равно 0.
          *
-         * @param snapshotDuration - продолжительность съемки последнего изображения
-         * @param deviceFps - текущий FPS, полученный от устройства, или -1, если драйвер не
-         * поддержите это
-         * @ интервал возврата (в миллисекундах)
+         * @param snapshotDuration - продолжительность получения последнего изображения.
+         * @param deviceFps        - текущий FPS, полученный от устройства, или -1, если драйвер не
+         *                         поддерживает это.
+         * @return интервал возврата (в миллисекундах).
          */
         long calculateDelay(long snapshotDuration, double deviceFps);
     }
 
     /**
-     * Использование DelayCalculator по умолчанию на основе TARGET_FPS. Возвращает 0 задержки для snapshotDuration
-     * &gt; 20 millis.
+     * Использование DelayCalculator по умолчанию на основе TARGET_FPS.
+     * Возвращает 0 задержки для snapshotDuration &gt; 20 millis.
      */
     public static class DefaultDelayCalculator implements DelayCalculator {
 
         @Override
         public long calculateDelay(long snapshotDuration, double deviceFps) {
             // Рассчитаем задержку, необходимую для достижения целевого FPS.
-            // В некоторых случаях может быть меньше 0
-            // потому что камера не может показывать изображения так быстро, как
-            // мы хотели бы. В таком случае просто бегите без задержки,
-            // поэтому максимальный FPS будет поддерживаться
-            // по устройству камеры в данный момент.
+            // В некоторых случаях может быть меньше 0,
+            // потому что детектор не может показывать изображения так быстро, как
+            // мы хотели бы. В таком случае просто используется без задержки,
+            // поэтому будет поддерживаться максимальный FPS,
+            // поддерживаемый в данный момент.
 
 
             long delay = Math.max((1000 / TARGET_FPS) - snapshotDuration, 0);
@@ -67,7 +64,6 @@ public class DetectorUpdater implements Runnable {
 
     /**
      * Фабрика потоков для исполнителей, используемых без класса оповещателя.
-     *
      */
     private static final class UpdaterThreadFactory implements ThreadFactory {
 
@@ -75,7 +71,7 @@ public class DetectorUpdater implements Runnable {
 
         @Override
         public Thread newThread(Runnable r) {
-            Thread t = new Thread(r, String.format("detecter-updater-thread-%d", number.incrementAndGet()));
+            Thread t = new Thread(r, String.format("Detecter-updater-thread-%d", number.incrementAndGet()));
             t.setUncaughtExceptionHandler(DetectorExceptionHandler.getInstance());
             t.setDaemon(true);
             return t;
@@ -84,7 +80,7 @@ public class DetectorUpdater implements Runnable {
     }
 
     /**
-     * Регистратор.
+     * Логгер.
      */
     private static final Logger LOG = LoggerFactory.getLogger(DetectorUpdater.class);
 
@@ -92,7 +88,9 @@ public class DetectorUpdater implements Runnable {
      * Целевой FPS.
      */
     private static final int TARGET_FPS = 50;
-
+    /**
+     * Фабрика.
+     */
     private static final UpdaterThreadFactory THREAD_FACTORY = new UpdaterThreadFactory();
 
     /**
@@ -119,7 +117,9 @@ public class DetectorUpdater implements Runnable {
      * Работает ли программа обновления.
      */
     private AtomicBoolean running = new AtomicBoolean(false);
-
+    /**
+     * Флаг нового изображения.
+     */
     private volatile boolean imageNew = false;
 
     /**
@@ -128,19 +128,19 @@ public class DetectorUpdater implements Runnable {
     private final DelayCalculator delayCalculator;
 
     /**
-     * Создать новый обновляльщик, используя DefaultDelayCalculator.
+     * Создать новый апдейтера, используя DefaultDelayCalculator.
      *
-     * @param detector детектор, к которому будет прикреплен апдейтер
+     * @param detector детектор, к которому будет прикреплен апдейтер.
      */
     protected DetectorUpdater(Detector detector) {
         this(detector, new DefaultDelayCalculator());
     }
 
     /**
-     * Создать новый апдейтер детектора
+     * Создать новый апдейтер детектора.
      *
-     * @param detector детектор, к которому будет прикреплен апдейтер
-     * @param delayCalculator Реализация
+     * @param detector        детектор, к которому будет прикреплен апдейтер.
+     * @param delayCalculator реализация.
      */
     public DetectorUpdater(Detector detector, DelayCalculator delayCalculator) {
         this.detector = detector;
@@ -152,7 +152,7 @@ public class DetectorUpdater implements Runnable {
     }
 
     /**
-     * Start updater.
+     * Старт апдейтера.
      */
     public void start() {
 
@@ -170,7 +170,7 @@ public class DetectorUpdater implements Runnable {
     }
 
     /**
-     * Stop updater.
+     * Остановка апдейтера.
      */
     public void stop() {
         if (running.compareAndSet(true, false)) {
@@ -262,30 +262,30 @@ public class DetectorUpdater implements Runnable {
     }
 
     /**
-     * Вернуть в настоящее время доступное изображение. Этот метод вернется немедленно, пока он был
-     * вызывается после открытия камеры. В случае, когда запущены параллельные потоки и есть
-     * есть возможность вызвать этот метод во время открытия, или до того, как камера была открыта в
-     * все, этот метод будет блокироваться до тех пор, пока детектора не вернет первое изображение. Максимальное время блокировки будет 10
-     * секунд, по истечении этого времени метод вернет null.
+     * Вернуть доступное в настоящее время изображение.
+     * Этот метод вернется немедленно после открытия детектора.
+     * В случае, когда запущены параллельные потоки и есть
+     * есть возможность вызвать этот метод во время открытия, или до того, как детектор был открыт
+     * этот метод будет блокироваться до тех пор, пока детектора не вернет первое изображение.
+     * Максимальное время блокировки будет 10 секунд, по истечении этого времени метод вернет null.
      *
-     * @return Изображение хранится в кеше
+     * @return Изображение, которое хранится в кеше
      */
     public BufferedImage getImage() {
 
         int i = 0;
         while (image.get() == null) {
 
-            // На тот случай, если другой поток начнет вызывать этот метод раньше
-            // программа обновления запущена правильно. Это будет зацикливаться, пока изображение
+            // На тот случай, если другой поток начнет вызывать этот метод раньше, чем
+            // программа обновления будет запущена правильно. Будет зацикливание, пока изображение
             // недоступно.
-//todo Похоже сдесь тормоз
+
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
             // Возвращаем null, если прошло более 10 секунд (тайм-аут).
-            System.err.println("Тормоз: "+i);
             if (i++ > 100) {
                 LOG.error("Image has not been found for more than 10 seconds");
                 return null;
@@ -302,7 +302,8 @@ public class DetectorUpdater implements Runnable {
     }
 
     /**
-     * Вернуть текущий номер FPS. Он рассчитывается в режиме реального времени на основе того, как часто камера
+     * Вернуть текущий FPS.
+     * Он рассчитывается в режиме реального времени на основе того, как часто детектор
      * выдает новое изображение.
      *
      * @return число кадров в секунду

@@ -14,8 +14,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -44,7 +42,7 @@ import ru.pelengator.API.*;
 import ru.pelengator.API.devises.china.ChinaDriver;
 import ru.pelengator.API.devises.china.ChinaDriverEth;
 import ru.pelengator.API.driver.FT_STATUS;
-import ru.pelengator.API.driver.NetworkInfo;
+import ru.pelengator.model.NetworkInfo;
 import ru.pelengator.model.DetectorInfo;
 import ru.pelengator.model.ExpInfo;
 import ru.pelengator.model.StatData;
@@ -62,168 +60,168 @@ public class Controller implements Initializable {
     private static final Logger LOG = LoggerFactory.getLogger(Controller.class);
 
     /**
-     * Чекбокс на центральную зону
+     * Чекбокс на центральную зону.
      */
     @FXML
     private CheckBox cbKvadrat;
     /**
-     * Размер центральной зоны по ширине
+     * Размер центральной зоны по ширине.
      */
     @FXML
     private TextField tfKvadratWidth;
     /**
-     * Размер центральной зоны по высоте
+     * Размер центральной зоны по высоте.
      */
     @FXML
     private TextField tfKvadratHeight;
 
 
     /**
-     * Скролпейн
+     * Скролпейн.
      */
     @FXML
     private ScrollPane myPane;
     /**
-     * Сценарий остановки картинки
+     * Сценарий остановки картинки.
      */
     @FXML
     private Button btnStartStop;
     /**
-     * Кнопка расчета потока от источника света
+     * Кнопка расчета потока от источника света.
      */
     @FXML
     private Button btnPotok;
     /**
-     * Кнопка сбора кадров
+     * Кнопка сбора кадров.
      */
     @FXML
     private Button btnGetData;
     /**
-     * Кнопка расчета параметров
+     * Кнопка расчета параметров.
      */
     @FXML
     private Button btnParams;
     /**
-     * Список подключенных детекторов
+     * Список подключенных детекторов.
      */
     @FXML
     private ComboBox<DetectorInfo> cbDetectorOptions;
     /**
-     * Комбобокс выбора сетевого драйвера
+     * Комбобокс выбора сетевого драйвера.
      */
     @FXML
     private ComboBox<NetworkInfo> cbNetworkOptions;
     /**
-     * Центральное окно с картинкой
+     * Центральное окно с картинкой.
      */
     @FXML
     private BorderPane bpDetectorPaneHolder;
     /**
-     * Панель ско
+     * Панель ско.
      */
     @FXML
     private VBox pnFlash;
     /**
-     * Поле вывода картинки
+     * Поле вывода картинки.
      */
     @FXML
     private SwingNode snDetectorCapturedImage;
     /**
-     * Панель, обслуживающая детектор
+     * Панель, обслуживающая детектор.
      */
     private DetectorPanel detectorPanel;
     /**
-     * Кнопка питания
+     * Кнопка питания.
      */
     @FXML
     private CheckBox chPower;
     /**
-     * Поле инта
+     * Поле инта.
      */
     @FXML
     private TextField tfInt;
     /**
-     * Поле VOS
+     * Поле VOS.
      */
     @FXML
     private TextField tfVOS;
     /**
-     * Поле VR0
+     * Поле VR0.
      */
     @FXML
     private TextField tfVR0;
     /**
-     * Доступные разрешения
+     * Доступные разрешения.
      */
     @FXML
     private ComboBox<String> cbDimOptions;
     /**
-     * Доступные усиления
+     * Доступные усиления.
      */
     @FXML
     private ComboBox<String> cbCCCOptions;
     /**
-     * Задержка опроса платы
+     * Задержка опроса платы.
      */
     @FXML
     private TextField tfSpeedPlata;
     /**
-     * Поле текущего FPS
+     * Поле текущего FPS.
      */
     @FXML
     private TextField tfFPS;
     /**
-     * Панелька гистограммы
+     * Панелька гистограммы.
      */
     @FXML
     private Pane pnGist;
     /**
-     * Среднее значение отклонения сигнала
+     * Среднее значение отклонения сигнала.
      */
     @FXML
     private Label lbSKO;
     /**
-     * Среднее значение сигнала
+     * Среднее значение сигнала.
      */
     @FXML
     private Label lbAverageSignal;
     /**
-     * Максимальный сигнал
+     * Максимальный сигнал.
      */
     @FXML
     private Label lbMax;
     /**
-     * Минимальный сигнал
+     * Минимальный сигнал.
      */
     @FXML
     private Label lbMin;
     /**
-     * Гистограмма верх
+     * Гистограмма верх.
      */
     @FXML
     private ImageView iwGist;
     /**
-     * Полоса
+     * Полоса.
      */
     @FXML
     private ImageView ivPolosa;//w=300; h=25;
     /**
-     * Гистограмма низ. Распределение по строкам
+     * Гистограмма низ. Распределение по строкам.
      */
     @FXML
     private ImageView iwGistSKO_H;
     /**
-     * Гистограмма низ. Распределение по столбцам
+     * Гистограмма низ. Распределение по столбцам.
      */
     @FXML
     private ImageView iwGistSKO_V;
     /**
-     * Прогрессбар
+     * Прогрессбар.
      */
     @FXML
     private ProgressBar pb_exp;
     /**
-     * Дежурная строка
+     * Дежурная строка.
      */
     @FXML
     private Label lab_exp_status;
@@ -232,130 +230,122 @@ public class Controller implements Initializable {
      */
     private Properties properties = new Properties();
     /**
-     * Текущее разрешение картинки
+     * Текущее разрешение картинки.
      */
     private volatile Dimension viewSize;
     /**
-     * Формат целого числа
+     * Формат целого числа.
      */
     private static final String DEFAULT_FORMAT = "0";
     private static final NumberFormat FORMATTER = new DecimalFormat(DEFAULT_FORMAT);
     /**
-     * Флаг остановки вывода картинки
+     * Флаг остановки вывода картинки.
      */
     private boolean paused = false;
     /**
-     * Масштаб оцифровки АЦП
+     * Масштаб оцифровки АЦП.
      */
     private static float MASHTAB = (5000 / (float) (Math.pow(2, 14)));
     /**
-     * Флаг//todo
-     */
-    private AtomicBoolean isFramesReady = new AtomicBoolean(false);
-    /**
-     * Параметры стенда
+     * Параметры стенда.
      */
     private StendParams params = new StendParams(this);
 
-
     /**
-     * Запись параметров при выходе
+     * Запись параметров при выходе.
      */
     public void save() {
         params.save();
     }
 
     /**
-     * картинка для гистограммы верх
+     * Картинка для гистограммы верх.
      */
     private BufferedImage grabbedImage;
     /**
-     * картинка для гистограммы низ верт
+     * Картинка для гистограммы низ верт.
      */
     private BufferedImage grabbedImageV;
     /**
-     * картинка для гистограммы низ гориз
+     * Картинка для гистограммы низ гориз
      */
     private BufferedImage grabbedImageH;
     /**
-     * Свойства для отображения картинки гистограммы
+     * Свойства для отображения картинки гистограммы.
      */
     private ObjectProperty<Image> gistImageProperty = new SimpleObjectProperty<Image>();
     /**
-     * Свойства для отображения картинки гистограммы низ верт
+     * Свойства для отображения картинки гистограммы низ верт.
      */
     private ObjectProperty<Image> gistImagePropertyV = new SimpleObjectProperty<Image>();
     /**
-     * Свойства для отображения картинки гистограммы низ гориз
+     * Свойства для отображения картинки гистограммы низ гориз.
      */
     private ObjectProperty<Image> gistImagePropertyH = new SimpleObjectProperty<Image>();
     /**
-     * Активный детектор
+     * Активный детектор.
      */
     private Detector selDetector = null;
     /**
-     * Активный эксперимент
+     * Активный эксперимент.
      */
     private ExpInfo selExp = new ExpInfo();
     /**
-     * активный интерфейс драйвера сети
+     * Активный интерфейс драйвера сети.
      */
     private NetworkInfo selNetworkInterface = null;
     /**
-     * Флаг работы
+     * Флаг работы.
      */
     private boolean stopVideo = false;
     /**
-     * FPS по умолчанию
+     * FPS по умолчанию.
      */
     private double FPSVideo = 25;
     /**
-     * Подсказка в список детекторов
+     * Подсказка в список детекторов.
      */
     private String detectorListPromptText = "Выбрать";
     /**
-     * Подсказка в список эксп
+     * Подсказка в список эксп.
      */
     private String expListPromptText = "Нет данных";
     /**
-     * Подсказка в список драйверов
+     * Подсказка в список драйверов.
      */
     private String networkListPromptText = "Выбрать драйвер";
     /**
-     * Список для меню детекторов
+     * Список для меню детекторов.
      */
     private ObservableList<DetectorInfo> options;
     /**
-     * Список для меню экспериментов
+     * Список для меню экспериментов.
      */
     private ObservableList<ExpInfo> optionsExp = FXCollections.observableArrayList();
     /**
-     * Список для меню драйвера
+     * Список для меню драйвера.
      */
     private ObservableList<NetworkInfo> optionsNetwork = FXCollections.observableArrayList();
     /**
-     * Список коэф усиления
+     * Список коэф. усиления.
      */
     private ObservableList<String> optionsCCC = FXCollections.observableArrayList("1", "3");
     /**
-     * Список для допустимых разрешений
+     * Список для допустимых разрешений.
      */
     private ObservableList<String> optionsDimension = FXCollections.observableArrayList("128*128", "92*90");
     /**
-     * Счетчик экспериментов
+     * Счетчик экспериментов.
      */
     private static int expCounter = 0;
     /**
-     * Создание списка детекторов
+     * Создание списка детекторов.
      */
     private volatile static AtomicBoolean isImageFrash = new AtomicBoolean(false);
     private static int detectorCounter = 0;
 
-
-    private volatile AtomicBoolean autoSet = new AtomicBoolean(true);
-
     /**
-     * Инициализация всего
+     * Инициализация всего и вся.
      *
      * @param arg0
      * @param arg1
@@ -363,16 +353,16 @@ public class Controller implements Initializable {
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         /**
-         * Выключение интерфейса управления
+         * Выключение интерфейса управления.
          */
         myPane.setVisible(false);
         cbDetectorOptions.setDisable(true);
         /**
-         * Создание списка
+         * Создание списка.
          */
         int interfaceCounter = 0;
         /**
-         * Заполнение списка интерфейсов
+         * Заполнение списка интерфейсов.
          */
         optionsNetwork.add(new NetworkInfo(interfaceCounter++));
         for (NetworkInterface networkInterface : findInterfaces().toArray(new NetworkInterface[0])) {
@@ -381,22 +371,22 @@ public class Controller implements Initializable {
             interfaceCounter++;
         }
         /**
-         * Установка списка в комбобокс
+         * Установка списка в комбобокс.
          */
         cbNetworkOptions.setItems(optionsNetwork);
         /**
-         * Установка подсказки в комбобокс
+         * Установка подсказки в комбобокс.
          */
         cbNetworkOptions.setPromptText(networkListPromptText);
         /**
-         * Установка подсказки в комбобокс
+         * Установка подсказки в комбобокс.
          */
         cbDetectorOptions.setPromptText(detectorListPromptText);
         /**
-         * Создание списка экспериментов
+         * Создание списка экспериментов.
          */
         /**
-         * Заполнение списка экспериментов
+         * Заполнение списка экспериментов.
          */
         ExpInfo expInfo = new ExpInfo();
         expInfo.setExpIndex(expCounter);
@@ -404,25 +394,25 @@ public class Controller implements Initializable {
         optionsExp.add(expInfo);
         expCounter++;
         /**
-         * Подключение слушателя на выбор элемента из списка
+         * Подключение слушателя на выбор элемента из списка.
          */
         cbNetworkOptions.getSelectionModel().selectedItemProperty().addListener((arg012, arg112, newValue) -> {
             if (newValue != null) {
                 if (newValue.getName().equals("USB 3.0")) {
                     /**
-                     * Регистрация драйвера детектора для USB 3.0
+                     * Регистрация драйвера детектора для USB 3.0.
                      */
                     Detector.setDriver(new ChinaDriver(params));
 
                 } else {
                     /**
-                     * Регистрация драйвера детектора для ethernet
+                     * Регистрация драйвера детектора для ethernet.
                      */
                     Detector.setDriver(new ChinaDriverEth(params));
                 }
 
                 /**
-                 * Разблокировка списка детекторов
+                 * Разблокировка списка детекторов.
                  */
                 if (cbDetectorOptions.isDisabled()) {
                     cbDetectorOptions.setDisable(false);
@@ -430,11 +420,11 @@ public class Controller implements Initializable {
                     closeDetector();
                 }
                 /**
-                 * Передача индекса интерфейса в инициализатор
+                 * Передача индекса интерфейса в инициализатор.
                  */
                 initializeNetwork(newValue.getIndex());
                 /**
-                 * Заполнение списка детекторов
+                 * Заполнение списка детекторов.
                  */
                 fillDetectors();
                 cbNetworkOptions.setDisable(true);
@@ -442,13 +432,13 @@ public class Controller implements Initializable {
         });
 
         /**
-         * Подключение слушателя на выбор элемента из списка детекторов
+         * Подключение слушателя на выбор элемента из списка детекторов.
          */
         cbDetectorOptions.getSelectionModel().selectedItemProperty().addListener((arg01, arg11, newValue) -> {
             if (newValue != null) {
                 LOG.trace("Detector Index: " + newValue.getDetectorIndex() + ": Detector Name: " + newValue.getDetectorName() + " choosed");
                 /**
-                 * Передача индекса детектора в инициализатор
+                 * Передача индекса детектора в инициализатор.
                  */
                 initializeDetector(newValue.getDetectorIndex());
                 if (!myPane.isVisible()) {
@@ -465,46 +455,43 @@ public class Controller implements Initializable {
 
 
         /**
-         * Подгонка размеров окна отображения картинки
+         * Подгонка размеров окна отображения картинки.
          */
         Platform.runLater(() -> setImageViewSize());
         /**
-         * Инициализация списка коэф. усиления
+         * Инициализация списка коэф. усиления.
          */
         cbCCCOptions.setItems(optionsCCC);
         /**
-         * Установка полей в прошлое состояние
+         * Установка полей в прошлое состояние.
          */
         params.loadParams("props.properties");
         /**
-         * Описание
+         * Обработка смены коэф. усиления
          */
-        cbCCCOptions.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+        cbCCCOptions.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 
-                if ("1".equals(newValue)) {
-                    if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
-                        ((DetectorDevice.ChinaSource) selDetector.getDevice()).setССС(false);
-                        params.setTempKU(false);
-                    }
-
-                } else {
-                    if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
-                        ((DetectorDevice.ChinaSource) selDetector.getDevice()).setССС(true);
-                        params.setTempKU(true);
-                    }
+            if ("1".equals(newValue)) {
+                if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
+                    ((DetectorDevice.ChinaSource) selDetector.getDevice()).setССС(false);
+                    params.setTempKU(false);
                 }
-                resetBTNS();
 
+            } else {
+                if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
+                    ((DetectorDevice.ChinaSource) selDetector.getDevice()).setССС(true);
+                    params.setTempKU(true);
+                }
             }
+            resetBTNS();
+
         });
         /**
-         * Установка списка разрешений
+         * Установка списка разрешений.
          */
         cbDimOptions.setItems(optionsDimension);
         /**
-         * Активация разрешения
+         * Активация разрешения.
          */
         if (viewSize == DetectorResolution.CHINA.getSize()) {
             cbDimOptions.getSelectionModel().select(optionsDimension.get(0));
@@ -519,7 +506,7 @@ public class Controller implements Initializable {
             cbCCCOptions.getSelectionModel().select(tempKU ? 1 : 0);
         }
         /**
-         * Обработка отклика
+         * Обработка отклика на смену разрешения.
          */
         cbDimOptions.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 
@@ -539,41 +526,30 @@ public class Controller implements Initializable {
         });
 
         /**
-         * Обработка отклика на нажатие кнопки вкл
+         * Обработка отклика на нажатие кнопки вкл.
          */
-        chPower.selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+        chPower.selectedProperty().addListener((observable, oldValue, newValue) -> {
 
-                boolean connected = false;
-                /**
-                 * Запрос на статус
-                 */
+            /**
+             * Запрос на статус
+             */
+
+            if (newValue) {
                 if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
-                    connected = ((DetectorDevice.ChinaSource) selDetector.getDevice()).isConnected();
+                    ((DetectorDevice.ChinaSource) selDetector.getDevice()).setPower(true);
+                    params.setTempPower(true);
+                    /**
+                     *Установка стартовых параметров
+                     */
+                    extStartSession();
                 }
-
-                if (newValue) {
-                    if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
-                        //  if (!connected) {
-                        ((DetectorDevice.ChinaSource) selDetector.getDevice()).setPower(true);
-                        params.setTempPower(true);
-                        /**
-                         *Установка стартовых параметров
-                         */
-                        extStartSession();
-                    }
-                    //  }
-                } else {
-                    if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
-                        //    if (connected) {
-                        ((DetectorDevice.ChinaSource) selDetector.getDevice()).setPower(false);
-                        params.setTempPower(false);
-                        //   }
-                    }
+            } else {
+                if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
+                    ((DetectorDevice.ChinaSource) selDetector.getDevice()).setPower(false);
+                    params.setTempPower(false);
                 }
-                resetBTNS();
             }
+            resetBTNS();
         });
 
 
@@ -586,13 +562,13 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Скан детекторов и заполнение списка
+     * Скан детекторов и заполнение списка.
      */
     private void fillDetectors() {
         detectorCounter = 0;
         options = FXCollections.observableArrayList();
         /**
-         * Заполнение списка детекторов
+         * Заполнение списка детекторов.
          */
         for (Detector detector : Detector.getDetectors()) {
             DetectorInfo detectorInfo = new DetectorInfo();
@@ -602,28 +578,27 @@ public class Controller implements Initializable {
             detectorCounter++;
         }
         /**
-         * Установка списка в комбобокс
+         * Установка списка в комбобокс.
          */
         cbDetectorOptions.setItems(options);
     }
 
-    private void waitNewImage(){
-       try {
-              TimeUnit.MILLISECONDS.sleep(100);
-          } catch (InterruptedException e) {
-              throw new RuntimeException(e);
-          }
-
-
+    /**
+     * Небольшая пауза.
+     */
+    private void waitNewImage() {
+        try {
+            TimeUnit.MILLISECONDS.sleep(100);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
     /**
-     * Инициализация работы детектора
+     * Инициализация работы детектора.
      */
     private void extStartSession() {
-
-
         Thread thread = new Thread(() -> {
             boolean selectedFullScr = cbDimOptions.getSelectionModel().isSelected(0);
             waitNewImage();
@@ -653,15 +628,12 @@ public class Controller implements Initializable {
             }
             waitNewImage();
         });
-
         thread.setDaemon(true);
         thread.start();
-
-
     }
 
     /**
-     * Заполнение (отрисовка) полосы
+     * Заполнение (отрисовка) полосы.
      *
      * @return
      */
@@ -687,14 +659,7 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Инициализация полей
-     */
-    protected void setFields() {
-        //TODO
-    }
-
-    /**
-     * Выставление размеров (свойств) картинки относительно размера ImageView
+     * Выставление размеров (свойств) картинки относительно размера ImageView.
      */
     protected void setImageViewSize() {
         double height = pnGist.getHeight();
@@ -704,13 +669,12 @@ public class Controller implements Initializable {
         iwGist.prefHeight(height);
         iwGist.prefWidth(width);
         iwGist.setPreserveRatio(true);
-        //Нужно ли менять размер панели
     }
 
     /**
-     * Инициализация детектора
+     * Инициализация детектора.
      *
-     * @param detectorIndex индекс найденного детектора
+     * @param detectorIndex индекс найденного детектора.
      */
     protected void initializeDetector(final int detectorIndex) {
 
@@ -718,19 +682,19 @@ public class Controller implements Initializable {
             @Override
             protected Void call() throws Exception {
                 /**
-                 * Если нет активного детектора, тогда инициализировать выбранный
+                 * Если нет активного детектора, тогда инициализировать выбранный.
                  */
                 if (selDetector == null) {
                     initPanel(detectorIndex, FPSVideo);
                 } else {
                     /**
-                     * Если уже есть активный детектор, тогда закрыть активный и инициализировать выбранный
+                     * Если уже есть активный детектор, тогда закрыть активный и инициализировать выбранный.
                      */
                     closeDetector();
                     initPanel(detectorIndex, FPSVideo);
                 }
                 /**
-                 * Старт потока видео
+                 * Старт  видеопотока.
                  */
                 startDetectorStream();
                 return null;
@@ -738,14 +702,14 @@ public class Controller implements Initializable {
         };
         new Thread(detectorIntilizer).start();
         /**
-         * Активировать панель с кнопками
+         * Активировать панель с кнопками.
          */
         btnGetData.setDisable(true);
         btnParams.setDisable(true);
     }
 
     /**
-     * Инициализация панели
+     * Инициализация панели.
      *
      * @param detectorIndex индекс детектора
      * @param FPS           ограничение кадровой частоты
@@ -754,20 +718,16 @@ public class Controller implements Initializable {
         selDetector = Detector.getDetectors().get(detectorIndex);
         viewSize = selDetector.getViewSize();
         detectorPanel = new DetectorPanel(selDetector, viewSize, true);
-
         detectorPanel.setFPSDisplayed(true);
         snDetectorCapturedImage.setContent(detectorPanel);
-
         initFPSservice();
         initStatService();
-
         BufferedImage bufferedImage = fillPolosa();
         ivPolosa.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
-
     }
 
     /**
-     * Старт видео
+     * Старт видеопотока.
      */
     protected void startDetectorStream() {
         /**
@@ -783,7 +743,7 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Отработка удаления (сброса) детектора
+     * Отработка закрытия детектора.
      */
     private void closeDetector() {
         if (selDetector != null) {
@@ -792,7 +752,7 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Отработка кнопки старт/стоп
+     * Отработка кнопки старт/стоп.
      *
      * @param event
      */
@@ -810,7 +770,7 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Отработка кнопки сброса
+     * Отработка кнопки сброса.
      *
      * @param event
      */
@@ -838,42 +798,7 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Отработка установки задержки вывода видео
-     *
-     * @param event
-     */
-    public void setPauseOnVideo(ActionEvent event) {
-        TextField source = (TextField) event.getSource();
-        try {
-            double limit = Double.parseDouble(source.getText());
-            FPSVideo = limit;
-        } catch (Exception e) {
-            LOG.error("Integer processing error", e);
-        }
-        source.selectAll();
-        source.getParent().requestFocus();
-        reconnect();
-    }
-
-    /**
-     * Переоткрытие панели при смене параметров
-     */
-    private void reconnect() {
-        int selectedIndex = cbDetectorOptions.getSelectionModel().getSelectedIndex();
-        paused = true;
-        disposeDetector(new ActionEvent());
-        btnStartStop.setDisable(false);
-        cbDetectorOptions.getSelectionModel().select(null);
-        try {
-            TimeUnit.MILLISECONDS.sleep(200);
-        } catch (InterruptedException e) {
-            LOG.error(e.getMessage());
-        }
-        cbDetectorOptions.getSelectionModel().select(selectedIndex);
-    }
-
-    /**
-     * Сервис отображения FPS
+     * Сервис отображения FPS.
      */
     private void initFPSservice() {
         Task<Void> task = new Task<Void>() {
@@ -882,9 +807,9 @@ public class Controller implements Initializable {
                 while (!stopVideo) {
                     try {
                         TimeUnit.SECONDS.sleep(1);
-                        Platform.runLater(() -> tfFPS.setText(detectorPanel.stringFps));
+                        Platform.runLater(() -> tfFPS.setText(detectorPanel.getStringFPS()));
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        //ignore
                     }
                 }
                 return null;
@@ -896,10 +821,8 @@ public class Controller implements Initializable {
         th.start();
     }
 
-    private volatile int countSkippedFrames = 0;
-
     /**
-     * Отображение статистики
+     * Отображение статистики.
      */
     private void initStatService() {
         Task<Void> task = new Task<Void>() {
@@ -928,7 +851,7 @@ public class Controller implements Initializable {
                                 lbAverageSignal.setText(FORMATTER.format(statData.getMean()));
                                 //Отображение гистограмм
                                 /**
-                                 * Главная гистограмма
+                                 * Главная гистограмма.
                                  */
                                 if (grabbedImage != null) {
                                     final Image gistIamgeToFX = SwingFXUtils
@@ -936,13 +859,13 @@ public class Controller implements Initializable {
                                     gistImageProperty.set(gistIamgeToFX);
                                 }
                                 /**
-                                 * Горизонтальная гистограмма
+                                 * Горизонтальная гистограмма.
                                  */
                                 final Image gistHIamgeToFXH = SwingFXUtils
                                         .toFXImage(grabbedImageH, null);
                                 gistImagePropertyH.set(gistHIamgeToFXH);
                                 /**
-                                 * Вертикальная гистограмма
+                                 * Вертикальная гистограмма.
                                  */
                                 final Image gistVIamgeToFXV = SwingFXUtils
                                         .toFXImage(grabbedImageV, null);
@@ -956,7 +879,7 @@ public class Controller implements Initializable {
 
                         }
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        LOG.error("Error in staticService {}",e);
                     }
                 }
                 return null;
@@ -973,7 +896,7 @@ public class Controller implements Initializable {
 
 
     /**
-     * Отработка установки инта
+     * Отработка установки инта.
      *
      * @param event
      */
@@ -990,6 +913,9 @@ public class Controller implements Initializable {
 
     }
 
+    /**
+     * Сброс цвета кнопок.
+     */
     private void resetBTNS() {
         btnGetData.setDisable(true);
         btnParams.setDisable(true);
@@ -999,20 +925,19 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Установка инта
+     * Установка инта.
      */
     public FT_STATUS setInt() {
         if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
             FT_STATUS ft_status = ((DetectorDevice.ChinaSource) selDetector.getDevice()).setInt(params.getTempInt());
             return ft_status;
-
         }
         return null;
     }
 
 
     /**
-     * Отработка установки VOS
+     * Отработка установки VOS/скимменг.
      *
      * @param event
      */
@@ -1027,7 +952,7 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Установка VOS
+     * Установка VOS.
      */
     public FT_STATUS setVOS() {
         if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
@@ -1038,7 +963,7 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Отработка установки VOS1
+     * Отработка установки VOS1.
      *
      * @param event
      */
@@ -1054,7 +979,7 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Установка референса VOS1
+     * Установка референса VOS1.//todo нуженли
      */
     public FT_STATUS setReference() {
         if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
@@ -1066,7 +991,7 @@ public class Controller implements Initializable {
 
 
     /**
-     * Отработка установки VR0
+     * Отработка установки VR0/смещения.
      *
      * @param event
      */
@@ -1081,20 +1006,18 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Установка VR0
+     * Установка VR0/смещение.
      */
     public FT_STATUS setVR0() {
         if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
             FT_STATUS ft_status = ((DetectorDevice.ChinaSource) selDetector.getDevice()).setVR0(params.getTempVR0());
-
             return ft_status;
         }
         return null;
     }
 
-
     /**
-     * Установка числа отсчетов
+     * Установка числа отсчетов.
      *
      * @param event
      */
@@ -1108,7 +1031,7 @@ public class Controller implements Initializable {
     }
 
     /**
-     * установка размеров окна центральной части
+     * Установка размеров окна центральной части.
      *
      * @param event
      */
@@ -1129,6 +1052,12 @@ public class Controller implements Initializable {
         }
     }
 
+    /**
+     * Отрисовка главной гистограммы распределения.
+     *
+     * @param data входной массив данных.
+     * @return картинка.
+     */
     private BufferedImage drawMainGist(float[] data) {
 
         int height = (int) pnGist.getHeight();
@@ -1146,7 +1075,7 @@ public class Controller implements Initializable {
         g2.setBackground(new Color(204, 204, 204, 255));
         g2.clearRect(0, 0, width, height);
 
-        applyRaspred(data, g2);
+        drowColomn(data, g2);
 
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.dispose();
@@ -1159,12 +1088,18 @@ public class Controller implements Initializable {
     int bochka = -1;
     int length = 0;
 
-    private void applyRaspred(float[] data, Graphics2D g2) {
+    /**
+     * Отрисовка столбцов.
+     *
+     * @param data
+     * @param g2
+     */
+    private void drowColomn(float[] data, Graphics2D g2) {
         maxVisota = -1;
         maxVhogrenie = -1;
         bochka = -1;
         length = data.length;
-        int[] ints = takeRaspred2(data, true, 195, 300);
+        int[] ints = takeCountInside(data, true, 195, 300);
         for (int i = 0; i < ints.length; i++) {
 
             drawRect(g2, ints[i], i, ints.length);
@@ -1173,41 +1108,16 @@ public class Controller implements Initializable {
                 bochka = i;
             }
         }
-        // drawString(g2, bochka, maxVhogrenie, length);
-
     }
 
-    private void drawString(Graphics2D g2, int bochka, int maxVhogrenie, int size) {
-        Font font = new Font("sans-serif", Font.BOLD, 12);
-        g2.setFont(font);
-        FontMetrics metrics = g2.getFontMetrics(font);
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-        double roundValue = DoubleRounder.round(100 * maxVhogrenie / 195.0, 3);
-        int roundST = (int) DoubleRounder.round(roundValue * length / 100, 0);
-        String s = roundST + " элем. " + roundValue + " % ";
-        int w = 6 * bochka + 10;
-        int visota = (int) (195 * maxVhogrenie * 0.01);
-        int h = 195 - visota - 5;
-        if (h < 0) {
-            h = metrics.getHeight();
-        } else if (h < metrics.getHeight() + 2) {
-            h = h + metrics.getHeight() + 2;
-        }
-        if (w > 300 - metrics.stringWidth(s)) {
-            w = 300 - metrics.stringWidth(s) - 10;
-
-        }
-        int sw = w;
-        int sh = h;
-
-        g2.setColor(Color.BLACK);
-        g2.drawString(s, sw + 1, sh + 1);
-        g2.setColor(Color.WHITE);
-        g2.drawString(s, sw, sh);
-    }
-
-
+    /**
+     * Отрисовка примоугольника.
+     *
+     * @param g2
+     * @param value
+     * @param i
+     * @param length
+     */
     private void drawRect(Graphics2D g2, int value, int i, int length) {
 
         int shaG = 300 / length;
@@ -1220,12 +1130,17 @@ public class Controller implements Initializable {
     }
 
     ///////////////////
-    //todo
-    //todo
-    //todo
-    //todo
 
-    private int[] takeRaspred2(float[] dataArray, boolean persent, int h, int w) {
+    /**
+     * Расчет количества вхождений.
+     *
+     * @param dataArray      входные параметры.
+     * @param enableMasshtab флагмасштабирования.
+     * @param h              высота поля.
+     * @param w              ширина.
+     * @return
+     */
+    private int[] takeCountInside(float[] dataArray, boolean enableMasshtab, int h, int w) {
 
         double maxValue = Double.MIN_VALUE;
         double minValue = Double.MAX_VALUE;
@@ -1258,7 +1173,7 @@ public class Controller implements Initializable {
             }
         }
         float koef = (float) ((1.0 * h) / length);
-        if (persent) {
+        if (enableMasshtab) {
             for (int i = 0; i < countOtrezkov; i++) {
                 tempArray[i] = (int) DoubleRounder.round((tempArray[i] * koef), 0);
             }
@@ -1266,6 +1181,13 @@ public class Controller implements Initializable {
         return tempArray;
     }
 
+    /**
+     * Отрисовка гистограмм распределения по вертикали и горизонтали.
+     *
+     * @param data         исходные данные.
+     * @param TYPE_DIAGRAM true- вертикаль, false -горизонталь.
+     * @return картинка.
+     */
     private BufferedImage drawLowGist(float[] data, boolean TYPE_DIAGRAM) {
 
         if (!TYPE_DIAGRAM) {
@@ -1300,12 +1222,20 @@ public class Controller implements Initializable {
     int bochkaSKO = -1;
     int lengthSKO = -1;
 
+    /**
+     * Расчет распределения для гистограмм строк и столбцов.
+     *
+     * @param data         данные.
+     * @param g2           среда.
+     * @param height       высота поля.
+     * @param width        ширина поля.
+     * @param TYPE_DIAGRAM тип диаграммы. true- вертикаль, false -горизонталь.
+     */
     private void applySKO(float[] data, Graphics2D g2, int height, int width, boolean TYPE_DIAGRAM) {
         maxVisotaSKO = -1;
         maxVhogrenieSKO = -1;
         bochkaSKO = -1;
         lengthSKO = data.length;
-
         for (int i = 0; i < data.length; i++) {
 
             if (maxVisotaSKO < data[i]) {
@@ -1313,41 +1243,53 @@ public class Controller implements Initializable {
                 bochkaSKO = i;
             }
         }
-
         float koef = height / maxVisotaSKO;
         for (int i = 0; i < data.length; i++) {
-
-            drawRect2(g2, (int) (data[i] * koef), i, data.length, height, width);
-
+            drawLitleColomn(g2, (int) (data[i] * koef), i, data.length, height, width);
         }
-        drawString2(g2, data.length - 1 - bochkaSKO, maxVisotaSKO, data.length, height, width, TYPE_DIAGRAM);
+        drawMaxValueOnGist(g2, data.length - 1 - bochkaSKO, maxVisotaSKO, data.length,
+                height, width, TYPE_DIAGRAM);
     }
 
-    private void drawRect2(Graphics2D g2, int value, int i, int length, int height, int width) {
+    /**
+     * Отрисовка маленьких столбцов c показом максимума.
+     *
+     * @param g2
+     * @param value  значение.
+     * @param i      номер столбца с максимальным значением.
+     * @param length количество столбцов.
+     * @param height высота поля.
+     * @param width  ширина поля.
+     */
+    private void drawLitleColomn(Graphics2D g2, int value, int i, int length, int height, int width) {
 
         int shaG = width / length;
-
         if (i == bochkaSKO) {
             g2.setColor(new Color(0, 0, 0));
         } else {
             g2.setColor(new Color(68, 133, 3));
         }
         int visota = (int) (height - value);
-
-
         g2.fillRect(300 - 22 - shaG * i, visota, shaG, value);
-
     }
 
-    private void drawString2(Graphics2D g2, int bochka, float maxVhogrenie, int size, int height, int width, boolean TYPE_DIAGRAM) {
+    /**
+     * Отрисовка значения на истограмме.
+     *
+     * @param g2
+     * @param bochka       номер столбца с максимальным значением.
+     * @param maxVhogrenie максимальное значение.
+     * @param size         количество столбцов.
+     * @param height       высота.
+     * @param width        ширина.
+     * @param TYPE_DIAGRAM тип диаграммы: строка, столбец.
+     */
+    private void drawMaxValueOnGist(Graphics2D g2, int bochka, float maxVhogrenie, int size, int height, int width, boolean TYPE_DIAGRAM) {
         Font font = new Font("sans-serif", Font.BOLD, 10);
         g2.setFont(font);
         FontMetrics metrics = g2.getFontMetrics(font);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-        /////////////////////////////////////////////////////
         int shaG = width / size;
-
         for (int i = 0; i < size + 1; i = i + 32) {
             String s;
             if (i == 0) {
@@ -1356,9 +1298,7 @@ public class Controller implements Initializable {
                 s = (i - 1) + "";
             }
             int w = 22 + shaG * i - metrics.stringWidth(s) / 2;
-
             int h = height - 5;
-
             int sw = w;
             int sh = h;
             g2.setColor(Color.BLACK);
@@ -1366,7 +1306,6 @@ public class Controller implements Initializable {
             g2.setColor(Color.WHITE);
             g2.drawString(s, sw, sh);
         }
-
         font = new Font("sans-serif", Font.BOLD, 14);
         g2.setFont(font);
         metrics = g2.getFontMetrics(font);
@@ -1379,22 +1318,16 @@ public class Controller implements Initializable {
         }
         int w = width;
         int h = height;
-
         int sw = (w - metrics.stringWidth(s)) - 25;
         int sh = (h - metrics.getHeight()) - 20;
-
         g2.setColor(Color.BLACK);
         g2.drawString(s, sw + 1, sh + 1);
-
         g2.setColor(Color.WHITE);
         g2.drawString(s, sw, sh);
-
     }
 
-    //TODO
-
     /**
-     * Старт расчета потока
+     * Старт расчета потока.
      *
      * @param event
      */
@@ -1406,14 +1339,14 @@ public class Controller implements Initializable {
         PotokController potokController = potokFxmlLoader.getController();
         potokController.initController(this);
         Scene scene = new Scene(root);
-        stage.setTitle("Поток");
+        stage.setTitle("Расчет значения потока и ввод параметров стенда");
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.show();
     }
 
     /**
-     * Старт расчета параметров
+     * Старт расчета параметров.
      *
      * @param event
      */
@@ -1425,7 +1358,7 @@ public class Controller implements Initializable {
         ParamsController paramsController = paramsFxmlLoader.getController();
         paramsController.initController(this);
         Scene scene = new Scene(root);
-        stage.setTitle("Параметры");
+        stage.setTitle("Расчет характеристик детектора");
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.show();
@@ -1433,16 +1366,19 @@ public class Controller implements Initializable {
 
     private DataService dataService;
 
+    /**
+     * Старт сервиса набора данных.
+     *
+     * @param event
+     */
     @FXML
     private void startGetData(ActionEvent event) {
         if (dataService == null) {
             initDataservice();
         }
-
         getPb_exp().visibleProperty().bind(dataService.runningProperty());
         getPb_exp().progressProperty().bind(dataService.progressProperty());
         getLab_exp_status().textProperty().bind(dataService.messageProperty());
-
         if (dataService.getState() == Worker.State.RUNNING) {
             dataService.cancel();
             dataService = null;
@@ -1452,12 +1388,11 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Инициализация сервиса сбора данных
+     * Инициализация сервиса сбора данных.
      */
     public void initDataservice() {
         dataService = new DataService(this);
     }
-
 
     FXMLLoader potokFxmlLoader;
     FXMLLoader paramsFxmlLoader;
@@ -1466,30 +1401,13 @@ public class Controller implements Initializable {
         return paramsFxmlLoader;
     }
 
-    public FXMLLoader getPotokFxmlLoader() {
-        return potokFxmlLoader;
-    }
-
     public ComboBox<String> getCbDimOptions() {
         return cbDimOptions;
-    }
-
-    public void setCbDimOptions(ComboBox<String> cbDimOptions) {
-        this.cbDimOptions = cbDimOptions;
     }
 
     public static float getMASHTAB() {
         return MASHTAB;
     }
-
-    public AtomicBoolean getIsFramesReady() {
-        return isFramesReady;
-    }
-
-    public void setIsFramesReady(AtomicBoolean isFramesReady) {
-        this.isFramesReady = isFramesReady;
-    }
-
 
     public ProgressBar getPb_exp() {
         return pb_exp;
@@ -1523,82 +1441,34 @@ public class Controller implements Initializable {
         return btnParams;
     }
 
-    public int getBochka() {
-        return bochka;
-    }
-
     public ExpInfo getSelExp() {
         return selExp;
-    }
-
-    public void setSelExp(ExpInfo selExp) {
-        this.selExp = selExp;
     }
 
     public ObservableList<ExpInfo> getOptionsExp() {
         return optionsExp;
     }
 
-    public void setOptionsExp(ObservableList<ExpInfo> optionsExp) {
-        this.optionsExp = optionsExp;
-    }
-
     public static int getExpCounter() {
         return expCounter++;
-    }
-
-    public static void setExpCounter(int expCounter) {
-        Controller.expCounter = expCounter;
-    }
-
-    public void setTfInt(TextField tfInt) {
-        this.tfInt = tfInt;
     }
 
     public TextField getTfVOS() {
         return tfVOS;
     }
 
-    public void setTfVOS(TextField tfVOS) {
-        this.tfVOS = tfVOS;
-    }
-
     public TextField getTfVR0() {
         return tfVR0;
-    }
-
-    public void setTfVR0(TextField tfVR0) {
-        this.tfVR0 = tfVR0;
     }
 
     public ComboBox<String> getCbCCCOptions() {
         return cbCCCOptions;
     }
 
-    public void setCbCCCOptions(ComboBox<String> cbCCCOptions) {
-        this.cbCCCOptions = cbCCCOptions;
-    }
-
-    public TextField getTfSpeedPlata() {
-        return tfSpeedPlata;
-    }
-
-    public void setTfSpeedPlata(TextField tfSpeedPlata) {
-        this.tfSpeedPlata = tfSpeedPlata;
-    }
-
-    public TextField getTfFPS() {
-        return tfFPS;
-    }
-
-    public void setTfFPS(TextField tfFPS) {
-        this.tfFPS = tfFPS;
-    }
-
     /**
-     * Инициализация сети
+     * Инициализация сети.
      *
-     * @param index индекс найденного интрерфейса
+     * @param index индекс найденного интрерфейса.
      */
     protected void initializeNetwork(final int index) {
         selNetworkInterface = optionsNetwork.get(index);

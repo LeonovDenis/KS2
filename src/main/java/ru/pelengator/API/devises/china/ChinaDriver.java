@@ -127,7 +127,7 @@ public class ChinaDriver implements DetectorDriver, DetectorDiscoverySupport {
     }
 
     /**
-     * Конструктор
+     * Конструктор.
      * @param params стендовые параметры
      */
     public ChinaDriver(StendParams params) {
@@ -136,7 +136,7 @@ public class ChinaDriver implements DetectorDriver, DetectorDiscoverySupport {
     }
 
     /**
-     * Возврат значения интервала поиска устройств
+     * Возврат значения интервала поиска устройств.
      * @return
      */
     @Override

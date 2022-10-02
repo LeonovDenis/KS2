@@ -1,5 +1,8 @@
 package ru.pelengator.API;
 
+/**
+ * Тип события детектора.
+ */
 public enum DetectorEventType {
 
     OPEN,

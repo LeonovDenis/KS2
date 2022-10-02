@@ -42,12 +42,17 @@ public class Jna2 {
     private static volatile Pointer hendler = new Memory(MB);
     //количество переданных байтов
     private static volatile LongByReference byteTrans = new LongByReference(0);
-    private static AtomicBoolean online = new AtomicBoolean(false);
-    private static AtomicBoolean isMessageSend = new AtomicBoolean(false);
-
+    /**
+     * Флаг действительности обработчика.
+     */
     private static AtomicBoolean validHendler = new AtomicBoolean(false);
+    /**
+     * Флаг ожидания ответа от платы.
+     */
     private static AtomicBoolean needToWaite = new AtomicBoolean(false);
-
+    /**
+     * Флаг открытия устройства.
+     */
     private static AtomicBoolean isOpened = new AtomicBoolean(false);
 
     private ComList comList;
@@ -56,14 +61,14 @@ public class Jna2 {
 ///////////////////////////////////////////////////////////////////////////////////
 
     /**
-     * Конструктор
+     * Конструктор.
      */
     public Jna2() {
     }
 
 
     /**
-     * Нативный интерфейс
+     * Нативный интерфейс.
      */
     public interface FTD3XX extends StdCallLibrary {
 
@@ -89,10 +94,9 @@ public class Jna2 {
     //рабочие методы
     //////////////////////////////////////////////////////////////
 
-
     /**
-     * Создание обработчика
-     * Инициализация работы
+     * Создание обработчика.
+     * Инициализация работы.
      *
      * @return Статус FT_
      */
@@ -109,7 +113,7 @@ public class Jna2 {
             } else {
                 validHendler.set(false);
             }
-            LOG.error("Открытие обработчика обработчика {} {}", value, validHendler.get());
+            LOG.trace("Detector not open. Dont create hendler, error {} hendler {}", value, validHendler.get());
         } else {
             return FT_STATUS.FT_BUSY;
         }
@@ -129,15 +133,16 @@ public class Jna2 {
         //тест
         FT_STATUS status = FT_STATUS.values()[i];
         if (status != FT_STATUS.FT_OK) {
+            LOG.error("Writing error {}",status);
             validHendler.set(false);
         }
         return status;
     }
 
     /**
-     * чтение массива
+     * Чтение массива.
      *
-     * @return Обернутый массив
+     * @return Обернутый массив.
      */
     public Bytes readPipe() {
         int i = FTD3XX.FTD3XX_INSTANCE.FT_ReadPipe(hendler.getPointer(0), (byte) 0x82, pBuff, MB, byteTrans, (Structure) null);
@@ -146,47 +151,15 @@ public class Jna2 {
         //тест
         FT_STATUS status = FT_STATUS.values()[i];
         if (status != FT_STATUS.FT_OK) {
+            LOG.error("Reading error {}",status);
             validHendler.set(false);
         }
         return from;
     }
 
-
     /**
-     * Реконнект
-     */
-    public synchronized FT_STATUS reconnect() {
-        LOG.error("Реконнект");
-
-        stopSession();
-        try {
-            TimeUnit.MILLISECONDS.sleep(200);
-        } catch (InterruptedException e) {
-            LOG.error("Ошибка при реконнекте {}", e);
-            e.printStackTrace();
-        }
-        FT_STATUS ft_status1 = create();
-        if (ft_status1 != FT_STATUS.FT_OK || ft_status1 != FT_STATUS.FT_BUSY) {
-            return FT_STATUS.FT_DEVICE_LIST_NOT_READY;
-        }
-
-        FT_STATUS ft_status = setID();
-
-        try {
-            TimeUnit.MILLISECONDS.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        if (ft_status == FT_STATUS.FT_OK) {
-            online.compareAndSet(false, true);
-        }
-
-        return FT_STATUS.FT_OK;
-    }
-
-    /**
-     * Завершение работы
-     * Закрытие обработчика
+     * Завершение работы.
+     * Закрытие обработчика.
      *
      * @return Статус FT_
      */
@@ -198,7 +171,7 @@ public class Jna2 {
             isOpened.set(false);
             validHendler.set(false);
 
-            LOG.error("Закрытие обработчика {} {}", value, validHendler.get());
+            LOG.trace("Closing detector {}, hendler validstatus: {}", value, validHendler.get());
         } else {
             return FT_STATUS.FT_BUSY;
         }
@@ -209,22 +182,22 @@ public class Jna2 {
     //////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////управление/////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////
-//todo
     private String name = "ДТ10Э";
     private String id = "ЕАНГ.468424.012";
+    /**
+     * Флаг для поисковика устройств.
+     */
     private static volatile AtomicBoolean flag_device_connected = new AtomicBoolean(true);
-
+    /**
+     * Текущее разрешение.
+     */
     private static Dimension size = DetectorResolution.CHINA.getSize();
 
-    private static Map<String, ?> properties = new HashMap<>();
-
-//todo
-
     /**
-     * Заполнение списка устройств
+     * Заполнение списка устройств.
      *
-     * @param devices пустой список устройств
-     * @return заполненный список устройств
+     * @param devices пустой список устройств.
+     * @return заполненный список устройств.
      */
     public List<DetectorDevice> getDDevices(List<DetectorDevice> devices) {
 
@@ -233,7 +206,7 @@ public class Jna2 {
             device.setResolution(size);
             devices.add(device);
         } else {
-            LOG.error("Устройство НЕ подключено. Пустой лист");
+            LOG.error("Devise not connected. List is Empty");
         }
         return Collections.unmodifiableList(devices);
     }
@@ -241,36 +214,34 @@ public class Jna2 {
     /**
      * Формирование массива изображения из буффера из интов.
      *
-     * @return Обернутый массив сырого изображения инт
+     * @return Обернутый массив сырого изображения инт.
      */
     public ByteBuffer getImage() {
-        LOG.trace("Запрос на получение Картинки из getImage до nextFrame");
         ByteBuffer bytes = null;
         Bytes frame = nextFrame();
-        LOG.trace("Вывод полного кадра из getImage после nextFrame {}", frame);
-        LOG.trace("isOnline: {}, validHendler {},needWaite {}", isOpened, validHendler, needToWaite);
+        LOG.trace("Detector status: isOnline: {}, validHendler {},needWaite {}", isOpened, validHendler, needToWaite);
         if (frame == null) {
             return null;
         }
         bytes = frame.buffer();
-        LOG.trace("Вывод полного кадра {}", bytes);
+        LOG.trace("Image capted. Bytes: {}", bytes);
         return bytes;
     }
 
 
     /**
-     * Запрос ширины полученной картинки
+     * Запрос ширины полученной картинки.
      *
-     * @return ширина в px
+     * @return ширина в px.
      */
     public int getWidth() {
         return (int) size.getWidth();
     }
 
     /**
-     * Запрос высоты полученной картинки
+     * Запрос высоты полученной картинки.
      *
-     * @return высота в px
+     * @return высота в px.
      */
     public int getHeight() {
         return (int) size.getHeight();
@@ -278,22 +249,12 @@ public class Jna2 {
 
     /**
      * Остановка текущей сессии.
-     * Закрытие устройства
+     * Закрытие устройства.
      */
     public void stopSession() {
-        LOG.trace("Старт остановки сессии");
+        LOG.trace("Start stop session");
         nextFrame();
-        //todo возможно необходимо прочитать разок
         close();
-    }
-
-    private void waitToClearUSB() {
-        Bytes bytes = null;
-        do {
-            bytes = nextFrame();
-
-        } while (bytes != null);
-        isMessageSend.compareAndSet(false, true);
     }
 
     /**
@@ -303,14 +264,13 @@ public class Jna2 {
      */
     public FT_STATUS startSession() {
         comList = new ComList(this);
-        LOG.info("Создан комлист");
         validHendler.compareAndSet(true, false);
-        LOG.info("Старт сессии......");
+        LOG.info("Start session");
         return FT_STATUS.FT_OK;
     }
 
     /**
-     * Установка разрешения
+     * Установка разрешения.
      *
      * @param set - 0xFF -128*128 (true); 0x00 - 92*90
      * @return
@@ -330,7 +290,7 @@ public class Jna2 {
     }
 
     /**
-     * Установка коэф. усиления
+     * Установка коэф. усиления.
      *
      * @param set - 0xFF -3 (true); 0x00 - 1
      * @return
@@ -346,23 +306,7 @@ public class Jna2 {
     }
 
     /**
-     * Подача питания RE
-     *
-     * @param set - 0xFF -включение (true); 0x00 - выключение
-     * @return
-     */
-    public FT_STATUS setRE(boolean set) {
-        if (!validHendler.get()) {
-            LOG.error("Hendler not valid");
-            return FT_STATUS.FT_BUSY;
-        }
-        needToWaite.set(true);
-        return comList.setRE(set);
-
-    }
-
-    /**
-     * Подача питания VDD, VDDA
+     * Подача питания VDD, VDDA.
      *
      * @param set - 0xFF -включение (true); 0x00 - выключение
      * @return
@@ -371,7 +315,7 @@ public class Jna2 {
         FT_STATUS ft_status;
         if (set) {
 
-            LOG.info("Создание обработчика в повере");
+            LOG.info("Creating Hendler in power session");
             FT_STATUS ft_status1 = create();
             if (ft_status1 == FT_STATUS.FT_BUSY) {
                 nextFrame();
@@ -380,13 +324,13 @@ public class Jna2 {
                 nextFrame();
                 return ft_status;
             } else if (ft_status1 != FT_STATUS.FT_OK) {
-                LOG.error("Обработчик в повере не создался");
+                LOG.error("Hendler not started inpower session");
                 return FT_STATUS.FT_EEPROM_NOT_PRESENT;
             }
 
-            LOG.info("Установка ID в повере");
+            LOG.info("Setting ID in power session");
             if (setID() != FT_STATUS.FT_OK) {
-                LOG.error("Установка  id не удалась в повере");
+                LOG.error("Cant set ID in Power session");
                 return FT_STATUS.FT_BUSY;
             }
             if (isOpened.get()) {
@@ -421,7 +365,7 @@ public class Jna2 {
     }
 
     /**
-     * Установка напр. смещения
+     * Установка напр. смещения.
      *
      * @param value - в миливольтах
      * @return
@@ -436,25 +380,9 @@ public class Jna2 {
         return comList.setVR0(value);
     }
 
-    /**
-     * Установка направления сканирования
-     *
-     * @param value - byte
-     * @return
-     */
-    public FT_STATUS setRo(byte value) {
-
-        if (!validHendler.get()) {
-            LOG.error("Hendler not valid");
-            return FT_STATUS.FT_BUSY;
-        }
-        needToWaite.set(true);
-        return comList.setRo(value);
-    }
-
 
     /**
-     * Установка напр. антиблюминга
+     * Установка напр. VOS скимминга.
      *
      * @param value - в миливольтах
      * @return
@@ -470,7 +398,7 @@ public class Jna2 {
     }
 
     /**
-     * Установка рефов1
+     * Установка рефов1 //todo проверить нужен ли метод
      *
      * @param value - в миливольтах
      * @return
@@ -486,39 +414,7 @@ public class Jna2 {
     }
 
     /**
-     * Установка рефов2
-     *
-     * @param value - в миливольтах
-     * @return
-     */
-    public FT_STATUS setVVA2(int value) {
-
-        if (!validHendler.get()) {
-            LOG.error("Hendler not valid");
-            return FT_STATUS.FT_BUSY;
-        }
-        needToWaite.set(true);
-        return comList.setVVA2(value);
-    }
-
-    /**
-     * Сброс устройства
-     *
-     * @param isReset - true - ресет
-     * @return
-     */
-    public FT_STATUS setReset(boolean isReset) {
-
-        if (!validHendler.get()) {
-            LOG.error("Hendler not valid");
-            return FT_STATUS.FT_BUSY;
-        }
-        needToWaite.set(true);
-        return comList.setReset(isReset);
-    }
-
-    /**
-     * Установка id устройства
+     * Установка id устройства.
      *
      * @return
      */
@@ -531,55 +427,51 @@ public class Jna2 {
         needToWaite.set(true);
         return comList.setID();
     }
-private int countFR=0;
+
+    /**
+     * На случай неподтверждения факта получения сообщения.
+     */
+    private int countFR = 0;
+
+    /**
+     * Запрос целого кадра.
+     * @return
+     */
     public Bytes nextFrame() {
         Bytes bytes = null;
         if (validHendler.get()) {
 
-            do {//todo возможно нужно еще раз прочитать
+            do {
                 bytes = comList.nextFrame();
-                LOG.error("КАдр прочитан. Внутри while");
-                if(countFR++>10){
+                if (countFR++ > 10) {
                     needToWaite.set(false);
-                    LOG.error("Выход принудительный. Внутри while");
-                    countFR=0;
+                    countFR = 0;
                 }
             } while (needToWaite.get());
-            LOG.error("обработчик валид. видео ок");
         } else {
             if (validHendler.get() && needToWaite.get() && isOpened.get()) {
                 close();
             }
             //выход, кагда нет связи или старт без включения
             bytes = null;
-            LOG.error("обработчик инвалид. видео нул");
+            LOG.error("Hendler not valid. Video null");
         }
         return bytes;
     }
 
+    /**
+     * Очистка буфера
+     */
     public void clearBuffer() {
         comList.clearBuffer();
 
     }
-
-    public FT_STATUS setParameters(Map<String, ?> params) {
-        return FT_STATUS.FT_OK;
-    }
-
     public static AtomicBoolean getNeedToWaite() {
         return needToWaite;
     }
 
-    public static void setNeedToWaite(AtomicBoolean needToWaite) {
-        Jna2.needToWaite = needToWaite;
-    }
-
     public static AtomicBoolean getValidHendler() {
         return validHendler;
-    }
-
-    public static void setValidHendler(AtomicBoolean validHendler) {
-        Jna2.validHendler = validHendler;
     }
 }
 

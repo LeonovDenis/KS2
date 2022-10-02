@@ -13,7 +13,7 @@ import java.util.*;
 import static ru.pelengator.API.utils.Utils.*;
 
 /**
- * Сервис
+ * Сервис расчета потока.
  */
 public class PotokService extends Service<Void> {
     /**
@@ -55,6 +55,7 @@ public class PotokService extends Service<Void> {
         return new Task<>() {
             @Override
             protected Void call() throws Exception {
+                LOG.trace("Start task");
                 updateMessage("Старт Сервиса");
                 updateProgress(0.0, 1);
                 updateMessage("Инициализация данных");
@@ -76,9 +77,10 @@ public class PotokService extends Service<Void> {
     }
 
     /**
-     * Инициализация параметров
+     * Инициализация параметров.
      */
     private void initParams() {
+        LOG.trace("Init");
         plank0 = mainController.getParams().getPlank0();
         plank1 = mainController.getParams().getPlank1();
         T0 = mainController.getParams().getTemp0();
@@ -97,7 +99,7 @@ public class PotokService extends Service<Void> {
     }
 
     /**
-     * Расчетная функция
+     * Расчетная функция.
      */
     private void math() {
         potok0 = potok(T0, plank0, epsilin0, areaACHT0, L0, betta0, areaFPU0);
@@ -109,13 +111,13 @@ public class PotokService extends Service<Void> {
     }
 
     /**
-     * Печать потока
+     * Печать потока.
      *
      * @param controller
-     * @param potok0     поток при меньшей засветке
-     * @param potok1     поток при большей засветке
-     * @param potok      итоговый поток
-     * @param exposure   итоговая одлученность
+     * @param potok0     поток при меньшей засветке.
+     * @param potok1     поток при большей засветке.
+     * @param potok      итоговый поток.
+     * @param exposure   итоговая одлученность.
      */
     private void printPotok(PotokController controller, double potok0, double potok1, double potok, double exposure) {
         String fpotok0 = String.format(Locale.CANADA, "%.3e", potok0).toUpperCase();
@@ -135,6 +137,7 @@ public class PotokService extends Service<Void> {
      * Сохраняем полученные данные
      */
     private void saveData() {
+        LOG.trace("Saving");
         mainController.getParams().setPotok(potok);
         mainController.getParams().setPotok0(potok0);
         mainController.getParams().setPotok1(potok1);

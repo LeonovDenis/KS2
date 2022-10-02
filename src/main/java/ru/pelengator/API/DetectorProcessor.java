@@ -12,6 +12,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Обработчик заданий детектора (синхронно).
+ */
 public class DetectorProcessor {
     /**
      * Логгер.
@@ -27,7 +30,7 @@ public class DetectorProcessor {
         private static final AtomicInteger N = new AtomicInteger(0);
 
         public ProcessorThread(Runnable r) {
-            super(r, String.format("atomic-processor-%d", N.incrementAndGet()));
+            super(r, String.format("Atomic-processor-%d", N.incrementAndGet()));
         }
     }
 
@@ -47,8 +50,9 @@ public class DetectorProcessor {
     }
 
     /**
-     * Сердце общей системы обработки. Этот класс обрабатывает все нативные вызовы, заключенные в задачи, путем
-     * при этом выполнение всех задач суперсинхронизируется.
+     * Сердце общей системы обработки.
+     * Этот класс обрабатывает все вызовы, заключенные в задачи.
+     * При этом выполнение всех задач суперсинхронизируется.
      */
     private static final class AtomicProcessor implements Runnable {
 

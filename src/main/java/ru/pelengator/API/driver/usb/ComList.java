@@ -22,7 +22,6 @@ public class ComList {
         this.grabber = grabber;
     }
 
-
     private static volatile AtomicBoolean flag_frame_ready = new AtomicBoolean(false);
 
     private static volatile LinkedList<Bytes> bufferVideoParts = new LinkedList<Bytes>();
@@ -30,7 +29,9 @@ public class ComList {
     private static volatile LinkedList<Bytes> currentFrames = new LinkedList<Bytes>();
 
 
-
+    /**
+     * Флаг тестирования.
+     */
     private boolean isTest = false;
     ///////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////методы управления
@@ -53,7 +54,7 @@ public class ComList {
     byte[] SETCCC = new byte[]{(byte) 0x05, (byte) 0x22};
 
     /**
-     * Установка разрешения
+     * Установка разрешения.
      *
      * @param set - 0xFF -128*128 (true); 0x00 - 92*90
      * @return
@@ -66,9 +67,9 @@ public class ComList {
             data = (byte) 0x00;//92*90
         }
         Bytes msg = HEADER              //маска+ID
-                .append(SETDIM[0])    //функция
+                .append(SETDIM[0])      //функция
                 .append((byte) 0x02)    //размер[команда+данные]||
-                .append(SETDIM[1])    //команда               |
+                .append(SETDIM[1])      //команда               |
                 .append(data);          //данные               _|
         FT_STATUS ft_status = grabber.writePipe(msg);
         return ft_status;
@@ -76,7 +77,7 @@ public class ComList {
     }
 
     /**
-     * Установка коэф. усиления
+     * Установка коэф. усиления.
      *
      * @param set - 0xFF -3 (true); 0x00 - 1
      * @return
@@ -89,40 +90,18 @@ public class ComList {
             data = (byte) 0x00;//1
         }
         Bytes msg = HEADER              //маска+ID
-                .append(SETCCC[0])    //функция
+                .append(SETCCC[0])      //функция
                 .append((byte) 0x02)    //размер[команда+данные]||
-                .append(SETCCC[1])    //команда               |
+                .append(SETCCC[1])      //команда               |
                 .append(data);          //данные               _|
         FT_STATUS ft_status = grabber.writePipe(msg);
         return ft_status;
 
     }
 
-    /**
-     * Подача питания RE
-     *
-     * @param set - 0xFF -включение (true); 0x00 - выключение
-     * @return
-     */
-    public FT_STATUS setRE(boolean set) {
-        byte data;
-        if (set) {
-            data = (byte) 0xFF;//on
-        } else {
-            data = (byte) 0x00;//off
-        }
-        Bytes msg = HEADER              //маска+ID
-                .append(SETRE[0])    //функция
-                .append((byte) 0x02)    //размер[команда+данные]||
-                .append(SETRE[1])    //команда               |
-                .append(data);          //данные               _|
-        FT_STATUS ft_status = grabber.writePipe(msg);
-        return ft_status;
-
-    }
 
     /**
-     * Подача питания VDD, VDDA
+     * Подача питания VDD, VDDA.
      *
      * @param set - 0xFF -включение (true); 0x00 - выключение
      * @return
@@ -145,6 +124,11 @@ public class ComList {
         return ft_status;
     }
 
+    /**
+     * Установка времени интегрирования.
+     * @param time
+     * @return
+     */
     public FT_STATUS setIntTime(int time) {
 
         byte[] data = Bytes.from(time).resize(2).reverse().array();
@@ -159,7 +143,7 @@ public class ComList {
     }
 
     /**
-     * Установка напр. смещения
+     * Установка напр. смещения.
      *
      * @param value - в миливольтах
      * @return
@@ -177,27 +161,8 @@ public class ComList {
         return ft_status;
     }
 
-
     /**
-     * Установка направления сканирования
-     *
-     * @param value - byte
-     * @return
-     */
-    public FT_STATUS setRo(byte value) {
-
-        Bytes msg = HEADER            //маска+ID
-                .append(SETRO[0])    //функция
-                .append((byte) 0x02)  //размер[команда+данные]||
-                .append(SETRO[1])    //команда               |
-                .append(value);        //данные               _|
-        FT_STATUS ft_status = grabber.writePipe(msg);
-        return ft_status;
-    }
-
-
-    /**
-     * Установка напр. антиблюминга
+     * Установка напр. VOS скимминга.
      *
      * @param value - в миливольтах
      * @return
@@ -216,7 +181,7 @@ public class ComList {
     }
 
     /**
-     * Установка рефов1
+     * Установка рефов1.
      *
      * @param value - в миливольтах
      * @return
@@ -225,62 +190,18 @@ public class ComList {
 
         float floatValue = value / 1000f;
         byte[] data = Bytes.from(floatValue).reverse().array();
-        Bytes msg = HEADER            //маска+ID
+        Bytes msg = HEADER             //маска+ID
                 .append(SETVVA1[0])    //функция
-                .append((byte) 0x05)  //размер[команда+данные]||
+                .append((byte) 0x05)   //размер[команда+данные]||
                 .append(SETVVA1[1])    //команда               |
-                .append(data);        //данные               _|
+                .append(data);         //данные               _|
         FT_STATUS ft_status = grabber.writePipe(msg);
 
         return ft_status;
     }
 
     /**
-     * Установка рефов2
-     *
-     * @param value - в миливольтах
-     * @return
-     */
-    public FT_STATUS setVVA2(int value) {
-
-        float floatValue = value / 1000f;
-        byte[] data = Bytes.from(floatValue).reverse().array();
-        Bytes msg = HEADER            //маска+ID
-                .append(SETVVA2[0])    //функция
-                .append((byte) 0x05)  //размер[команда+данные]||
-                .append(SETVVA2[1])    //команда               |
-                .append(data);        //данные               _|
-        FT_STATUS ft_status = grabber.writePipe(msg);
-
-        return ft_status;
-    }
-
-    /**
-     * Сброс устройства
-     *
-     * @param isReset - true - ресет
-     * @return
-     */
-    public FT_STATUS setReset(boolean isReset) {
-
-        byte data;
-        if (!isReset) {
-            data = (byte) 0xFF;//work
-        } else {
-            data = (byte) 0x00;//reset
-        }
-        Bytes msg = HEADER              //маска+ID
-                .append(SETRESET[0])    //функция
-                .append((byte) 0x02)    //размер[команда+данные]||
-                .append(SETRESET[1])    //команда               |
-                .append(data);          //данные               _|
-        FT_STATUS ft_status = grabber.writePipe(msg);
-
-        return ft_status;
-    }
-
-    /**
-     * Установка id устройства
+     * Установка id устройства.
      *
      * @return
      */
@@ -292,20 +213,18 @@ public class ComList {
                 .append(SETID[1])    //команда               |
                 .append(DEV_ID);     //данные               _|
         FT_STATUS ft_status = grabber.writePipe(msg);
-        LOG.info("ID установлено {}", ft_status);
+        LOG.info("ID setted {}", ft_status);
 
         return ft_status;
     }
 
     /**
-     * Чтение данных сырых данных
+     * Чтение данных сырых данных.
      *
      * @return
      */
     public Bytes readData() {
         Bytes bytes = grabber.readPipe();
-
-        //тест
 
         if (isTest) {
             bytes = testData(bytes);
@@ -314,29 +233,31 @@ public class ComList {
         return bytes;
     }
 
+    /**
+     * Запросполногокадра.
+     * @return
+     */
     public Bytes nextFrame() {
 
-        LOG.trace("Запрос на получение данных из nextFrame");
         Bytes bytesData = readData();
-        LOG.trace("Запрос на получение данных после nextFrame");
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //проверка на пустой массив
-        if (/*bytesData.isEmpty()||*/!grabber.getValidHendler().get()) {
-            LOG.trace("Мы на паузе",bytesData);
-            grabber.close();//todo нужно ли еще читать?
+        if (!grabber.getValidHendler().get()) {
+            LOG.trace("Exitig. Closing detector. Hendler not valid",bytesData);
+            grabber.close();
             return null;
         }
-        LOG.trace("Запрос на получение данных после норм nextFrame{}",bytesData);
+        LOG.trace("Parsing frame {}",bytesData);
         /**
          * Есть заголовок?
          */
         if (bytesData.startsWith(HEADER.array())) {
 
             /**
-             * Заголовок есть
+             * Заголовок есть.
              */
             /**
-             * Считываем номер функции
+             * Считываем номер функции.
              */
             byte function = bytesData.byteAt(2);// читаем номер функции
 
@@ -349,7 +270,7 @@ public class ComList {
                         try {
                             TimeUnit.MILLISECONDS.sleep(5);
                         } catch (InterruptedException e) {
-                            e.printStackTrace();
+                            //ignore
                         }
                         //повторяем чтение до целого кадра
                         Bytes btData = readData();
@@ -365,27 +286,19 @@ public class ComList {
 
                     Bytes bytes = summPartsOfFrame();
                     if (bytes.length() < (2 * grabber.getHeight() * grabber.getWidth())) {
-                        LOG.error("Разрешение картинки и конфигурация детектора не совпадают!");
+                        LOG.error("Dimension not same!");
                         return null;
                     }
                     return bytes;
                 case 0x00://установка ID
-                    System.out.println("0x00 " + bytesData);
-                    grabber.getNeedToWaite().set(false);
-                    //todo
-                    return null;
-                case 0x05://установка какого-либо параметра
-                    System.out.println("0x05 " + bytesData);
-                    grabber.getNeedToWaite().set(false);
-                    //todo
-                    return null;
                 case 0x02://установка питания
-                    System.out.println("0x02 " + bytesData);
+                case 0x05://установка какого-либо параметра
+                    LOG.trace("Answer " + bytesData);
                     grabber.getNeedToWaite().set(false);
-                    //todo
                     return null;
+
                 default:
-                    System.out.println("default" + bytesData);
+                    LOG.trace("Answer" + bytesData);
                     return null;
             }
         } else {
@@ -394,16 +307,16 @@ public class ComList {
              */
            //0x008000000 подтверждение ID
             if(bytesData.length()==4){
-                System.out.println("0x0080 " + bytesData);
+                LOG.trace("Answer on Set ID " + bytesData);
                 grabber.getNeedToWaite().set(false);
             }
-            System.out.println("Заголовка нет" + bytesData);
+            LOG.error("Answer without header " + bytesData);
             return null;
         }
     }
 
     /**
-     * Обрабатывает составные части кадра
+     * Обрабатывает составные части кадра.
      *
      * @param bytesData
      */
@@ -417,12 +330,11 @@ public class ComList {
         int length = bytesData.length();
         bytesData = reversBytes(bytesData);
         bufferVideoParts.add(bytesData);
-        // LOG.trace("размер второй части {}", length);
         return length / 2;
     }
 
     /**
-     * Обрабатывает первую часть кадра
+     * Обрабатывает первую часть кадра.
      *
      * @param bytesData
      */
@@ -439,12 +351,11 @@ public class ComList {
         Bytes resized = bytesData.resize(box_length - headers);
         resized = reversBytes(resized);
         bufferVideoParts.add(resized);
-        //  LOG.trace("размер первой части {}", resized);
         return frameSize - (resized.length()) / 2;
     }
 
     /**
-     * Разворачивает байты
+     * Разворачивает байты.
      *
      * @param bytes
      * @return
@@ -466,6 +377,10 @@ public class ComList {
         return Bytes.wrap(bytesArray);
     }
 
+    /**
+     * Суммирование частей кадра.
+     * @return
+     */
     private Bytes summPartsOfFrame() {
         if (!bufferVideoParts.isEmpty()) {
 
@@ -480,38 +395,41 @@ public class ComList {
         return null;
     }
 
+    /**
+     * Очистка буфера.
+     */
     public void clearBuffer() {
-        LOG.debug("Очистка буфера размером {}", bufferVideoParts.size());
+        LOG.debug("Clearing buffer. size {}", bufferVideoParts.size());
         bufferVideoParts.clear();
 
     }
     /**
-     * Тестовые данные
+     * Тестовые данные.
      *
      * @param bytes
      * @return
      */
     private static int count = 0;
 
+    /**
+     * Тестовые данные.
+     * @param bytes
+     * @return
+     */
     private Bytes testData(Bytes bytes) {
-
-
         if (count == 0) {
             Bytes temp = bytes.append(HEADER).append(VIDEOHEADER);
             //16384 значения
             Bytes length = Bytes.from((int) 16384).reverse().resize(3, BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_ZERO_INDEX);
             bytes = temp.append(length);
-
             for (int k = 0; k < 8192; k++) {
                 if (k == 8191) {
                     k = 8192 * 2;
                 }
                 Bytes temp_k = Bytes.from((int) k).reverse().resize(2, BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_ZERO_INDEX);
                 bytes = bytes.append(temp_k);
-
             }
         } else if (count == 1) {
-
             for (int k = 0; k < (8192); k++) {
                 Bytes temp_k = Bytes.from((int) (Math.random() * 12000)/*8192+ k*/).reverse().resize(2, BytesTransformer.ResizeTransformer.Mode.RESIZE_KEEP_FROM_ZERO_INDEX);
                 bytes = bytes.append(temp_k);
@@ -521,8 +439,6 @@ public class ComList {
             bytes = bytes.append(HEADER).append((byte) 0x05).append((byte) 0x00);
         }
         count++;
-
         return bytes;
     }
-
 }

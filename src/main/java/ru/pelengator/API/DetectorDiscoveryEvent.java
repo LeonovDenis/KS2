@@ -2,7 +2,6 @@ package ru.pelengator.API;
 import java.util.EventObject;
 /**
  * Это событие генерируется, когда детектор был найден или потерян.
-
  */
 public class DetectorDiscoveryEvent extends EventObject  {
 

@@ -1,5 +1,8 @@
 package ru.pelengator.API;
 
+/**
+ * Обертка для заданий, отправляемыхна детектор
+ */
 public abstract class DetectorTask {
     private boolean doSync = true;
     private DetectorProcessor processor = null;

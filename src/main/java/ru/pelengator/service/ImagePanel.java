@@ -11,9 +11,13 @@ import java.util.Map;
 
 import static java.awt.RenderingHints.*;
 
-
+/**
+ * Интерактивная панелька с квадратом.
+ */
 public class ImagePanel extends JPanel {
-
+    /**
+     * Режимы заполнения окна.
+     */
     public enum DrawMode {
         NONE,
         FILL,
@@ -22,11 +26,11 @@ public class ImagePanel extends JPanel {
 
     public interface Painter {
         /**
-         * Нарисуйте изображение на панели.
+         * Рисует изображение.
          *
-         * @param panel панель для рисования
-         * @param image изображение
-         * @param g2    графический 2D-объект, используемый для рисования
+         * @param panel панель .
+         * @param image изображение.
+         * @param g2    графический 2D-объект, используемый для рисования.
          */
         void paintImage(ImagePanel panel, BufferedImage image, Graphics2D g2);
     }
@@ -38,6 +42,7 @@ public class ImagePanel extends JPanel {
          * Размер буферизованного изображения изменен, чтобы соответствовать области рисования панели.
          */
         private BufferedImage resizedImage = null;
+
         @Override
         public void paintImage(ImagePanel owner, BufferedImage image, Graphics2D g2) {
 
@@ -104,17 +109,10 @@ public class ImagePanel extends JPanel {
 
                     resizedImage = gc.createCompatibleImage(pw, ph);
                     gr = resizedImage.createGraphics();
-
                     gr.setComposite(AlphaComposite.Src);
-
-               //     for (Entry<Key, Object> hint : imageRenderingHints.entrySet()) {
-                //        gr.setRenderingHint(hint.getKey(), hint.getValue());
-                //    }
-
                     gr.setBackground(Color.WHITE);
                     gr.setColor(new Color(0xcccccc));
                     gr.fillRect(0, 0, pw, ph);
-
 
                     int sx1, sx2, sy1, sy2; // source rectangle coordinates
                     int dx1, dx2, dy1, dy2; // destination rectangle coordinates
@@ -146,7 +144,7 @@ public class ImagePanel extends JPanel {
                     Font font = new Font("sans-serif", Font.BOLD, 16);
                     gr.setFont(font);
                     FontMetrics metrics = gr.getFontMetrics(font);
-                    gr.drawRect(dx1 - stroke / 2, dy1 - stroke / 2, dx2 - dx1 + stroke-1, dy2 - dy1 + stroke-1);
+                    gr.drawRect(dx1 - stroke / 2, dy1 - stroke / 2, dx2 - dx1 + stroke - 1, dy2 - dy1 + stroke - 1);
 
                     double iHy = ih / 4.0;
                     double iHx = ih / 4.0;
@@ -196,22 +194,10 @@ public class ImagePanel extends JPanel {
             g2.setRenderingHint(KEY_RENDERING, rendering);
 
         }
-
-        private void drawRect(Graphics2D g2, int w, int h) {
-
-            int rw = 33;
-            int rh = 33;
-            int rx = (int) ((w - rw) / 2.0) - 0;
-            int ry = (int) ((h - rh) / 2.0) - 0;
-
-
-            g2.setColor(new Color(255, 255, 255, 255));
-            g2.drawRect(rx, ry, rw, rh);
-        }
     }
 
     /**
-     * Этот исполняемый файл будет делать не что иное, как перекрашивать панель.
+     * Отрисовщик.
      */
     private static final class SwingRepainter implements Runnable {
 
@@ -228,7 +214,7 @@ public class ImagePanel extends JPanel {
     }
 
     /**
-     * Регистратор.
+     * Логгер.
      */
     private static final Logger LOG = LoggerFactory.getLogger(ImagePanel.class);
 
@@ -242,18 +228,17 @@ public class ImagePanel extends JPanel {
     }
 
     /**
-     * Этот исполняемый файл будет делать не что иное, как перекрашивать панель.
+     * Отрисовщмк.
      */
     private final Runnable repaint = new SwingRepainter(this);
 
     /**
-     * Подсказки рендеринга, которые будут использоваться при рисовании отображаемого изображения.
+     * Настройки рендеринга.
      */
     private Map<Key, Object> imageRenderingHints = new HashMap<Key, Object>(DEFAULT_IMAGE_RENDERING_HINTS);
 
-
     /**
-     * Режим того, как изображение будет изменено, чтобы соответствовать границам панели. По умолчанию
+     * Режим прорисовки.
      * {@link DrawMode#FIT}
      *
      * @see DrawMode
@@ -266,21 +251,18 @@ public class ImagePanel extends JPanel {
     private boolean antialiasingEnabled = true;
 
     /**
-     * Изображение отображается в данный момент.
+     * Текущее изображение.
      */
     private BufferedImage image = null;
 
 
     /**
-     * painter по умолчанию.
+     * Отрисовщик по-умолчанию.
      */
     private final Painter defaultPainter = new DefaultPainter();
 
     /**
-     * Painter используется для рисования изображения на панели.
-     *
-     * @see #setPainter(Painter)
-     * @see #getPainter()
+     * Отрисовщик.
      */
     private Painter painter = defaultPainter;
 
@@ -291,7 +273,7 @@ public class ImagePanel extends JPanel {
 
 
     /**
-     * Зеркальное изображение.
+     * Зеркалировать изображение.
      */
     private boolean mirrored = false;
 
@@ -306,23 +288,6 @@ public class ImagePanel extends JPanel {
         }
     }
 
-    /**
-     * Установить новый художник. Painter — это класс, который делает изображение видимым, когда
-     *
-     * @param painter объект рисования, который нужно установить
-     */
-    public void setPainter(Painter painter) {
-        this.painter = painter;
-    }
-
-    /**
-     * Используйте Painter для рисования изображения на панели
-     *
-     * @return Painter object
-     */
-    public Painter getPainter() {
-        return painter;
-    }
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -335,7 +300,7 @@ public class ImagePanel extends JPanel {
     }
 
     /**
-     * Откройте и начните рендеринг.
+     * Старт отрисовки.
      */
     public void start() {
         LOG.debug("Starting panel rendering and trying to open attached detector");
@@ -343,7 +308,7 @@ public class ImagePanel extends JPanel {
     }
 
     /**
-     * Остановите рендеринг и закройте detector.
+     * Остановка отрисовки.
      */
     public void stop() {
         LOG.debug("Stopping panel rendering and closing attached detector");
@@ -356,69 +321,6 @@ public class ImagePanel extends JPanel {
      */
     public void repaintPanel() {
         SwingUtilities.invokeLater(repaint);
-    }
-
-    /**
-     * Включить/выключить сглаживание.
-     *
-     * @param antialiasing : true для включения, false для отключения сглаживания
-     */
-    public void setAntialiasingEnabled(boolean antialiasing) {
-        this.antialiasingEnabled = antialiasing;
-    }
-
-    /**
-     * @return True, если сглаживание включено, иначе false
-     */
-    public boolean isAntialiasingEnabled() {
-        return antialiasingEnabled;
-    }
-
-    /**
-     * Этот метод возвращает текущий режим рисования, в основном используемый пользовательскими рисовальщиками.
-     *
-     * @return текущее значение {@link DrawMode}
-     */
-    public DrawMode getDrawMode() {
-        return this.drawMode;
-    }
-
-    /**
-     * Этот метод устанавливает режим рисования
-     *
-     * @param drawMode желаемый {@link DrawMode}
-     */
-    public void setDrawMode(DrawMode drawMode) {
-        this.drawMode = drawMode;
-    }
-
-    /**
-     * Получить рисовальщик по умолчанию, используемый для рисования панели.
-     *
-     * @return Художник по умолчанию
-     */
-    public Painter getDefaultPainter() {
-        return defaultPainter;
-    }
-
-
-    /**
-     * Этот метод возвращает значение true, если зеркальное отображение изображений включено. Значение по умолчанию неверно.
-     *
-     * @return True, если изображение зеркальное, иначе false
-     */
-    public boolean isMirrored() {
-        return mirrored;
-    }
-
-    /**
-     * Решите, будет ли зеркально отображаться изображение с веб-камеры, нарисованное на поверхности панели. То
-     * изображение с самой камеры не модифицируется.
-     *
-     * @param mirrored параметр, чтобы контролировать, должно ли изображение быть зеркальным
-     */
-    public void setMirrored(boolean mirrored) {
-        this.mirrored = mirrored;
     }
 
     public BufferedImage getImage() {

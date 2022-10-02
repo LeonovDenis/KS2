@@ -1,15 +1,15 @@
 package ru.pelengator.model;
 
 /**
- * Подкласс для списка детекторов
+ * Подкласс для списка детекторов.
  */
 public class DetectorInfo {
     /**
-     * Наименование детектора
+     * Наименование детектора.
      */
     private String detectorName;
     /**
-     * Индекс детектора в списке
+     * Индекс детектора в списке.
      */
     private int detectorIndex;
 

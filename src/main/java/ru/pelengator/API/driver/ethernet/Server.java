@@ -1,7 +1,7 @@
 package ru.pelengator.API.driver.ethernet;
 
 
-import ru.pelengator.API.driver.NetworkInfo;
+import ru.pelengator.model.NetworkInfo;
 
 import java.io.IOException;
 import java.net.DatagramPacket;

@@ -13,8 +13,9 @@ import java.util.ResourceBundle;
 import javax.imageio.ImageIO;
 
 
-
-
+/**
+ * Утилиты для работы с картинкой
+ */
 public class DetectorUtils {
 
     public static final void capture(Detector detector, File file) {

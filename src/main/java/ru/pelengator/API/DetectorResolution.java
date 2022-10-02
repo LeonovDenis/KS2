@@ -1,7 +1,11 @@
 package ru.pelengator.API;
 
 import java.awt.Dimension;
-public enum  DetectorResolution {
+
+/**
+ * Набор разрешений
+ */
+public enum DetectorResolution {
     /**
      * Разрешение для детектора размером 128x128 px.
      */
@@ -9,8 +13,7 @@ public enum  DetectorResolution {
     /**
      * Разрешение для детектора размером 92x90 px.
      */
-    CHINALOW(92, 90),
-    ;
+    CHINALOW(92, 90);
 
     /**
      * Разрешение.
@@ -18,16 +21,15 @@ public enum  DetectorResolution {
     private Dimension size = null;
 
     /**
-     *
-     * @param width разрешение по ширине
-     * @param height разрешение по высоте
+     * @param width  разрешение по ширине.
+     * @param height разрешение по высоте.
      */
     private DetectorResolution(int width, int height) {
         this.size = new Dimension(width, height);
     }
 
     /**
-     * Получение разрешения
+     * Получение разрешения.
      *
      * @return Dimension object
      */
@@ -75,9 +77,5 @@ public enum  DetectorResolution {
                 .append(rw).append(':').append(rh)
                 .append(')')
                 .toString();
-    }
-
-    public static void main(String[] args) {
-
     }
 }

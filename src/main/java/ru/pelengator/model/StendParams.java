@@ -4,9 +4,10 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.pelengator.App;
 import ru.pelengator.Controller;
-import ru.pelengator.API.driver.NetworkInfo;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -18,67 +19,70 @@ import java.util.Locale;
 import java.util.Properties;
 
 /**
- * Класс хранения параметров стенда
+ * Класс хранения параметров стенда.
  */
 public class StendParams {
-
     /**
-     * Количество кадров на выборку
+     * Логгер.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(StendParams.class);
+    /**
+     * Количество кадров на выборку.
      */
     private int countFrames = 128;
     /**
-     * Первая температура
+     * Первая температура.
      */
     private double temp0 = 0;
     /**
-     * Вторая температура
+     * Вторая температура.
      */
     private double temp1 = 0;
     /**
-     * Площадь диафрагмы АЧТ
+     * Площадь диафрагмы АЧТ.
      */
     private double areaACHT0 = 0;
     private double areaACHT1 = 0;
     /**
-     * Площадь фоточувствительного элемента
+     * Площадь фоточувствительного элемента.
      */
     private double areaFPU0 = 0;
     private double areaFPU1 = 0;
     /**
-     * Расстояние от АЧТ до фпу
+     * Расстояние от АЧТ до фпу.
      */
     private double rasstACHTfpu0 = 0;
     private double rasstACHTfpu1 = 0;
     /**
-     * Поток при первых условиях
+     * Поток при первых условиях.
      */
     private double potok0 = 0;
     private double potok1 = 0;
     /**
-     * Итоговый поток
+     * Итоговый поток.
      */
     private double potok = 0;
     /**
-     * Степень черноты АЧТ
+     * Степень черноты АЧТ.
      */
     private double epsilin0 = 0;
     private double epsilin1 = 0;
     /**
-     * Постоянная планка
+     * Постоянная планка.
      */
     private double plank0 = 0;
     private double plank1 = 0;
     /**
-     * Коэффициет поправки потока
+     * Коэффициет поправки потока.
      */
     private double betta0 = 0;
     private double betta1 = 0;
     /**
-     * Частота эффективная
+     * Частота эффективная.
      */
     private double fEfect = 0;
     /**
-     * Облученность
+     * Облученность.
      */
     private double exposure = 0;
 
@@ -161,19 +165,20 @@ public class StendParams {
     }
 
     public void loadParams(String PATH) {
+        LOG.trace("Load params");
         File file = new File(PATH);
         Path path = Paths.get(PATH);
         if (file.exists()) {
             try {
                 properties.load(Files.newBufferedReader(path));
             } catch (IOException e) {
-                e.printStackTrace();
+                LOG.error("Error in load params file {}",e);
             }
         } else {
             try {
                 properties.load(App.class.getResourceAsStream(PATH));
             } catch (IOException e) {
-                e.printStackTrace();
+                LOG.error("Error in load params in zip file {}",e);
             }
         }
 
@@ -211,40 +216,38 @@ public class StendParams {
         tempKU = Boolean.parseBoolean(properties.getProperty("KU", "true"));
         controller.getCbCCCOptions().getSelectionModel().select(tempKU ? 1 : 0);
 
-        temp0 = Double.parseDouble(properties.getProperty("temp0", "0"));
-        temp1 = Double.parseDouble(properties.getProperty("temp1", "0"));
-        areaACHT0 = Double.parseDouble(properties.getProperty("diamACHT0", "0"));
-        areaACHT1 = Double.parseDouble(properties.getProperty("diamACHT1", "0"));
-        areaFPU0 = Double.parseDouble(properties.getProperty("areaFPU0", "0"));
-        areaFPU1 = Double.parseDouble(properties.getProperty("areaFPU1", "0"));
-        rasstACHTfpu0 = Double.parseDouble(properties.getProperty("rasstACHTfpu0", "0"));
-        rasstACHTfpu1 = Double.parseDouble(properties.getProperty("rasstACHTfpu1", "0"));
+        temp0 = Double.parseDouble(properties.getProperty("temp0", "303.0"));
+        temp1 = Double.parseDouble(properties.getProperty("temp1", "513.0"));
+        areaACHT0 = Double.parseDouble(properties.getProperty("diamACHT0", "1.962e-03"));
+        areaACHT1 = Double.parseDouble(properties.getProperty("diamACHT1", "1.962e-03"));
+        areaFPU0 = Double.parseDouble(properties.getProperty("areaFPU0", "9.000e-10"));
+        areaFPU1 = Double.parseDouble(properties.getProperty("areaFPU1", "9.000e-10"));
+        rasstACHTfpu0 = Double.parseDouble(properties.getProperty("rasstACHTfpu0", "4.200e-01"));
+        rasstACHTfpu1 = Double.parseDouble(properties.getProperty("rasstACHTfpu1", "4.200e-01"));
         exposure = Double.parseDouble(properties.getProperty("exposure", "0"));
         potok = Double.parseDouble(properties.getProperty("potok", "0"));
         potok0 = Double.parseDouble(properties.getProperty("potok0", "0"));
         potok1 = Double.parseDouble(properties.getProperty("potok1", "0"));
-        epsilin0 = Double.parseDouble(properties.getProperty("epsilin0", "0"));
-        epsilin1 = Double.parseDouble(properties.getProperty("epsilin1", "0"));
-        plank0 = Double.parseDouble(properties.getProperty("plank0", "0"));
-        plank1 = Double.parseDouble(properties.getProperty("plank1", "0"));
-        betta0 = Double.parseDouble(properties.getProperty("betta0", "0"));
-        betta1 = Double.parseDouble(properties.getProperty("betta1", "0"));
+        epsilin0 = Double.parseDouble(properties.getProperty("epsilin0", "9.500e-01"));
+        epsilin1 = Double.parseDouble(properties.getProperty("epsilin1", "9.500e-01"));
+        plank0 = Double.parseDouble(properties.getProperty("plank0", "5.670e-08"));
+        plank1 = Double.parseDouble(properties.getProperty("plank1", "5.670e-08"));
+        betta0 = Double.parseDouble(properties.getProperty("betta0", "2.075e-01"));
+        betta1 = Double.parseDouble(properties.getProperty("betta1", "2.075e-01"));
 
         fEfect = Double.parseDouble(properties.getProperty("fEfect", "0"));
         countFrames = Integer.parseInt(properties.getProperty("countFrames", "128"));
-        //   dimention=properties.getProperty("dimention", "128*128");
-        //    tfFrameCount.setText(String.valueOf(countFrames));
 
-        arifmeticMeanPersent = Double.parseDouble(properties.getProperty("arifmeticMeanPersent", "0"));
-        quadraticMeanPersent = Double.parseDouble(properties.getProperty("quadraticMeanPersent", "0"));
-        SKOPersent = Double.parseDouble(properties.getProperty("SKOPersent", "0"));
-        vwPersent = Double.parseDouble(properties.getProperty("vwPersent", "0"));
-        porogPersent = Double.parseDouble(properties.getProperty("porogPersent", "0"));
-        porogStarPersent = Double.parseDouble(properties.getProperty("porogStarPersent", "0"));
-        detectivityPersent = Double.parseDouble(properties.getProperty("detectivityPersent", "0"));
-        detectivityStarPersent = Double.parseDouble(properties.getProperty("detectivityStarPersent", "0"));
-        NETDPersent = Double.parseDouble(properties.getProperty("NETDPersent", "0"));
-        exposurePersent = Double.parseDouble(properties.getProperty("exposurePersent", "0"));
+        arifmeticMeanPersent = Double.parseDouble(properties.getProperty("arifmeticMeanPersent", "20.00"));
+        quadraticMeanPersent = Double.parseDouble(properties.getProperty("quadraticMeanPersent", "20.00"));
+        SKOPersent = Double.parseDouble(properties.getProperty("SKOPersent", "20.00"));
+        vwPersent = Double.parseDouble(properties.getProperty("vwPersent", "20.00"));
+        porogPersent = Double.parseDouble(properties.getProperty("porogPersent", "20.00"));
+        porogStarPersent = Double.parseDouble(properties.getProperty("porogStarPersent", "20.00"));
+        detectivityPersent = Double.parseDouble(properties.getProperty("detectivityPersent", "20.00"));
+        detectivityStarPersent = Double.parseDouble(properties.getProperty("detectivityStarPersent", "20.00"));
+        NETDPersent = Double.parseDouble(properties.getProperty("NETDPersent", "20.00"));
+        exposurePersent = Double.parseDouble(properties.getProperty("exposurePersent", "20.00"));
 
         persentColorArifm = properties.getProperty("persentColorArifm", "#FFFFFF");
         persentColorQuadratic = properties.getProperty("persentColorQuadratic", "#FFFFFF");
@@ -267,7 +270,7 @@ public class StendParams {
 
         ////// сеть
         detPortVideo = Integer.parseInt(properties.getProperty("detPortVideo", "53"));
-        detPortCommand = Integer.parseInt(properties.getProperty("detPortCommand", "4565"));
+        detPortCommand = Integer.parseInt(properties.getProperty("detPortCommand", "54"));
         detIP = properties.getProperty("detIP", "127.0.0.1");
 
         serverVideoBuff = Integer.parseInt(properties.getProperty("serverVideoBuff", "1024"));
@@ -281,7 +284,7 @@ public class StendParams {
     }
 
     private void save(String PATH) {
-
+        LOG.trace("Save params");
 
         properties.setProperty("zakaz", zakaz.getValue());
         properties.setProperty("dogovor", dogovor.getValue());
@@ -309,7 +312,6 @@ public class StendParams {
         properties.setProperty("VOS", String.valueOf(tempVOS));
         properties.setProperty("VR0", String.valueOf(tempVR0));
         properties.setProperty("KU", String.valueOf(tempKU));
-        //    properties.setProperty("dimention",dimention);
 //////////////////////////////////////////////////////////////////////////////////////
         String text = String.format(Locale.CANADA, "%.1f", temp0);
         properties.setProperty("temp0", text);
@@ -413,7 +415,7 @@ public class StendParams {
         try (BufferedWriter bufferedWriter = Files.newBufferedWriter(of)) {
             properties.store(bufferedWriter, "");
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error("Error in save params to file {}",e);
         }
     }
 
@@ -497,16 +499,8 @@ public class StendParams {
         this.rasstACHTfpu1 = rasstACHTfpu1;
     }
 
-    public double getPotok0() {
-        return potok0;
-    }
-
     public void setPotok0(double potok0) {
         this.potok0 = potok0;
-    }
-
-    public double getPotok1() {
-        return potok1;
     }
 
     public void setPotok1(double potok1) {
@@ -577,10 +571,6 @@ public class StendParams {
         this.fEfect = fEfect;
     }
 
-    public boolean isTempPower() {
-        return tempPower;
-    }
-
     public void setTempPower(boolean tempPower) {
         this.tempPower = tempPower;
     }
@@ -623,10 +613,6 @@ public class StendParams {
 
     public void setTempKU(boolean tempKU) {
         this.tempKU = tempKU;
-    }
-
-    public Properties getProperties() {
-        return properties;
     }
 
     public double getExposure() {
@@ -805,21 +791,12 @@ public class StendParams {
         this.dimention = dimention;
     }
 
-    public void setProperties(Properties properties) {
-        this.properties = properties;
-    }
-
-
     public String getZakaz() {
         return zakaz.get();
     }
 
     public StringProperty zakazProperty() {
         return zakaz;
-    }
-
-    public void setZakaz(String zakaz) {
-        this.zakaz.set(zakaz);
     }
 
     public String getDogovor() {
@@ -830,20 +807,12 @@ public class StendParams {
         return dogovor;
     }
 
-    public void setDogovor(String dogovor) {
-        this.dogovor.set(dogovor);
-    }
-
     public String getMetodika() {
         return metodika.get();
     }
 
     public StringProperty metodikaProperty() {
         return metodika;
-    }
-
-    public void setMetodika(String metodika) {
-        this.metodika.set(metodika);
     }
 
     public String getNomer_0() {
@@ -854,20 +823,12 @@ public class StendParams {
         return nomer_0;
     }
 
-    public void setNomer_0(String nomer_0) {
-        this.nomer_0.set(nomer_0);
-    }
-
     public String getNomer() {
         return nomer.get();
     }
 
     public StringProperty nomerProperty() {
         return nomer;
-    }
-
-    public void setNomer(String nomer) {
-        this.nomer.set(nomer);
     }
 
     public String getCopy() {
@@ -878,20 +839,12 @@ public class StendParams {
         return copy;
     }
 
-    public void setCopy(String copy) {
-        this.copy.set(copy);
-    }
-
     public String getOtk() {
         return otk.get();
     }
 
     public StringProperty otkProperty() {
         return otk;
-    }
-
-    public void setOtk(String otk) {
-        this.otk.set(otk);
     }
 
     public String getData() {
@@ -922,20 +875,12 @@ public class StendParams {
         return TXT_0_0;
     }
 
-    public void setTXT_0_0(String TXT_0_0) {
-        this.TXT_0_0.set(TXT_0_0);
-    }
-
     public String getTXT_0_1() {
         return TXT_0_1.get();
     }
 
     public StringProperty TXT_0_1Property() {
         return TXT_0_1;
-    }
-
-    public void setTXT_0_1(String TXT_0_1) {
-        this.TXT_0_1.set(TXT_0_1);
     }
 
     public String getTXT_0_2() {
@@ -946,20 +891,12 @@ public class StendParams {
         return TXT_0_2;
     }
 
-    public void setTXT_0_2(String TXT_0_2) {
-        this.TXT_0_2.set(TXT_0_2);
-    }
-
     public String getTXT_0_3() {
         return TXT_0_3.get();
     }
 
     public StringProperty TXT_0_3Property() {
         return TXT_0_3;
-    }
-
-    public void setTXT_0_3(String TXT_0_3) {
-        this.TXT_0_3.set(TXT_0_3);
     }
 
     public String getTXT_0_4() {
@@ -970,20 +907,12 @@ public class StendParams {
         return TXT_0_4;
     }
 
-    public void setTXT_0_4(String TXT_0_4) {
-        this.TXT_0_4.set(TXT_0_4);
-    }
-
     public String getTXT_0_5() {
         return TXT_0_5.get();
     }
 
     public StringProperty TXT_0_5Property() {
         return TXT_0_5;
-    }
-
-    public void setTXT_0_5(String TXT_0_5) {
-        this.TXT_0_5.set(TXT_0_5);
     }
 
     public String getTXT_0_6() {
@@ -994,20 +923,12 @@ public class StendParams {
         return TXT_0_6;
     }
 
-    public void setTXT_0_6(String TXT_0_6) {
-        this.TXT_0_6.set(TXT_0_6);
-    }
-
     public String getTXT_0_7() {
         return TXT_0_7.get();
     }
 
     public StringProperty TXT_0_7Property() {
         return TXT_0_7;
-    }
-
-    public void setTXT_0_7(String TXT_0_7) {
-        this.TXT_0_7.set(TXT_0_7);
     }
 
     public String getTXT_0_8() {
@@ -1018,20 +939,12 @@ public class StendParams {
         return TXT_0_8;
     }
 
-    public void setTXT_0_8(String TXT_0_8) {
-        this.TXT_0_8.set(TXT_0_8);
-    }
-
     public String getTXT_0_9() {
         return TXT_0_9.get();
     }
 
     public StringProperty TXT_0_9Property() {
         return TXT_0_9;
-    }
-
-    public void setTXT_0_9(String TXT_0_9) {
-        this.TXT_0_9.set(TXT_0_9);
     }
 
     public boolean isTbExel() {
@@ -1042,10 +955,6 @@ public class StendParams {
         return tbExel;
     }
 
-    public void setTbExel(boolean tbExel) {
-        this.tbExel.set(tbExel);
-    }
-
     public boolean isTbTxt() {
         return tbTxt.get();
     }
@@ -1054,44 +963,16 @@ public class StendParams {
         return tbTxt;
     }
 
-    public void setTbTxt(boolean tbTxt) {
-        this.tbTxt.set(tbTxt);
-    }
-
-    public boolean isTbPdf() {
-        return tbPdf.get();
-    }
-
     public BooleanProperty tbPdfProperty() {
         return tbPdf;
-    }
-
-    public void setTbPdf(boolean tbPdf) {
-        this.tbPdf.set(tbPdf);
-    }
-
-    public boolean isCbWithBP() {
-        return cbWithBP.get();
     }
 
     public BooleanProperty cbWithBPProperty() {
         return cbWithBP;
     }
 
-    public void setCbWithBP(boolean cbWithBP) {
-        this.cbWithBP.set(cbWithBP);
-    }
-
-    public boolean isCbPrint() {
-        return cbPrint.get();
-    }
-
     public BooleanProperty cbPrintProperty() {
         return cbPrint;
-    }
-
-    public void setCbPrint(boolean cbPrint) {
-        this.cbPrint.set(cbPrint);
     }
 
     public int getDetPortVideo() {
@@ -1122,16 +1003,8 @@ public class StendParams {
         return serverVideoBuff;
     }
 
-    public void setServerVideoBuff(int serverVideoBuff) {
-        this.serverVideoBuff = serverVideoBuff;
-    }
-
     public int getCommandBuff() {
         return commandBuff;
-    }
-
-    public void setCommandBuff(int commandBuff) {
-        this.commandBuff = commandBuff;
     }
 
     public NetworkInfo getSelNetworkInterface() {

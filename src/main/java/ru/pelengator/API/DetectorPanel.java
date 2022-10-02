@@ -11,12 +11,8 @@ import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
@@ -48,38 +44,39 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     public enum DrawMode {
 
         /**
-         * Не изменяйте размер изображения - рисуйте как есть. Это заставит изображение исчезнуть
-         * границы, если панель меньше размера изображения.
+         * Не изменяет размер изображения - рисует как есть.
+         * Изображение исчезнет, если панель меньше размера изображения.
          */
         NONE,
 
         /**
-         * Изменит размер изображения до границ панели. Этот режим не заботится о масштабе изображения, поэтому
+         * Изменит размер изображения до границ панели.
+         * Этот режим не заботится о масштабе изображения, поэтому
          * конечное изображение может быть нарушено.
          */
         FILL,
 
         /**
-         * Будет помещать изображение в границы панели. Это изменит размер изображения и сохранит как x, так и y.
-         * масштаб.
+         * Будет помещать изображение в границы панели.
+         * Это изменит размер изображения и сохранит масштаб как по x, так и по y.
          */
         FIT,
     }
 
     /**
-     * Этот интерфейс можно использовать для передачи {@link BufferedImage} to {@link DetectorPanel}.
+     * Этот интерфейс можно использовать для передачи {@link BufferedImage} на {@link DetectorPanel}.
      */
     public interface ImageSupplier {
 
         /**
-         * @return {@link BufferedImage} для отображения в {@link DetectorPanel}
+         * @return {@link BufferedImage} для отображения на {@link DetectorPanel}
          */
         public BufferedImage get();
     }
 
     /**
-     * Реализация {@link ImageSupplier} по умолчанию, используемая в {@link DetectorPanel}. Он вызывает
-     * {@link Detector#getImage()} и вернуть {@link BufferedImage}.
+     * Реализация {@link ImageSupplier} по умолчанию, используемая в {@link DetectorPanel}.
+     * Он вызывает {@link Detector#getImage()} и возвращает {@link BufferedImage}.
      */
     private static class DefaultImageSupplier implements ImageSupplier {
 
@@ -96,12 +93,12 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     }
 
     /**
-     * Интерфейс рисовальщика, используемый для рисования изображения в панели.
+     * Интерфейс отрисовщика, используемый для рисования изображения на панели.
      */
     public interface Painter {
 
         /**
-         * Панель краски без изображения.
+         * Отрисовка панели без изображения.
          *
          * @param panel панель для рисования
          * @param g2    графический 2D-объект, используемый для рисования
@@ -109,7 +106,7 @@ public class DetectorPanel extends JPanel implements DetectorListener {
         void paintPanel(DetectorPanel panel, Graphics2D g2);
 
         /**
-         * Нарисуйте изображение на панели.
+         * Отрисовка изображения на панели.
          *
          * @param panel панель для рисования
          * @param image изображение
@@ -119,12 +116,12 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     }
 
     /**
-     * Художник по умолчанию, используемый для рисования изображения на панели.
+     * Отрисовщик по умолчанию, используемый для рисования изображения на панели.
      */
     public class DefaultPainter implements Painter {
 
         /**
-         * Имя устройства
+         * Имя устройства.
          */
         private String name = null;
 
@@ -174,9 +171,9 @@ public class DetectorPanel extends JPanel implements DetectorListener {
 
             String str;
 
-            final String strInitDevice = "INITIALIZING_DEVICE";
-            final String strNoImage = "NO_IMAGE";
-            final String strDeviceError ="DEVICE_ERROR";
+            final String strInitDevice = "Инициализация устройства";
+            final String strNoImage = "Изображение не доступно!";
+            final String strDeviceError = "Ошибка устройства";
 
             if (errored) {
                 str = strDeviceError;
@@ -318,7 +315,16 @@ public class DetectorPanel extends JPanel implements DetectorListener {
 
 
                 String str = String.format("%.1f", detector.getFPS());
-                stringFps = str;
+
+                int sx = 5;
+                int sy = ph-5;
+
+                g2.setFont(getFont());
+                g2.setColor(Color.BLACK);
+                g2.drawString(str, sx + 1, sy + 1);
+                g2.setColor(Color.WHITE);
+                g2.drawString(str, sx, sy);
+
             }
 
             if (isImageSizeDisplayed()) {
@@ -350,7 +356,8 @@ public class DetectorPanel extends JPanel implements DetectorListener {
                 } else {
 
                     long now = System.currentTimeMillis();
-                    String res = String.format("DEBUG: repaints per second: %.1f", (double) 1000 / (now - lastRepaintTime));
+                    String res = String.format("DEBUG: repaints per second: %.1f",
+                            (double) 1000 / (now - lastRepaintTime));
                     lastRepaintTime = now;
                     g2.setFont(getFont());
                     g2.setColor(Color.BLACK);
@@ -363,8 +370,6 @@ public class DetectorPanel extends JPanel implements DetectorListener {
             g2.setRenderingHint(KEY_ANTIALIASING, antialiasing);
             g2.setRenderingHint(KEY_RENDERING, rendering);
         }
-
-
     }
 
     private static final class PanelThreadFactory implements ThreadFactory {
@@ -373,7 +378,8 @@ public class DetectorPanel extends JPanel implements DetectorListener {
 
         @Override
         public Thread newThread(Runnable r) {
-            Thread t = new Thread(r, String.format("detector-panel-scheduled-executor-%d", number.incrementAndGet()));
+            Thread t = new Thread(r, String.format("Detector-panel-scheduled-executor-%d",
+                    number.incrementAndGet()));
             t.setUncaughtExceptionHandler(DetectorExceptionHandler.getInstance());
             t.setDaemon(true);
             return t;
@@ -381,7 +387,7 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     }
 
     /**
-     * Этот исполняемый файл будет делать не что иное, как перекрашивать панель.
+     * Отрисовщик библиотеки Swing. Только перерисовывает панель.
      */
     private static final class SwingRepainter implements Runnable {
 
@@ -397,25 +403,22 @@ public class DetectorPanel extends JPanel implements DetectorListener {
         }
     }
 
-    /**
-     * S/N, используемый Java для сериализации bean-компонентов.
-     */
     private static final long serialVersionUID = 1L;
 
     /**
-     * Логгер
+     * Логгер.
      */
     private static final Logger LOG = LoggerFactory.getLogger(DetectorPanel.class);
 
     /**
      * Минимальная частота кадров в секунду.
      */
-    public static final double MIN_FREQUENCY = 0.016; // 1 frame per minute
+    public static final double MIN_FREQUENCY = 0.016; // 1 кадр в минуту
 
     /**
      * Максимальная частота кадров в секунду.
      */
-    private static final double MAX_FREQUENCY = 50; // 50 frames per second
+    private static final double MAX_FREQUENCY = 50; // 50 кадров в минуту
 
     /**
      * Фабрика потоков, используемая службой выполнения.
@@ -431,7 +434,7 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     }
 
     /**
-     * Этот исполняемый файл будет делать не что иное, как перекрашивать панель.
+     * Задание на перерисовку.
      */
     private final Runnable repaint = new SwingRepainter(this);
 
@@ -446,35 +449,35 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     private ScheduledExecutorService executor = null;
 
     /**
-     * Средство обновления изображений считывает изображения с камеры и принудительно перекрашивает панель.
+     * Задание на обновление изображений. Считывает изображение с устройства и принудительно перекрашивает панель.
      */
     private class ImageUpdater implements Runnable {
 
         /**
-         * Перерисовка обновлений панели расписания планировщика.
+         * Задание на перерисовку панели.
          */
         private class RepaintScheduler extends Thread {
 
             /**
-             * Перерисовка обновлений панели расписания планировщика.
+             * Фабрика в конструкторе.
              */
             public RepaintScheduler() {
                 setUncaughtExceptionHandler(DetectorExceptionHandler.getInstance());
-                setName(String.format("repaint-scheduler-%s", detector.getName()));
+                setName(String.format("Repaint-scheduler-%s", detector.getName()));
                 setDaemon(true);
             }
 
             @Override
             public void run() {
 
-                // ничего не делать, когда не работает
+                // ничего не делать, когда устройство не работает
                 if (!running.get()) {
                     return;
                 }
 
-                repaintPanel();
+                repaintPanel();//перерисовка панели Swing
 
-                // цикл при запуске для ожидания изображений
+                // цикл при запуске устройства для ожидания поступления изображений
                 while (starting) {
                     try {
                         Thread.sleep(50);
@@ -489,7 +492,7 @@ public class DetectorPanel extends JPanel implements DetectorListener {
                 try {
 
                     // Ограничение FPS означает, что частота рендеринга панели
-                    // ограничено конкретным значением и панель не будет
+                    // ограничена конкретным значением и панель не будет
                     // отображается чаще, чем конкретное значение
 
                     if (detector.isOpen()) {
@@ -500,26 +503,13 @@ public class DetectorPanel extends JPanel implements DetectorListener {
                             executor.scheduleWithFixedDelay(updater, 100, 1, TimeUnit.MILLISECONDS);
                         }
                     } else {
-                        //todo добавка
-                    /**    try {
-                            if (!detector.isOpen()) {
-                            //    errored = !detector.open();
-                                System.out.println("Открытие в добавке");
-                            }
-                        } catch (DetectorException e) {
-                            errored = true;
-                        } finally {
-                            starting = false;
-                            repaintPanel();
-                        }*/
                         executor.schedule(this, 500, TimeUnit.MILLISECONDS);
-                    //    LOG.error("Автоматический повторный запуск детектора");
                     }
                 } catch (RejectedExecutionException e) {
 
                     // экзекьютор остановлен, значит кто-то
                     // остановил панель/устройство  до того, как оно было на самом деле
-                    // полностью запущен (был в "стартовом" таймфрейме)
+                    // полностью запущено (был в "стартовом" таймфрейме)
 
                     LOG.warn("Executor rejected paint update");
                     LOG.trace("Executor rejected paint update because of", e);
@@ -538,7 +528,8 @@ public class DetectorPanel extends JPanel implements DetectorListener {
         private AtomicBoolean running = new AtomicBoolean(false);
 
         /**
-         * Запустить ремастер. Может вызываться много раз, но только первый вызов вступит в силу.
+         * Запустить перерисовку.
+         * Может вызываться много раз, но только первый вызов вступит в силу.
          */
         public void start() {
             if (running.compareAndSet(false, true)) {
@@ -576,8 +567,10 @@ public class DetectorPanel extends JPanel implements DetectorListener {
          */
         private void update() {
 
-            // ничего не делать, когда программа обновления не запущена, когда детектор закрыт или
-            // перерисовка панели приостановлена
+            // ничего не делать, когда или:
+            // - программа обновления не запущена;
+            // - детектор закрыт;
+            // - перерисовка панели приостановлена.
 
             if (!running.get() || !detector.isOpen() || paused) {
                 return;
@@ -585,16 +578,17 @@ public class DetectorPanel extends JPanel implements DetectorListener {
 
             // получаем новое изображение
 
-            BufferedImage tmp = supplier.get();
+            BufferedImage tmp = supplier.get();//запрос в детектор
+
             boolean repaint = true;
 
-            if (tmp != null) {
+            if (tmp != null) { //если есть изображение
 
                 tmp = copyImage(tmp);
 
-                convertImageRGB(tmp);
+                convertImageRGB(tmp); //todo перенести в трансформер
 
-                // игнорировать перерисовку, если изображение такое же, как и раньше
+                // игнорировать перерисовку, если изображение такое же, как и предыдущее
                 if (image == tmp) {
                     repaint = false;
                 }
@@ -609,8 +603,8 @@ public class DetectorPanel extends JPanel implements DetectorListener {
 
 
     /**
-     * Режим того, как изображение будет изменено, чтобы соответствовать границам панели. По умолчанию
-     * {@link DrawMode#FIT}
+     * Режим того, как изображение будет изменено, чтобы соответствовать границам панели.
+     * По умолчанию {@link DrawMode#FIT}
      *
      * @see DrawMode
      */
@@ -622,8 +616,9 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     private double frequency = 25; // FPS
 
     /**
-     * Ограничена ли частота запроса кадров? Если true, изображения будут загружаться в заданное время.
-     * интервалы. Если false, изображения будут загружаться так быстро, как только детектор сможет их обслужить.
+     * Ограничена ли частота запроса кадров?
+     * Если true, изображения будут загружаться в заданные интервалы времени.
+     * Если false, изображения будут загружаться так быстро, как только детектор сможет их обслужить.
      */
     private boolean frequencyLimit = false;
 
@@ -646,46 +641,49 @@ public class DetectorPanel extends JPanel implements DetectorListener {
      * Объект детектора, используемый для получения изображений.
      */
     private final Detector detector;
-
+    /**
+     * Поставщик изображений.
+     */
     private final ImageSupplier supplier;
 
     /**
-     * Repainter используется для получения изображений и принудительной перерисовки панели, когда изображение готово.
+     * Апдейтер изображения.
      */
     private final ImageUpdater updater;
 
     /**
-     * Изображение отображается в данный момент.
+     * Изображение, которое отображается в данный момент.
      */
     private BufferedImage image = null;
 
     /**
-     * детектор в настоящее время запускается.
+     * Флаг запуска устройства.
      */
     private volatile boolean starting = false;
 
     /**
-     * Painting приостановлен
+     * Флаг приостановки перерисовки.
+     * Новые изображения не запрашиваются.
      */
     private volatile boolean paused = false;
 
     /**
-     * Есть ли проблемы
+     * Флаг наличия ошибки.
      */
     private volatile boolean errored = false;
 
     /**
-     * детектор запущен.
+     * Флаг работы детектора.
      */
     private final AtomicBoolean started = new AtomicBoolean(false);
 
     /**
-     * painter по умолчанию.
+     * Отрисовщик по умолчанию.
      */
     private final Painter defaultPainter = new DefaultPainter();
 
     /**
-     * Painter используется для рисования изображения на панели.
+     * Интерфейс для рисования изображения на панели.
      *
      * @see #setPainter(Painter)
      * @see #getPainter()
@@ -698,12 +696,12 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     private Dimension defaultSize = null;
 
     /**
-     * Если отладочная информация должна отображаться.
+     * Должна ли отображаться отладочная информация.
      */
     private boolean displayDebugInfo = false;
 
     /**
-     * Зеркальное изображение.
+     * Зеркальное ли изображение.
      */
     private boolean mirrored = false;
 
@@ -719,12 +717,12 @@ public class DetectorPanel extends JPanel implements DetectorListener {
 
 
     /**
-     * Контроллер
+     * Контроллер.
      */
     private Controller controller;
 
     /**
-     * Создает панель детектора и автоматически запускает детектор.
+     * Создает панель и автоматически запускает детектор.
      *
      * @param detector   детектор, который будет использоваться для получения изображений
      * @param controller ссылка на контроллер
@@ -735,7 +733,7 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     }
 
     /**
-     * Создает панель детектора и автоматически запускает детектор.
+     * Создает панель и автоматически запускает детектор.
      *
      * @param detector детектор, который будет использоваться для получения изображений
      */
@@ -744,7 +742,7 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     }
 
     /**
-     * Создает новую панель, которая отображает изображение с камеры в вашем приложении Swing.
+     * Создает новую панель, которая отображает изображение с устройства в вашем приложении Swing.
      *
      * @param detector детектор, который будет использоваться для получения изображений
      * @param start    true, если детектор должен запускаться автоматически
@@ -754,15 +752,12 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     }
 
     /**
-     * Создает новую панель веб-камеры, которая отображает изображение с камеры в вашем приложении Swing. Если
-     * Аргумент размера панели равен нулю, тогда будет использоваться размер изображения. Если вы хотите заполнить панель
-     * область с изображением, даже если ее размер отличается, то можно использовать
-     * Метод {@link DetectorPanel#setFillArea(boolean)} для настройки.
+     * Создает новую панель, которая отображает изображение с устройства в вашем приложении Swing.
+     * Если аргумент размера панели равен null, тогда будет использоваться размер изображения.
      *
      * @param detector детектор, который будет использоваться для получения изображений
      * @param size     размер панели
      * @param start    true, если детектор должен запускаться автоматически
-     * @see DetectorPanel#setFillArea(boolean)
      */
     public DetectorPanel(Detector detector, Dimension size, boolean start) {
         this(detector, size, start, new DefaultImageSupplier(detector));
@@ -771,7 +766,8 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     public DetectorPanel(Detector detector, Dimension size, boolean start, ImageSupplier supplier) {
 
         if (detector == null) {
-            throw new IllegalArgumentException(String.format("Detector argument in %s constructor cannot be null!", getClass().getSimpleName()));
+            throw new IllegalArgumentException(String.format("Detector argument in %s constructor cannot be null!",
+                    getClass().getSimpleName()));
         }
 
         this.defaultSize = size;
@@ -779,7 +775,7 @@ public class DetectorPanel extends JPanel implements DetectorListener {
         this.updater = new ImageUpdater();
         this.supplier = supplier;
 
-     //   setDoubleBuffered(true);
+        //setDoubleBuffered(true);//todo проверить нужно ли
 
         if (size == null) {
             Dimension r = detector.getViewSize();
@@ -797,7 +793,8 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     }
 
     /**
-     * Установить новый художник. Painter — это класс, который делает изображение видимым, когда
+     * Установить новый Painter.
+     * Painter — это класс, который делает изображение видимым.
      *
      * @param painter объект рисования, который нужно установить
      */
@@ -806,7 +803,7 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     }
 
     /**
-     * Используйте Painter для рисования изображения на панели
+     * Используемый Painter для рисования изображения на панели
      *
      * @return Painter object
      */
@@ -814,20 +811,26 @@ public class DetectorPanel extends JPanel implements DetectorListener {
         return painter;
     }
 
+    /**
+     * Вызывается каждый раз при необходимости перерисовки панели.
+     * Если изображение null, то рисуем панель, если изображение существует, то отрисовываем его.
+     *
+     * @param g the <code>Graphics</code> object to protect
+     */
     @Override
     protected void paintComponent(Graphics g) {
 
         super.paintComponent(g);
 
         if (image == null) {
-            painter.paintPanel(this, (Graphics2D) g);
+            painter.paintPanel(this, (Graphics2D) g);//рисуем панель
         } else {
-            painter.paintImage(this, image, (Graphics2D) g);
+            painter.paintImage(this, image, (Graphics2D) g);//рисуем изображение
         }
     }
 
     /**
-     * Откройте и начните рендеринг.
+     * Открытие панели, старт рендеринга и открытие устройства.
      */
     public void start() {
 
@@ -842,8 +845,10 @@ public class DetectorPanel extends JPanel implements DetectorListener {
         updater.start();
 
         starting = true;
-
-        final SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+        /**
+         * Фоновая задачи на открытие детектора.
+         */
+        final SwingWorker<Void, Void> worker = new SwingWorker<>() {
 
             @Override
             protected Void doInBackground() throws Exception {
@@ -851,7 +856,6 @@ public class DetectorPanel extends JPanel implements DetectorListener {
                 try {
                     if (!detector.isOpen()) {
                         errored = !detector.open();
-                        System.out.println("Открытие на старте");
                     }
                 } catch (DetectorException e) {
                     errored = true;
@@ -859,9 +863,7 @@ public class DetectorPanel extends JPanel implements DetectorListener {
                 } finally {
                     starting = false;
                     repaintPanel();
-
                 }
-
                 return null;
             }
         };
@@ -869,13 +871,13 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     }
 
     /**
-     * Остановите рендеринг и закройте detector.
+     * Остановка рендеринга и закрытие детектора.
      */
     public void stop() {
 
-           if (!started.compareAndSet(true, false)) {
-                return;
-            }
+        if (!started.compareAndSet(true, false)) {
+            return;
+        }
 
         detector.removeDetectorListener(this);
 
@@ -888,8 +890,10 @@ public class DetectorPanel extends JPanel implements DetectorListener {
         }
 
         image = null;
-
-        final SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+        /**
+         * Фоновая задача на закрытие детектора.
+         */
+        final SwingWorker<Void, Void> worker = new SwingWorker<>() {
 
             @Override
             protected Void doInBackground() throws Exception {
@@ -904,7 +908,6 @@ public class DetectorPanel extends JPanel implements DetectorListener {
                 } finally {
                     repaintPanel();
                 }
-
                 return null;
             }
         };
@@ -919,7 +922,7 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     }
 
     /**
-     * Пауза рендеринга.
+     * Постановка на паузу рендеринг.
      */
     public void pause() {
         if (paused) {
@@ -955,10 +958,9 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     }
 
     /**
-     * Включить или отключить ограничение частоты. Ограничение по частоте следует использовать для <b>всех IP-камер
-     * работает в режиме pull</b> (чтобы сократить количество HTTP-запросов). Если true, изображения будут загружены
-     * в настроенных временных интервалах. Если false, изображения будут загружаться так быстро, как только камера сможет их обслужить.
-     * их.
+     * Включить или отключить ограничение частоты.
+     * Если true, изображения будут загружены в настроенных временных интервалах.
+     * Если false, изображения будут загружаться так быстро, как только устройство сможет их обслужить.
      *
      * @param frequencyLimit true, если ограничиваете частоту запросов изображения
      */
@@ -976,10 +978,11 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     }
 
     /**
-     * Установите частоту рендеринга (в Гц или FPS). Минимальная частота 0,016 (1 кадр в минуту) и
-     * максимум 25 (25 кадров в секунду).
+     * Установите частоту рендеринга (в Гц или FPS).
+     * Минимальная частота - 0,016 (1 кадр в минуту),
+     * максимум - 25 (25 кадров в секунду).
      *
-     * @param fps the frequency
+     * @param fps Частота рендеринга.
      */
     public void setFPSLimit(double fps) {
         if (fps > MAX_FREQUENCY) {
@@ -992,7 +995,7 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     }
 
     /**
-     * Включено ли отображение некоторой отладочной информации.
+     * Включено ли отображение отладочной информации.
      *
      * @return True, если включена отладочная информация, иначе false
      */
@@ -1001,19 +1004,19 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     }
 
     /**
-     * Отображение некоторой отладочной информации на поверхности изображения.
+     * Отображение отладочной информации на поверхности изображения.
      *
-     * @param displayDebugInfo значение для управления отладочной информацией
+     * @param displayDebugInfo значение для управления отладочной информацией.
      */
     public void setDisplayDebugInfo(boolean displayDebugInfo) {
         this.displayDebugInfo = displayDebugInfo;
     }
 
     /**
-     * Этот метод возвращает значение true, если для камеры настроено отображение FPS на поверхности панели.
+     * Этот метод возвращает значение true, если для устройства настроено отображение FPS.
      * Возвращаемое значение по умолчанию — false.
      *
-     * @return True, если FPS камеры отображается на поверхности панели
+     * @return True, если FPS отображается.
      * @see #setFPSDisplayed(boolean)
      */
     public boolean isFPSDisplayed() {
@@ -1021,17 +1024,17 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     }
 
     /**
-     * Этот метод предназначен для управления отображением FPS камеры на поверхности панели .
+     * Этот метод предназначен для управления отображением FPS.
      *
-     * @param displayed значение для управления отображением FPS камеры .
+     * @param displayed true или false.
      */
     public void setFPSDisplayed(boolean displayed) {
         this.frequencyDisplayed = displayed;
     }
 
     /**
-     * Этот метод вернет true, если панель настроена на отображение размера изображения. То
-     * строка будет напечатана в правом нижнем углу поверхности панели.
+     * Этот метод вернет true, если панель настроена на отображение размера изображения.
+     * Строка будет напечатана в правом нижнем углу поверхности панели.
      *
      * @return True, если панель настроена на отображение размера изображения
      */
@@ -1040,7 +1043,7 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     }
 
     /**
-     * Настройте панель для отображения размера изображения камеры, которое будет отображаться.
+     * Настраивает панель для отображения размера изображения, которое будет отображаться.
      *
      * @param imageSizeDisplayed, если true, размеры в пикселях отображаются поверх изображения.
      */
@@ -1051,7 +1054,7 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     /**
      * Включить/выключить сглаживание.
      *
-     * @param antialiasing : true для включения, false для отключения сглаживания
+     * @param antialiasing : true для включения, false для отключения.
      */
     public void setAntialiasingEnabled(boolean antialiasing) {
         this.antialiasingEnabled = antialiasing;
@@ -1065,7 +1068,7 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     }
 
     /**
-     * Начинается ли перекраска панели детектора.
+     * Находится ли панель в старте.
      *
      * @return True, если панель запускается
      */
@@ -1074,9 +1077,9 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     }
 
     /**
-     * Начата ли перекраска панели детектора.
+     * Запущен ли детектор и начата ли отрисовка.
      *
-     * @return True, если начата перекраска панели
+     * @return True, если начата отрисовка панели
      */
     public boolean isStarted() {
         return started.get();
@@ -1101,71 +1104,18 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     }
 
     /**
-     * Указывает, находится ли панель в состоянии ошибки
+     * Указывает, находится ли панель в состоянии ошибки.
      *
-     * @return true, если на панели присутствует ошибка
+     * @return true, если панель в ошибке.
      */
     public boolean isErrored() {
         return errored;
     }
 
     /**
-     * Подсказки по рендерингу, в основном используемые для пользовательских рисовальщиков
+     * Получить Painter по умолчанию, используемый для рисования панели.
      *
-     * @return сохраненные RenderingHints
-     * @deprecated используйте {@link #getDrawMode()}.
-     */
-    @Deprecated
-    public Map<RenderingHints.Key, Object> getImageRenderingHints() {
-        return imageRenderingHints;
-    }
-
-    @Deprecated
-    public boolean isFitArea() {
-        return drawMode == DrawMode.FIT;
-    }
-
-    /**
-     * Этот метод изменит режим рисования области панели, поэтому изображение будет изменено в размере и
-     * Сохраняйте коэффициент масштабирования, чтобы он соответствовал границам рисуемой панели. Если установлено значение false, режим будет
-     * сбросить на {@link DrawMode#NONE}, поэтому изображение будет отображаться как есть.
-     *
-     * @param fitArea режим подгонки включен или отключен
-     * @deprecated use {@link #setDrawMode(DrawMode drawMode)} instead.
-     */
-    @Deprecated
-    public void setFitArea(boolean fitArea) {
-        this.drawMode = fitArea ? DrawMode.FIT : DrawMode.NONE;
-    }
-
-    /**
-     * Размер изображения будет изменен, чтобы заполнить область панели, если это правда. Если false, то изображение будет отображаться так, как оно
-     * было получено из экземпляра детектора.
-     *
-     * @param fillArea должно размещать изображение в области заполнения панели
-     * @deprecated use {@link #setDrawMode(DrawMode drawMode)} instead.
-     */
-    @Deprecated
-    public void setFillArea(boolean fillArea) {
-        this.drawMode = fillArea ? DrawMode.FILL : DrawMode.NONE;
-    }
-
-    /**
-     * Получить значение настройки области заливки. Размер изображения будет изменен, чтобы заполнить область панели, если это правда. Если ложь
-     * то изображение будет отображаться так, как оно было получено с экземпляра веб-камеры.
-     *
-     * @return True if image is being resized, false otherwise
-     * @deprecated use {@link #getDrawMode()} instead.
-     */
-    @Deprecated
-    public boolean isFillArea() {
-        return drawMode == DrawMode.FILL;
-    }
-
-    /**
-     * Получить рисовальщик по умолчанию, используемый для рисования панели.
-     *
-     * @return Художник по умолчанию
+     * @return Painter по умолчанию
      */
     public Painter getDefaultPainter() {
         return defaultPainter;
@@ -1174,8 +1124,8 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     @Override
     public void detectorOpen(DetectorEvent we) {
 
-        // если размер по умолчанию не указан, то используем размер с Detector
-        // устройство (это будет текущее разрешение Detector)
+        // если размер по умолчанию не указан, то используем размер с устройства
+        // (это будет текущее разрешение детектора)
 
         if (defaultSize == null) {
             setPreferredSize(detector.getViewSize());
@@ -1198,7 +1148,8 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     }
 
     /**
-     * Этот метод возвращает значение true, если зеркальное отображение изображений включено. Значение по умолчанию неверно.
+     * Этот метод возвращает значение true, если зеркальное отображение изображений включено.
+     * Значение по умолчанию false.
      *
      * @return True, если изображение зеркальное, иначе false
      */
@@ -1207,8 +1158,8 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     }
 
     /**
-     * Решите, будет ли зеркально отображаться изображение с веб-камеры, нарисованное на поверхности панели. То
-     * изображение с самой камеры не модифицируется.
+     * Устанавливает, будет ли зеркально отображаться изображение устройства.
+     * Если false, то изображение не модифицируется.
      *
      * @param mirrored параметр, чтобы контролировать, должно ли изображение быть зеркальным
      */
@@ -1232,19 +1183,17 @@ public class DetectorPanel extends JPanel implements DetectorListener {
         return image;
     }
 
-    public static String stringFps = "";
-
     /**
-     * Запрос статуса отображения квадрата
+     * Запрос статуса отображения квадрата.
      *
-     * @return true- если отображается
+     * @return true- если отображается.
      */
     public boolean isAimDisplayed() {
         return aimDisplayed;
     }
 
     /**
-     * установка отображения квадрата
+     * Установка отображения квадрата.
      *
      * @param aimDisplayed
      */
@@ -1253,7 +1202,7 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     }
 
     /**
-     * Получение ширины квадрата
+     * Получение ширины квадрата.
      *
      * @return
      */
@@ -1262,14 +1211,14 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     }
 
     /**
-     * Установка ширины квадрата
+     * Установка ширины квадрата.
      */
     public void setAimWidth(int aimWidth) {
         this.aimWidth = aimWidth;
     }
 
     /**
-     * получение высоты квадрата
+     * Получение высоты квадрата.
      *
      * @return
      */
@@ -1278,9 +1227,17 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     }
 
     /**
-     * Установка высоты квадрата
+     * Установка высоты квадрата.
      */
     public void setAimHeight(int aimHeight) {
         this.aimHeight = aimHeight;
+    }
+
+    /**
+     * Получение строки со значением FPS.
+     * @return значение.
+     */
+    public String getStringFPS() {
+        return String.format("%.1f", detector.getFPS());
     }
 }

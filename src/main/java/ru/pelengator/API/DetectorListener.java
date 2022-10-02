@@ -1,8 +1,7 @@
 package ru.pelengator.API;
 /**
- * Слушатель детектора
+ * Паттерн слушатель
  *
- * @author
  */
 public interface DetectorListener {
 
@@ -14,14 +13,14 @@ public interface DetectorListener {
     void detectorOpen(DetectorEvent de);
 
     /**
-     *  Детектор  был закрыт
+     *  Детектор был закрыт
      *
      * @param de событие
      */
     void detectorClosed(DetectorEvent de);
 
     /**
-     *  Детектор  был удален
+     *  Детектор  был освобожден
      *
      * @param de событие
      */

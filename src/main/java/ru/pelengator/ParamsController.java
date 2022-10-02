@@ -28,65 +28,67 @@ import static ru.pelengator.API.utils.Utils.*;
 public class ParamsController implements Initializable {
 
     /**
-     * Логгер
+     * Логгер.
      */
     private static final Logger LOG = LoggerFactory.getLogger(ParamsController.class);
 
-
     /**
-     * Лейбл размера окна
+     * Лейбл размера окна.
      */
     @FXML
     private Label lbFullWindow;
+    /**
+     * Лейбл размера окна второй.
+     */
     @FXML
     private Label lbFullWindow1;
     /**
-     * Среднее арифметическое сигнала
+     * Среднее арифметическое сигнала.
      */
     @FXML
     private TextField tfArifmeticMean;
     /**
-     * Среднее квадратическое сигнала
+     * Среднее квадратическое сигнала.
      */
     @FXML
     private TextField tfQuadraticMean;
     /**
-     * СКО сигнала
+     * СКО сигнала.
      */
     @FXML
     private TextField tfSKO;
     /**
-     * Вольтовая чувствительность
+     * Вольтовая чувствительность.
      */
     @FXML
     private TextField tfVw;
     /**
-     * Порог чувствительности
+     * Порог чувствительности.
      */
     @FXML
     private TextField tfPorog;
     /**
-     * Удельный порог чувствительноси
+     * Удельный порог чувствительноси.
      */
     @FXML
     private TextField tfPorogStar;
     /**
-     * Обнаружительная способность
+     * Обнаружительная способность.
      */
     @FXML
     private TextField tfDetectivity;
     /**
-     * Удельная обнаружительная способность
+     * Удельная обнаружительная способность.
      */
     @FXML
     private TextField tfDetectivityStar;
     /**
-     * NETD
+     * NETD.
      */
     @FXML
     private TextField tfNETD;
     /**
-     * Пороговая облученность
+     * Пороговая облученность.
      */
     @FXML
     private TextField tfExposure;
@@ -206,73 +208,69 @@ public class ParamsController implements Initializable {
     @FXML
     private CheckBox cbPrint;
     /**
-     * Расчет сучетом или без учета битых пикселей
+     * Расчет сучетом или без учета битых пикселей.
      */
     @FXML
     private CheckBox cbWithBP;
     /**
-     * Панель вывода гистограмм и кадров
+     * Панель вывода гистограмм и кадров.
      */
     @FXML
     private VBox scrlPane;
-
+    /**
+     * Панель вывода гистограмм и кадров, итоговая.
+     */
     @FXML
     private VBox scrlPane1;
     /**
-     * Поле для вывода данных
-     */
-    /**
-     * Кнопка старта эксперимента
+     * Кнопка старта эксперимента.
      */
     @FXML
     private Button btnStart;
-
     /**
-     * Кнопка сброса эксперимента
+     * Кнопка сброса эксперимента.
      */
     @FXML
     private Button btnReset;
-
     /**
-     * Кнопка записи данных эксперимента
+     * Кнопка записи данных эксперимента.
      */
     @FXML
     private Button btnSave;
-
     /**
-     * Текстовое поле прогрессбара
+     * Текстовое поле прогрессбара.
      */
     @FXML
     private Label lab_status;
-
     /**
-     * Прогрессбар
+     * Прогрессбар.
      */
     @FXML
     private ProgressBar pb_status;
     /**
-     * Прогрессиндикатор
+     * Прогрессиндикатор.
      */
     @FXML
     private ProgressIndicator pIndicator;
+    /**
+     * Индикатор на кнопке.
+     */
     @FXML
     private ProgressIndicator pIndicator2;
     /**
-     * Сервис расчетов
+     * Сервис расчетов.
      */
     private ParamsService service;
-
     /**
-     * Ссылка на контроллер
+     * Ссылка на контроллер.
      */
     private Controller controller;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        LOG.trace("Инициализация");
+        LOG.trace("Init");
         resetButtons();
-        showCrane(true);
-
+        showNeedCalck(true);
 
         String str = "Вольтовая чувствительность, В\u00B7Вт\u00AF \u00B9";
         cbVw.setText(str);
@@ -298,16 +296,14 @@ public class ParamsController implements Initializable {
          * Кнопка страрт
          */
         btnStart.setOnAction(event -> {
-            LOG.trace("Старт");
-            // clearPane(scrlPane);
-            // clearPane(scrlPane1);
-            showCrane(false);
+            LOG.trace("Start Service");
+            showNeedCalck(false);
             service.restart();//Стартуем сервис
             setButtonsDisable(true, false, true);//блок кнопок
         });
 
         btnReset.setOnAction(event -> {
-            LOG.trace("Стоп");
+            LOG.trace("Stop service");
             if (service.getState() == Worker.State.RUNNING) {
                 service.cancel();
             }
@@ -315,7 +311,7 @@ public class ParamsController implements Initializable {
             Platform.runLater(() -> {
                 btnStart.setStyle(null);
                 setMinus();
-                showCrane(true);
+                showNeedCalck(true);
                 clearPane(scrlPane);
                 clearPane(scrlPane1);
                 setAllPersent20();
@@ -325,7 +321,7 @@ public class ParamsController implements Initializable {
         });
 
         btnSave.setOnAction(event -> {
-            LOG.trace("Сохранение в файл");
+            LOG.trace("Save file pressed");
             saveAllInFile(event);
             setButtonsDisable(false, false, false);//блок кнопок
         });
@@ -357,17 +353,15 @@ public class ParamsController implements Initializable {
         controller.getParams().setExposurePersent(20.0);
         tfExposurePersent.setText("20.0");
     }
-
-
     /**
-     * Сервис сохранения в файл
+     * Сервис сохранения в файл.
      */
     private SaveFilesService saveFilesService;
 
     /**
-     * Сохранение в файл
+     * Сохранение в файл.
      *
-     * @param event эвент для внутрянки
+     * @param event эвент для внутрянки.
      */
     private void saveAllInFile(ActionEvent event) {
 
@@ -379,9 +373,7 @@ public class ParamsController implements Initializable {
         fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("PDF", "*.pdf"),
-                new FileChooser.ExtensionFilter("All Files", "*.*")/*,
-                new FileChooser.ExtensionFilter("JPG", "*.jpg"),
-                new FileChooser.ExtensionFilter("PNG", "*.png")*/);
+                new FileChooser.ExtensionFilter("All Files", "*.*"));
 
         File pdfFile = fileChooser.showSaveDialog(stage);
 
@@ -403,7 +395,7 @@ public class ParamsController implements Initializable {
     }
 
     /**
-     * Отработка колорпикера
+     * Отработка колорпикера.
      */
     private void addCBListeners() {
         cpArifmeticMean.valueProperty().addListener((observable, oldValue, newValue) ->
@@ -428,13 +420,9 @@ public class ParamsController implements Initializable {
                 controller.getParams().setPersentColorExposure(newValue.toString()));
         cpItog.valueProperty().addListener((observable, oldValue, newValue) ->
                 controller.getParams().setItogColor(newValue.toString()));
-
-
     }
-
-
     /**
-     * Блокировка кнопок
+     * Блокировка кнопок.
      *
      * @param startBut
      * @param resetBut
@@ -445,11 +433,9 @@ public class ParamsController implements Initializable {
         btnReset.setDisable(resetBut);
         btnSave.setDisable(saveBut);
         btnSave.setStyle("");
-
     }
-
     /**
-     * Сброс кнопок
+     * Сброс кнопок.
      */
     public void resetButtons() {
         setButtonsDisable(false, true, true);
@@ -457,7 +443,7 @@ public class ParamsController implements Initializable {
 
 
     /**
-     * Инициализация сервиса
+     * Инициализация сервиса.
      */
     public void initService() {
         service = new ParamsService(this);
@@ -471,12 +457,12 @@ public class ParamsController implements Initializable {
     }
 
     /**
-     * Инициализация контроллера
+     * Инициализация контроллера.
      *
      * @param controller
      */
     public void initController(Controller controller) {
-        LOG.trace("Инициализация контроллера");
+        LOG.trace("Init controller");
         this.controller = controller;
         initService();
         lbFullWindow.setText(controller.getParams().getDimention());
@@ -531,7 +517,7 @@ public class ParamsController implements Initializable {
     }
 
     /**
-     * Установка минусиков
+     * Установка минусиков.
      */
     private void setMinus() {
 
@@ -552,7 +538,6 @@ public class ParamsController implements Initializable {
         for (Label l : labels) {
             l.setText("--");
         }
-
     }
 
     public Controller getController() {
@@ -560,106 +545,111 @@ public class ParamsController implements Initializable {
     }
 
     //Отработка нажатий в полях
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     @FXML
     public void setArifmeticMeanPersent(ActionEvent event) {
         double d = parseDoubleText(event);
         controller.getParams().setArifmeticMeanPersent(d);
-        showCrane(true);
+        showNeedCalck(true);
     }
 
     @FXML
     public void setQuadraticMeanPersent(ActionEvent event) {
         double d = parseDoubleText(event);
         controller.getParams().setQuadraticMeanPersent(d);
-        showCrane(true);
+        showNeedCalck(true);
     }
 
     @FXML
     public void setSKOPersent(ActionEvent event) {
         double d = parseDoubleText(event);
         controller.getParams().setSKOPersent(d);
-        showCrane(true);
+        showNeedCalck(true);
     }
 
     @FXML
     public void setVwPersent(ActionEvent event) {
         double d = parseDoubleText(event);
         controller.getParams().setVwPersent(d);
-        showCrane(true);
+        showNeedCalck(true);
     }
 
     @FXML
     public void setPorogPersent(ActionEvent event) {
         double d = parseDoubleText(event);
         controller.getParams().setPorogPersent(d);
-        showCrane(true);
+        showNeedCalck(true);
     }
 
     @FXML
     public void setPorogStarPersent(ActionEvent event) {
         double d = parseDoubleText(event);
         controller.getParams().setPorogStarPersent(d);
-        showCrane(true);
+        showNeedCalck(true);
     }
 
     @FXML
     public void setDetectivityPersent(ActionEvent event) {
         double d = parseDoubleText(event);
         controller.getParams().setDetectivityPersent(d);
-        showCrane(true);
+        showNeedCalck(true);
     }
 
     @FXML
     public void setDetectivityStarPersent(ActionEvent event) {
         double d = parseDoubleText(event);
         controller.getParams().setDetectivityStarPersent(d);
-        showCrane(true);
+        showNeedCalck(true);
     }
 
     @FXML
     public void setNETDPersent(ActionEvent event) {
         double d = parseDoubleText(event);
         controller.getParams().setNETDPersent(d);
-        showCrane(true);
+        showNeedCalck(true);
     }
 
     @FXML
     public void setExposurePersent(ActionEvent event) {
         double d = parseDoubleText(event);
         controller.getParams().setExposurePersent(d);
-        showCrane(true);
+        showNeedCalck(true);
     }
 
 
     /**
-     * Отображение необходимости перерасчета
-     *
-     * @param b true-отобразить, false -убрать отображение
+     * Отображение необходимости перерасчета.
+     * @param b true-отобразить, false -убрать отображение.
      */
-    private void showCrane(boolean b) {
+    private void showNeedCalck(boolean b) {
 
         if (b) {
-            mayak(true);
+            needCalcTask(true);
         } else {
-            mayak(false);
+            needCalcTask(false);
         }
     }
 
     /**
-     * Задание на мигание
+     * Задание на мигание.
      */
     static private TimerTask timerTask;
     /**
-     * Сам таймер
+     * Сам таймер.
      */
     static private Timer tm;
     /**
-     * Отображение мигания
+     * Отображение мигания.
      */
-    static private boolean craneShow = false;
+    static private boolean needCalkShow = false;
 
-    private void mayak(boolean b) {
-        if (b && !craneShow) {
+    /**
+     * Отображение мигания на индикаторе.
+     * @param b
+     */
+    private void needCalcTask(boolean b) {
+        if (b && !needCalkShow) {
             if (tm != null) {
                 tm.cancel();
             }
@@ -678,177 +668,56 @@ public class ParamsController implements Initializable {
                 }
             };
             tm.schedule(timerTask, 0, 1000);
-            craneShow = true;
-        } else if (!b && craneShow) {
+            needCalkShow = true;
+        } else if (!b && needCalkShow) {
             tm.cancel();
             tm = null;
             timerTask = null;
             Platform.runLater(() -> {
                 btnStart.setText("Рассчитано");
             });
-            craneShow = false;
+            needCalkShow = false;
         }
     }
 
-
     public TextField getTfArifmeticMean() {
         return tfArifmeticMean;
-    }
-
-    public void setTfArifmeticMean(TextField tfArifmeticMean) {
-        this.tfArifmeticMean = tfArifmeticMean;
     }
 
     public TextField getTfQuadraticMean() {
         return tfQuadraticMean;
     }
 
-    public void setTfQuadraticMean(TextField tfQuadraticMean) {
-        this.tfQuadraticMean = tfQuadraticMean;
-    }
-
     public TextField getTfSKO() {
         return tfSKO;
-    }
-
-    public void setTfSKO(TextField tfSKO) {
-        this.tfSKO = tfSKO;
     }
 
     public TextField getTfVw() {
         return tfVw;
     }
 
-    public void setTfVw(TextField tfVw) {
-        this.tfVw = tfVw;
-    }
-
     public TextField getTfPorog() {
         return tfPorog;
-    }
-
-    public void setTfPorog(TextField tfPorog) {
-        this.tfPorog = tfPorog;
     }
 
     public TextField getTfPorogStar() {
         return tfPorogStar;
     }
 
-    public void setTfPorogStar(TextField tfPorogStar) {
-        this.tfPorogStar = tfPorogStar;
-    }
-
     public TextField getTfDetectivity() {
         return tfDetectivity;
-    }
-
-    public void setTfDetectivity(TextField tfDetectivity) {
-        this.tfDetectivity = tfDetectivity;
     }
 
     public TextField getTfDetectivityStar() {
         return tfDetectivityStar;
     }
 
-    public void setTfDetectivityStar(TextField tfDetectivityStar) {
-        this.tfDetectivityStar = tfDetectivityStar;
-    }
-
     public TextField getTfNETD() {
         return tfNETD;
     }
 
-    public void setTfNETD(TextField tfNETD) {
-        this.tfNETD = tfNETD;
-    }
-
     public TextField getTfExposure() {
         return tfExposure;
-    }
-
-    public void setTfExposure(TextField tfExposure) {
-        this.tfExposure = tfExposure;
-    }
-
-    public TextField getTfArifmeticMeanPersent() {
-        return tfArifmeticMeanPersent;
-    }
-
-    public void setTfArifmeticMeanPersent(TextField tfArifmeticMeanPersent) {
-        this.tfArifmeticMeanPersent = tfArifmeticMeanPersent;
-    }
-
-    public TextField getTfQuadraticMeanPersent() {
-        return tfQuadraticMeanPersent;
-    }
-
-    public void setTfQuadraticMeanPersent(TextField tfQuadraticMeanPersent) {
-        this.tfQuadraticMeanPersent = tfQuadraticMeanPersent;
-    }
-
-    public TextField getTfSKOPersent() {
-        return tfSKOPersent;
-    }
-
-    public void setTfSKOPersent(TextField tfSKOPersent) {
-        this.tfSKOPersent = tfSKOPersent;
-    }
-
-    public TextField getTfVwPersent() {
-        return tfVwPersent;
-    }
-
-    public void setTfVwPersent(TextField tfVwPersent) {
-        this.tfVwPersent = tfVwPersent;
-    }
-
-    public TextField getTfPorogPersent() {
-        return tfPorogPersent;
-    }
-
-    public void setTfPorogPersent(TextField tfPorogPersent) {
-        this.tfPorogPersent = tfPorogPersent;
-    }
-
-    public TextField getTfPorogStarPersent() {
-        return tfPorogStarPersent;
-    }
-
-    public void setTfPorogStarPersent(TextField tfPorogStarPersent) {
-        this.tfPorogStarPersent = tfPorogStarPersent;
-    }
-
-    public TextField getTfDetectivityPersent() {
-        return tfDetectivityPersent;
-    }
-
-    public void setTfDetectivityPersent(TextField tfDetectivityPersent) {
-        this.tfDetectivityPersent = tfDetectivityPersent;
-    }
-
-    public TextField getTfDetectivityStarPersent() {
-        return tfDetectivityStarPersent;
-    }
-
-    public void setTfDetectivityStarPersent(TextField tfDetectivityStarPersent) {
-        this.tfDetectivityStarPersent = tfDetectivityStarPersent;
-    }
-
-    public TextField getTfNETDPersent() {
-        return tfNETDPersent;
-    }
-
-    public void setTfNETDPersent(TextField tfNETDPersent) {
-        this.tfNETDPersent = tfNETDPersent;
-    }
-
-    public TextField getTfExposurePersent() {
-        return tfExposurePersent;
-    }
-
-    public void setTfExposurePersent(TextField tfExposurePersent) {
-        this.tfExposurePersent = tfExposurePersent;
     }
 
     public Label getLbArifmeticMean1() {
@@ -859,389 +728,144 @@ public class ParamsController implements Initializable {
         return lbItog;
     }
 
-    public void setLbItog(Label lbItog) {
-        this.lbItog = lbItog;
-    }
-
     public Label getLbItog1() {
         return lbItog1;
-    }
-
-    public void setLbItog1(Label lbItog1) {
-        this.lbItog1 = lbItog1;
-    }
-
-    public void setLbArifmeticMean1(Label lbArifmeticMean1) {
-        this.lbArifmeticMean1 = lbArifmeticMean1;
     }
 
     public Label getLbQuadraticMean1() {
         return lbQuadraticMean1;
     }
 
-    public void setLbQuadraticMean1(Label lbQuadraticMean1) {
-        this.lbQuadraticMean1 = lbQuadraticMean1;
-    }
-
     public Label getLbSKO1() {
         return lbSKO1;
-    }
-
-    public void setLbSKO1(Label lbSKO1) {
-        this.lbSKO1 = lbSKO1;
     }
 
     public Label getLbVw1() {
         return lbVw1;
     }
 
-    public void setLbVw1(Label lbVw1) {
-        this.lbVw1 = lbVw1;
-    }
-
     public Label getLbPorog1() {
         return lbPorog1;
-    }
-
-    public void setLbPorog1(Label lbPorog1) {
-        this.lbPorog1 = lbPorog1;
     }
 
     public Label getLbPorogStar1() {
         return lbPorogStar1;
     }
 
-    public void setLbPorogStar1(Label lbPorogStar1) {
-        this.lbPorogStar1 = lbPorogStar1;
-    }
-
     public Label getLbDetectivity1() {
         return lbDetectivity1;
-    }
-
-    public void setLbDetectivity1(Label lbDetectivity1) {
-        this.lbDetectivity1 = lbDetectivity1;
     }
 
     public Label getLbDetectivityStar1() {
         return lbDetectivityStar1;
     }
 
-    public void setLbDetectivityStar1(Label lbDetectivityStar1) {
-        this.lbDetectivityStar1 = lbDetectivityStar1;
-    }
-
     public Label getLbNETD1() {
         return lbNETD1;
-    }
-
-    public void setLbNETD1(Label lbNETD1) {
-        this.lbNETD1 = lbNETD1;
     }
 
     public Label getLbExposure1() {
         return lbExposure1;
     }
 
-    public void setLbExposure1(Label lbExposure1) {
-        this.lbExposure1 = lbExposure1;
-    }
-
     public Label getLbArifmeticMean() {
         return lbArifmeticMean;
-    }
-
-    public void setLbArifmeticMean(Label lbArifmeticMean) {
-        this.lbArifmeticMean = lbArifmeticMean;
     }
 
     public Label getLbQuadraticMean() {
         return lbQuadraticMean;
     }
 
-    public void setLbQuadraticMean(Label lbQuadraticMean) {
-        this.lbQuadraticMean = lbQuadraticMean;
-    }
-
     public Label getLbSKO() {
         return lbSKO;
-    }
-
-    public void setLbSKO(Label lbSKO) {
-        this.lbSKO = lbSKO;
     }
 
     public Label getLbVw() {
         return lbVw;
     }
 
-    public void setLbVw(Label lbVw) {
-        this.lbVw = lbVw;
-    }
-
     public Label getLbPorog() {
         return lbPorog;
-    }
-
-    public void setLbPorog(Label lbPorog) {
-        this.lbPorog = lbPorog;
     }
 
     public Label getLbPorogStar() {
         return lbPorogStar;
     }
 
-    public void setLbPorogStar(Label lbPorogStar) {
-        this.lbPorogStar = lbPorogStar;
-    }
-
     public Label getLbDetectivity() {
         return lbDetectivity;
-    }
-
-    public void setLbDetectivity(Label lbDetectivity) {
-        this.lbDetectivity = lbDetectivity;
     }
 
     public Label getLbDetectivityStar() {
         return lbDetectivityStar;
     }
 
-    public void setLbDetectivityStar(Label lbDetectivityStar) {
-        this.lbDetectivityStar = lbDetectivityStar;
-    }
-
     public Label getLbNETD() {
         return lbNETD;
-    }
-
-    public void setLbNETD(Label lbNETD) {
-        this.lbNETD = lbNETD;
     }
 
     public Label getLbExposure() {
         return lbExposure;
     }
 
-    public void setLbExposure(Label lbExposure) {
-        this.lbExposure = lbExposure;
-    }
-
-    public ColorPicker getCpArifmeticMean() {
-        return cpArifmeticMean;
-    }
-
-    public void setCpArifmeticMean(ColorPicker cpArifmeticMean) {
-        this.cpArifmeticMean = cpArifmeticMean;
-    }
-
-    public ColorPicker getCpQuadraticMean() {
-        return cpQuadraticMean;
-    }
-
-    public void setCpQuadraticMean(ColorPicker cpQuadraticMean) {
-        this.cpQuadraticMean = cpQuadraticMean;
-    }
-
-    public ColorPicker getCpSKO() {
-        return cpSKO;
-    }
-
-    public void setCpSKO(ColorPicker cpSKO) {
-        this.cpSKO = cpSKO;
-    }
-
-    public ColorPicker getCpVw() {
-        return cpVw;
-    }
-
-    public void setCpVw(ColorPicker cpVw) {
-        this.cpVw = cpVw;
-    }
-
-    public ColorPicker getCpPorog() {
-        return cpPorog;
-    }
-
-    public void setCpPorog(ColorPicker cpPorog) {
-        this.cpPorog = cpPorog;
-    }
-
-    public ColorPicker getCpPorogStar() {
-        return cpPorogStar;
-    }
-
-    public void setCpPorogStar(ColorPicker cpPorogStar) {
-        this.cpPorogStar = cpPorogStar;
-    }
-
-    public ColorPicker getCpDetectivity() {
-        return cpDetectivity;
-    }
-
-    public void setCpDetectivity(ColorPicker cpDetectivity) {
-        this.cpDetectivity = cpDetectivity;
-    }
-
-    public ColorPicker getCpDetectivityStar() {
-        return cpDetectivityStar;
-    }
-
-    public void setCpDetectivityStar(ColorPicker cpDetectivityStar) {
-        this.cpDetectivityStar = cpDetectivityStar;
-    }
-
-    public ColorPicker getCpNETD() {
-        return cpNETD;
-    }
-
-    public void setCpNETD(ColorPicker cpNETD) {
-        this.cpNETD = cpNETD;
-    }
-
-    public ColorPicker getCpExposure() {
-        return cpExposure;
-    }
-
-    public void setCpExposure(ColorPicker cpExposure) {
-        this.cpExposure = cpExposure;
-    }
-
     public CheckBox getCbArifmeticMean() {
         return cbArifmeticMean;
-    }
-
-    public void setCbArifmeticMean(CheckBox cbArifmeticMean) {
-        this.cbArifmeticMean = cbArifmeticMean;
     }
 
     public CheckBox getCbQuadraticMean() {
         return cbQuadraticMean;
     }
 
-    public void setCbQuadraticMean(CheckBox cbQuadraticMean) {
-        this.cbQuadraticMean = cbQuadraticMean;
-    }
-
     public CheckBox getCbSKO() {
         return cbSKO;
-    }
-
-    public void setCbSKO(CheckBox cbSKO) {
-        this.cbSKO = cbSKO;
     }
 
     public CheckBox getCbVw() {
         return cbVw;
     }
 
-    public void setCbVw(CheckBox cbVw) {
-        this.cbVw = cbVw;
-    }
-
     public CheckBox getCbPorog() {
         return cbPorog;
-    }
-
-    public void setCbPorog(CheckBox cbPorog) {
-        this.cbPorog = cbPorog;
     }
 
     public CheckBox getCbPorogStar() {
         return cbPorogStar;
     }
 
-    public void setCbPorogStar(CheckBox cbPorogStar) {
-        this.cbPorogStar = cbPorogStar;
-    }
-
     public CheckBox getCbDetectivity() {
         return cbDetectivity;
-    }
-
-    public void setCbDetectivity(CheckBox cbDetectivity) {
-        this.cbDetectivity = cbDetectivity;
     }
 
     public CheckBox getCbDetectivityStar() {
         return cbDetectivityStar;
     }
 
-    public void setCbDetectivityStar(CheckBox cbDetectivityStar) {
-        this.cbDetectivityStar = cbDetectivityStar;
-    }
-
     public CheckBox getCbNETD() {
         return cbNETD;
-    }
-
-    public void setCbNETD(CheckBox cbNETD) {
-        this.cbNETD = cbNETD;
     }
 
     public CheckBox getCbExposure() {
         return cbExposure;
     }
 
-    public void setCbExposure(CheckBox cbExposure) {
-        this.cbExposure = cbExposure;
-    }
-
     public CheckBox getCbWithBP() {
         return cbWithBP;
-    }
-
-    public void setCbWithBP(CheckBox cbWithBP) {
-        this.cbWithBP = cbWithBP;
     }
 
     public VBox getScrlPane() {
         return scrlPane;
     }
 
-    public void setScrlPane(VBox scrlPane) {
-        this.scrlPane = scrlPane;
-    }
-
-
     public Button getBtnStart() {
         return btnStart;
-    }
-
-    public void setBtnStart(Button btnStart) {
-        this.btnStart = btnStart;
-    }
-
-    public Button getBtnReset() {
-        return btnReset;
-    }
-
-    public void setBtnReset(Button btnReset) {
-        this.btnReset = btnReset;
     }
 
     public Button getBtnSave() {
         return btnSave;
     }
 
-    public void setBtnSave(Button btnSave) {
-        this.btnSave = btnSave;
-    }
-
     public Label getLab_status() {
         return lab_status;
-    }
-
-    public void setLab_status(Label lab_status) {
-        this.lab_status = lab_status;
-    }
-
-    public ProgressBar getPb_status() {
-        return pb_status;
-    }
-
-    public void setPb_status(ProgressBar pb_status) {
-        this.pb_status = pb_status;
     }
 
     public ParamsService getService() {
@@ -1260,10 +884,6 @@ public class ParamsController implements Initializable {
         return cbPrint;
     }
 
-    public void setCbPrint(CheckBox cbPrint) {
-        this.cbPrint = cbPrint;
-    }
-
     public ProgressIndicator getpIndicator() {
         return pIndicator;
     }
@@ -1272,43 +892,11 @@ public class ParamsController implements Initializable {
         return pIndicator2;
     }
 
-    public void setpIndicator2(ProgressIndicator pIndicator2) {
-        this.pIndicator2 = pIndicator2;
-    }
-
-    public void setpIndicator(ProgressIndicator pIndicator) {
-        this.pIndicator = pIndicator;
-    }
-
-    public SaveFilesService getSaveFilesService() {
-        return saveFilesService;
-    }
-
     public TextField getLbVw_raspr() {
         return lbVw_raspr;
     }
 
-    public void setLbVw_raspr(TextField lbVw_raspr) {
-        this.lbVw_raspr = lbVw_raspr;
-    }
-
-    public ColorPicker getCpItog() {
-        return cpItog;
-    }
-
-    public void setCpItog(ColorPicker cpItog) {
-        this.cpItog = cpItog;
-    }
-
     public VBox getScrlPane1() {
         return scrlPane1;
-    }
-
-    public void setScrlPane1(VBox scrlPane1) {
-        this.scrlPane1 = scrlPane1;
-    }
-
-    public void setSaveFilesService(SaveFilesService saveFilesService) {
-        this.saveFilesService = saveFilesService;
     }
 }

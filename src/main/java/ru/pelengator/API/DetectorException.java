@@ -1,5 +1,8 @@
 package ru.pelengator.API;
 
+/**
+ * Обертка ошибки.
+ */
 public class DetectorException extends RuntimeException{
 
     private static final long serialVersionUID = 1L;

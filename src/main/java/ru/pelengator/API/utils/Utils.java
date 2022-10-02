@@ -34,7 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.pelengator.App;
 import ru.pelengator.ParamsController;
-import ru.pelengator.charts.SampleBarChart;
+import ru.pelengator.model.SampleBarChart;
 import ru.pelengator.model.ExpInfo;
 import ru.pelengator.service.DocMaker;
 import ru.pelengator.service.ImagePanel;
@@ -73,6 +73,7 @@ public class Utils {
 
     /**
      * Расчет контрольной суммы архива.
+     *
      * @return значение.
      */
     public static String calkCRC32() {
@@ -84,6 +85,7 @@ public class Utils {
 
     /**
      * Создание объекта FIle по пути.
+     *
      * @param clazz класс в архиве.
      * @return строкапути.
      */
@@ -132,9 +134,12 @@ public class Utils {
         }
         return temp.getAbsolutePath();//ссылка на временный файл
     }
-   public static String separator = System.getProperty("file.separator");
+
+    public static String separator = System.getProperty("file.separator");
+
     /**
      * Поиск файла в директории.
+     *
      * @param path путь.
      * @param find расширение файла.
      * @return
@@ -160,6 +165,7 @@ public class Utils {
 
     /**
      * Расчет контрольной суммы по методу CRC-32.
+     *
      * @param szPath путь к файлу.
      * @return значение суммы.
      */
@@ -186,8 +192,9 @@ public class Utils {
 
     /**
      * Сохранение файла на диск.
+     *
      * @param fileName путь файла.
-     * @param data массив данных.
+     * @param data     массив данных.
      * @throws IOException
      */
     public static void saveFileToDisk(String fileName, byte[] data) throws IOException {
@@ -250,40 +257,43 @@ public class Utils {
     }
 
     /**
-     * Квантователь.
-     *Раскраска значений в цвета.
-     * @param source
-     * @return
+     * Квантователь. Присвает цвет значению.
+     * Двухбайтовае значение квантует на 1021 значениецвета.
+     * <br>
+     * <br>
+     * Границы цвета: синий, голубой, салатовый,желтый, красный.
+     * @param sourceValue отсчеты АЦП [16384]
+     * @return Цвет, один из 1021
      */
-    public static int qvantFilterRGB(int source) {
+    public static int qvantFilterRGB(int sourceValue) {
 
         int BITBYTE = 255;
         double koef = 16384.0 / (BITBYTE * 4.0 + 1.0);
-        source = (int) (source / koef);
+        sourceValue = (int) (sourceValue / koef);
         int a = 0xff000000;
         int r = 0;
         int g = 0;
         int b = 0;
 
-        if (source <= BITBYTE) {
+        if (sourceValue <= BITBYTE) {
             new Color(0, 0, BITBYTE);
             r = 0;
-            g = source;
+            g = sourceValue;
             b = BITBYTE;
-        } else if (source > BITBYTE && source <= BITBYTE * 2) {
+        } else if (sourceValue > BITBYTE && sourceValue <= BITBYTE * 2) {
             new Color(0, BITBYTE, BITBYTE);
             r = 0;
             g = BITBYTE;
-            b = BITBYTE - (source - BITBYTE);
-        } else if (source > BITBYTE * 2 && source <= BITBYTE * 3) {
+            b = BITBYTE - (sourceValue - BITBYTE);
+        } else if (sourceValue > BITBYTE * 2 && sourceValue <= BITBYTE * 3) {
             new Color(0, BITBYTE, 0);
-            r = source - BITBYTE * 2;
+            r = sourceValue - BITBYTE * 2;
             g = BITBYTE;
             b = 0;
-        } else if (source > BITBYTE * 3 && source <= BITBYTE * 4) {
+        } else if (sourceValue > BITBYTE * 3 && sourceValue <= BITBYTE * 4) {
             new Color(BITBYTE, BITBYTE, 0);
             r = BITBYTE;
-            g = BITBYTE - (source - BITBYTE * 3);
+            g = BITBYTE - (sourceValue - BITBYTE * 3);
             b = 0;
         } else {
             new Color(BITBYTE, 0, 0);
@@ -446,9 +456,10 @@ public class Utils {
 
     /**
      * Стандартная гистограмма.
+     *
      * @param nameXaxis подпись по оси X.
      * @param nameYaxis подписьпо оси Y.
-     * @param raspred данные для отображения.
+     * @param raspred   данные для отображения.
      * @return Гистограмму распределения.
      */
     public static BarChart<String, Number> getBar_chart(String nameXaxis,
@@ -543,7 +554,8 @@ public class Utils {
 
     /**
      * Заполнение изображения дефектными пикселями
-     * @param src пустое изображение
+     *
+     * @param src    пустое изображение
      * @param bpList перечень дефектных пикселей
      * @return
      */
@@ -586,30 +598,32 @@ public class Utils {
 
     /**
      * Отрисовка динамического квадрата.
-     * @param g2 ссылка на русурс.
-     * @param wNature реальное разрешение по ширине.
-     * @param hNature реальное разрешение по высоте.
-     * @param rectW ширина квадрата.
-     * @param rectH высота квадрата.
-     * @param x1 начальное положение по Х.
-     * @param y1 начальное положение по У.
+     *
+     * @param g2       ссылка на русурс.
+     * @param wNature  реальное разрешение по ширине.
+     * @param hNature  реальное разрешение по высоте.
+     * @param rectW    ширина квадрата.
+     * @param rectH    высота квадрата.
+     * @param x1       начальное положение по Х.
+     * @param y1       начальное положение по У.
      * @param sizeKoef коэфициент пикселя.
      */
     public static void drawRect(Graphics2D g2, int wNature, int hNature, int rectW, int rectH,
-                          int x1, int y1, double sizeKoef) {
+                                int x1, int y1, double sizeKoef) {
 
-        int rx= (int) (x1+((wNature-rectW)/2.0)/sizeKoef);
-        int ry= (int) (y1+((hNature-rectH)/2.0)/sizeKoef);
+        int rx = (int) (x1 + ((wNature - rectW) / 2.0) / sizeKoef);
+        int ry = (int) (y1 + ((hNature - rectH) / 2.0) / sizeKoef);
 
 
         g2.setColor(new Color(0, 0, 0, 255));
-        g2.drawRect(rx, ry, (int) (rectW/sizeKoef), (int) (rectH/sizeKoef));
+        g2.drawRect(rx, ry, (int) (rectW / sizeKoef), (int) (rectH / sizeKoef));
     }
 
 
     /**
      * Заполнение пустого изображения дефектными пикселями
-     * @param src исходное пустоее изображение
+     *
+     * @param src    исходное пустоее изображение
      * @param bpList перечень дефектов
      * @return
      */
@@ -864,9 +878,10 @@ public class Utils {
 
     /**
      * Получение максимального, среднего и минимального значения выборки.
-     * @param dataArrays входные данные.
+     *
+     * @param dataArrays   входные данные.
      * @param noCorrection исключение пустых значений.
-     * @param FALSE пустое значение.
+     * @param FALSE        пустое значение.
      * @return
      */
     public static double[] makeMaxMeanMin(double[][] dataArrays, boolean noCorrection, double FALSE) {
@@ -907,9 +922,9 @@ public class Utils {
     /**
      * Расчет неоднородности вольтовой чувствительности.
      *
-     * @param voltWatka исходные данные
+     * @param voltWatka    исходные данные
      * @param noCorrection исключать ли пустые пиксили
-     * @param persent процент отбраковки
+     * @param persent      процент отбраковки
      * @return
      */
     public static Double calculateHeterogeneity(double[][] voltWatka, boolean noCorrection, double persent) {
@@ -956,7 +971,7 @@ public class Utils {
      * <p>
      * Ее=(eps*sigma*T4*Dist2)/(4*L2)
      *
-     * @param potok значение потока.
+     * @param potok   значение потока.
      * @param areaFPU площать элемента.
      * @return
      */
@@ -1017,20 +1032,21 @@ public class Utils {
 
     /**
      * Расчет итогового потока разницы температур.
-     * @param T0 температура АЧТ
-     * @param plank0 постоянная Планка
-     * @param epsilin0 коэф. поглощения
+     *
+     * @param T0        температура АЧТ
+     * @param plank0    постоянная Планка
+     * @param epsilin0  коэф. поглощения
      * @param areaACHT0 площадь АЧТ
-     * @param L0 Расстояние между источником и приёмником
-     * @param betta0 поэффициент поправки
-     * @param areaFPU0 площадь элемента
-     * @param T1 температура АЧТ
-     * @param plank1 постоянная Планка
-     * @param epsilin1 коэф. поглощения
+     * @param L0        Расстояние между источником и приёмником
+     * @param betta0    поэффициент поправки
+     * @param areaFPU0  площадь элемента
+     * @param T1        температура АЧТ
+     * @param plank1    постоянная Планка
+     * @param epsilin1  коэф. поглощения
      * @param areaACHT1 площадь АЧТ
-     * @param L1 Расстояние между источником и приёмником
-     * @param betta1 поэффициент поправки
-     * @param areaFPU1 площадь элемента
+     * @param L1        Расстояние между источником и приёмником
+     * @param betta1    поэффициент поправки
+     * @param areaFPU1  площадь элемента
      * @return
      */
     public static double potok(double T0, double plank0, double epsilin0, double areaACHT0, double L0, double betta0, double areaFPU0,
@@ -1044,6 +1060,7 @@ public class Utils {
 
     /**
      * Расчет потока одной температуры.
+     *
      * @param T
      * @param plank
      * @param epsilin
@@ -1387,27 +1404,28 @@ public class Utils {
 
     /**
      * Проверка правильности ip. шаблон
+     *
      * @param ipAddress
      * @return true, если ip адрес имеет правильную форму
      */
-    public static boolean ipv4Check(String ipAddress){
+    public static boolean ipv4Check(String ipAddress) {
 
-        try{
-            if(ipAddress!=null && !ipAddress.isEmpty()){
-                String [] ip = ipAddress.split("\\.");
-                if(ip.length!=4)
+        try {
+            if (ipAddress != null && !ipAddress.isEmpty()) {
+                String[] ip = ipAddress.split("\\.");
+                if (ip.length != 4)
                     return false;
 
-                for(int i=0;i<=ip.length-1;i++){
-                    int j=Integer.parseInt(ip[i]);
-                    if(j<0 || j>255){
+                for (int i = 0; i <= ip.length - 1; i++) {
+                    int j = Integer.parseInt(ip[i]);
+                    if (j < 0 || j > 255) {
                         return false;
                     }
                 }
-                if ( ipAddress.endsWith(".") ) {
+                if (ipAddress.endsWith(".")) {
                     return false;
                 }
-                if ( ipAddress.startsWith(".") ) {
+                if (ipAddress.startsWith(".")) {
                     return false;
                 }
 
@@ -1417,7 +1435,6 @@ public class Utils {
             return false;
         }
     }
-
 
 
     /**
@@ -1464,6 +1481,7 @@ public class Utils {
 
     /**
      * Добавка элементов в список.
+     *
      * @param bpList
      * @param data
      * @param noCorrection
@@ -1508,6 +1526,7 @@ public class Utils {
 
     /**
      * Конвертер типов цвета.
+     *
      * @param color
      * @return
      */
@@ -1522,9 +1541,10 @@ public class Utils {
 
     /**
      * Замена  дефектного значения конкретным.
-     * @param data ресурс.
+     *
+     * @param data    ресурс.
      * @param persent процентовка.
-     * @param mean среднее значение.
+     * @param mean    среднее значение.
      * @return отфильтрованный массив.
      */
     public static double[][] zamenaData(double[][] data, double persent, double mean) {
@@ -1546,6 +1566,7 @@ public class Utils {
 
     /**
      * Очистка перечня элементов панели
+     *
      * @param pane
      */
     public static void clearPane(VBox pane) {
@@ -1556,14 +1577,15 @@ public class Utils {
 
     /**
      * Создание гистограммы и квадрата в панели
-     * @param pane панель
-     * @param Xname подпись по Х
-     * @param Yname подпись по У
+     *
+     * @param pane        панель
+     * @param Xname       подпись по Х
+     * @param Yname       подпись по У
      * @param raspredData данные
-     * @param tempImage пустой снимок
-     * @param bpList перечень днфектов
-     * @param scList лист дефектов
-     * @param controller ссылка на контролер
+     * @param tempImage   пустой снимок
+     * @param bpList      перечень днфектов
+     * @param scList      лист дефектов
+     * @param controller  ссылка на контролер
      * @return
      */
     public static HBox showGistAndImageBox(VBox pane, String Xname, String Yname,
@@ -1628,6 +1650,7 @@ public class Utils {
 
     /**
      * Создание квадратов.
+     *
      * @param pane
      * @param tempImage
      * @param bpList
@@ -1704,6 +1727,7 @@ public class Utils {
 
     /**
      * Построение окна с квадратом.
+     *
      * @param iw
      * @param w
      * @param h
@@ -1729,6 +1753,7 @@ public class Utils {
 
     /**
      * Обрисовка картинки осями.
+     *
      * @param image
      * @param bgColor
      * @return
@@ -1853,8 +1878,9 @@ public class Utils {
 
     /**
      * Сохранение отчета
-     * @param exp эксперимента
-     * @param src узел в которомвсе картинки
+     *
+     * @param exp     эксперимента
+     * @param src     узел в которомвсе картинки
      * @param pdfFile пдф файл
      * @return
      */
@@ -1981,7 +2007,7 @@ public class Utils {
                         PDPageContentStream.AppendMode.APPEND, true)) {
                     contentStream.beginText();
 
-                    String fontPATH="API"+separator+"utils"+separator+"fonts"+separator+"ARIALUNI.TTF";
+                    String fontPATH = "API" + separator + "utils" + separator + "fonts" + separator + "ARIALUNI.TTF";
 
                     PDFont font = PDType0Font.load(pDDocument,
                             App.class.getResourceAsStream(fontPATH));
@@ -2058,6 +2084,7 @@ public class Utils {
 
     /**
      * Сохранение TXT файла с перечнем дефектов.
+     *
      * @param expInfo эксперимент.
      * @param pdfFile путь к файлу.
      * @throws IOException
@@ -2075,6 +2102,7 @@ public class Utils {
 
     /**
      * Сохранение Exel файла
+     *
      * @param service
      * @param pdfFile
      */
@@ -2086,7 +2114,8 @@ public class Utils {
 
     /**
      * Подсчет дефектов в цинтральной зоне.
-     * @param frList перечень кадров .
+     *
+     * @param frList   перечень кадров .
      * @param position позиция в перечне.
      * @param areaSize размер стороны квадрата.
      * @return
@@ -2114,10 +2143,11 @@ public class Utils {
 
     /**
      * Подсчет дефектности в центральной области
-     * @param frList перечень
+     *
+     * @param frList   перечень
      * @param areaSize размер зоны
-     * @param w размер матрицы по ширине
-     * @param h размер матрицы по высоте
+     * @param w        размер матрицы по ширине
+     * @param h        размер матрицы по высоте
      * @return
      */
     public static int bbpInCentral(List<BadBigPoint> frList, int areaSize, int w, int h) {

@@ -70,10 +70,9 @@ public class App extends Application {
             try (FileOutputStream fl = new FileOutputStream(file);
                  PrintWriter pw = new PrintWriter(fl);) {
                 JOptionPane.showMessageDialog(null, e.getMessage() + "\n" + "Смотри file: " + file.getAbsolutePath());
-                e.printStackTrace();//вывод в консоль
                 e.printStackTrace(pw);//вывод в файл
             } catch (IOException e1) {
-                e1.printStackTrace();//отработка отсутствия файла ошибок
+                //ignore //отработка отсутствия файла ошибок
             }
         }
     }
@@ -92,14 +91,6 @@ public class App extends Application {
 
     public static String getFtd3XX() {
         return ftd3XX;
-    }
-
-    public static FXMLLoader getLoader() {
-        return loader;
-    }
-
-    public static Parent getRoot() {
-        return root;
     }
 
 }

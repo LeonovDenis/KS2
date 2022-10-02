@@ -5,14 +5,13 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Хук выключения должен быть выполнен, когда JVM корректно завершает работу. Это намерение класса
- * предназначен только для внутреннего использования.
- *
-  */
+ * ShutdownHook выключения должен быть выполнен, когда JVM корректно завершает работу.
+ * Это намерение класса предназначен только для внутреннего использования.
+ */
 public final class DetectorShutdownHook extends Thread {
 
     /**
-     * Регистратор.
+     * Логгер.
      */
     private static final Logger LOG = LoggerFactory.getLogger(DetectorShutdownHook.class);
 
@@ -22,7 +21,7 @@ public final class DetectorShutdownHook extends Thread {
     private static int number = 0;
 
     /**
-     * Экземпляр детектора подлежит удалению/закрытию.
+     * Экземпляр детектора,который подлежит удалению/закрытию.
      */
     private Detector detector = null;
 
@@ -32,7 +31,7 @@ public final class DetectorShutdownHook extends Thread {
      * @param detector детектор, для которого предназначен хук
      */
     protected DetectorShutdownHook(Detector detector) {
-        super("shutdown-hook-" + (++number));
+        super("Shutdown-hook-" + (++number));
         this.detector = detector;
         this.setUncaughtExceptionHandler(DetectorExceptionHandler.getInstance());
     }

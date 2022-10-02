@@ -4,9 +4,7 @@ import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.Pane;
 import javafx.stage.Screen;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +22,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static ru.pelengator.API.utils.Utils.*;
 
 /**
- * Сервис сбора данных
+ * Сервис сбора данных.
  */
 public class DataService extends Service<Void> implements DetectorListener {
     /**
@@ -32,59 +30,59 @@ public class DataService extends Service<Void> implements DetectorListener {
      */
     private static final Logger LOG = LoggerFactory.getLogger(DataService.class);
     /**
-     * Меньший поток
+     * Меньший поток.
      */
     private ArrayList<int[][]> dataArray_0;
     /**
-     * Больший поток
+     * Больший поток.
      */
     private ArrayList<int[][]> dataArray_1;
     /**
-     * Данные в вольтах
+     * Данные в вольтах.
      */
     private double[][] dataArrayMeanValue_0;
     private double[][] dataArrayMeanValue_1;
     /**
-     * Статика в АЦП
+     * Статика в АЦП.
      */
     private StatisticsUtils[][] dataArrayStat_0;
     private StatisticsUtils[][] dataArrayStat_1;
     /**
-     * Дельта среднего значения по потокам. В вольтах
+     * Дельта среднего значения по потокам. В вольтах.
      */
     private double totalMeanValue;
     /**
-     * Размер кадра
+     * Размер кадра.
      */
-    private int size;//ширина
-    private int size1;//высота
+    private int widthSize;//ширина
+    private int heigthSize;//высота
     /**
-     * Число отсчетов
+     * Число отсчетов.
      */
     private int count;
     /**
-     * Промежуточный кадр
+     * Промежуточный кадр.
      */
     private BufferedImage tempImage;
     /**
-     * Ссылка на контроллер
+     * Ссылка на контроллер.
      */
     private Controller controller;
     /**
-     * Флаг набора части кадров
+     * Флаг набора части кадров.
      */
     private AtomicBoolean flag_part = new AtomicBoolean(false);
     /**
-     * Флаг паузы в наборе
+     * Флаг паузы в наборе.
      */
     private AtomicBoolean flag_pause = new AtomicBoolean(false);
     /**
-     * Флаг повтора набора кадров
+     * Флаг повтора набора кадров.
      */
     private AtomicBoolean flag_2ndTry = new AtomicBoolean(true);
 
     /**
-     * Конструктор
+     * Конструктор.
      *
      * @param controller
      */
@@ -98,7 +96,7 @@ public class DataService extends Service<Void> implements DetectorListener {
         return new Task<>() {
             @Override
             protected Void call() throws Exception {
-
+                LOG.trace("Staring task");
                 updateMessage("Старт Сервиса");
                 updateProgress(0.0, 1);
                 updateMessage("Инициализация");
@@ -167,10 +165,10 @@ public class DataService extends Service<Void> implements DetectorListener {
     }
 
     /**
-     * Показ окна подтверждения выхода на следующие условия
+     * Показ окна подтверждения выхода на следующие условия.
      *
-     * @param flag_pause  флаг паузы между двумя выборками
-     * @param flag_2ndTry флаг повтора операции
+     * @param flag_pause  флаг паузы между двумя выборками.
+     * @param flag_2ndTry флаг повтора операции.
      */
     private void showAndWait(AtomicBoolean flag_pause, AtomicBoolean flag_2ndTry) {
 
@@ -182,9 +180,9 @@ public class DataService extends Service<Void> implements DetectorListener {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Info");
             alert.setHeaderText(null);
-            alert.setContentText("Данные собраны. Продолжаем?");
+            alert.setContentText("Данные набраны. Продолжаем?");
             alert.getButtonTypes().clear();
-            alert.getButtonTypes().addAll(repeatBtn,goNextBtn,cancelBtn);
+            alert.getButtonTypes().addAll(repeatBtn, goNextBtn, cancelBtn);
             Rectangle2D bounds = Screen.getPrimary().getBounds();
             alert.setX(bounds.getMaxX() / 2 - alert.getDialogPane().getWidth() / 2);
             alert.setY(bounds.getMaxY() / 2 + alert.getDialogPane().getHeight() * 2);
@@ -209,7 +207,7 @@ public class DataService extends Service<Void> implements DetectorListener {
     }
 
     /**
-     * Добавление в слугшатели на набор кадров
+     * Добавление в слугшатели на набор кадров.
      */
     private void addListnr() {
         controller.getSelDetector().addDetectorListener(this);
@@ -217,7 +215,7 @@ public class DataService extends Service<Void> implements DetectorListener {
 
 
     /**
-     * Инициализация параметров
+     * Инициализация параметров.
      */
     private void initParams() {
 
@@ -229,22 +227,22 @@ public class DataService extends Service<Void> implements DetectorListener {
         String selectedDist = controller.getCbDimOptions().getSelectionModel().getSelectedItem();
 
         String[] splitedSize = selectedDist.split("\\*");
-        size = Integer.parseInt(splitedSize[0]);
-        size1 = Integer.parseInt(splitedSize[1]);
+        widthSize = Integer.parseInt(splitedSize[0]);
+        heigthSize = Integer.parseInt(splitedSize[1]);
 
-        dataArrayMeanValue_0 = new double[size1][size];
-        dataArrayMeanValue_1 = new double[size1][size];
+        dataArrayMeanValue_0 = new double[heigthSize][widthSize];
+        dataArrayMeanValue_1 = new double[heigthSize][widthSize];
 
-        dataArrayStat_0 = new StatisticsUtils[size1][size];
-        dataArrayStat_1 = new StatisticsUtils[size1][size];
+        dataArrayStat_0 = new StatisticsUtils[heigthSize][widthSize];
+        dataArrayStat_1 = new StatisticsUtils[heigthSize][widthSize];
 
-        for (int h = 0; h < size1; h++) {
-            for (int w = 0; w < size; w++) {
+        for (int h = 0; h < heigthSize; h++) {
+            for (int w = 0; w < widthSize; w++) {
                 dataArrayStat_0[h][w] = new StatisticsUtils();
             }
         }
-        for (int h = 0; h < size1; h++) {
-            for (int w = 0; w < size; w++) {
+        for (int h = 0; h < heigthSize; h++) {
+            for (int w = 0; w < widthSize; w++) {
                 dataArrayStat_1[h][w] = new StatisticsUtils();
             }
         }
@@ -255,20 +253,9 @@ public class DataService extends Service<Void> implements DetectorListener {
         flag_2ndTry.set(true);
     }
 
-    /**
-     * Создание узла с текстром ошибки
-     *
-     * @param exception
-     * @return
-     */
-    private Node setErrorMSG(Throwable exception) {
-        Pane pane = new Pane();
-        pane.getChildren().add(new TextArea(exception.getMessage()));
-        return pane;
-    }
 
     /**
-     * Проверка на соответствие меньшему и большему потокам
+     * Проверка на соответствие меньшему и большему потокам.
      */
     private void proofFail() {
 
@@ -279,7 +266,7 @@ public class DataService extends Service<Void> implements DetectorListener {
 
         totalMeanValue = totalMeanValue_1 - totalMeanValue_0;
         /**
-         * При нарушении последовательности измерений реверсируем данные
+         * При нарушении последовательности измерений реверсируем данные.
          */
         if (totalMeanValue <= 0) {
             showAlert("Первый поток больше второго. Реверсирую данные!");
@@ -288,17 +275,17 @@ public class DataService extends Service<Void> implements DetectorListener {
 
 
     /**
-     * Вывод окна предупреждения
+     * Вывод окна предупреждения.
      *
-     * @param s Текст предупреждения
+     * @param alertTxt Текст предупреждения.
      */
-    private void showAlert(String s) {
+    private void showAlert(String alertTxt) {
 
         Platform.runLater(() -> {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("WARNING");
             alert.setHeaderText(null);
-            alert.setContentText(s);
+            alert.setContentText(alertTxt);
             Rectangle2D bounds = Screen.getPrimary().getBounds();
             alert.setX(bounds.getMaxX() / 2 - alert.getDialogPane().getWidth() / 2);
             alert.setY(bounds.getMaxY() / 2 + alert.getDialogPane().getHeight() * 2);
@@ -307,17 +294,17 @@ public class DataService extends Service<Void> implements DetectorListener {
     }
 
     /**
-     * Набираем массив среднего арифметического значения
+     * Набираем массив среднего арифметического значения.
      */
     private void takeAverage() {
         //пробегаем по каналам
-        for (int h = 0; h < size1; h++) {
-            for (int w = 0; w < size; w++) {
+        for (int h = 0; h < heigthSize; h++) {
+            for (int w = 0; w < widthSize; w++) {
                 dataArrayMeanValue_0[h][w] = dataArrayStat_0[h][w].getMean();
             }
         }
-        for (int h = 0; h < size1; h++) {
-            for (int w = 0; w < size; w++) {
+        for (int h = 0; h < heigthSize; h++) {
+            for (int w = 0; w < widthSize; w++) {
                 dataArrayMeanValue_1[h][w] = dataArrayStat_1[h][w].getMean();
             }
         }
@@ -325,14 +312,14 @@ public class DataService extends Service<Void> implements DetectorListener {
 
 
     /**
-     * Набираем массив статистики
+     * Набираем массив статистики.
      */
     private void takeStat() {
         for (int j = 0; j < count; j++) {
             int[][] frame0 = dataArray_0.get(j);
             int[][] frame1 = dataArray_1.get(j);
-            for (int h = 0; h < size1; h++) {
-                for (int w = 0; w < size; w++) {
+            for (int h = 0; h < heigthSize; h++) {
+                for (int w = 0; w < widthSize; w++) {
                     dataArrayStat_0[h][w].addValue(frame0[h][w]);
                     dataArrayStat_1[h][w].addValue(frame1[h][w]);
                 }
@@ -341,7 +328,7 @@ public class DataService extends Service<Void> implements DetectorListener {
     }
 
     /**
-     * Сохраняем полученные данные
+     * Сохраняем полученные данные.
      */
     public void saveExpData() {
         if (totalMeanValue <= 0) {
@@ -387,7 +374,7 @@ public class DataService extends Service<Void> implements DetectorListener {
     }
 
     /**
-     * Отключение слушателя новых кадров
+     * Отключение слушателя новых кадров.
      */
     private void removeListener() {
         controller.getSelDetector().removeDetectorListener(this);

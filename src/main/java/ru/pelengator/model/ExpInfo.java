@@ -6,23 +6,23 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 /**
- * Подкласс для списка экспериментов
+ * Класс для списка экспериментов.
  */
 public class ExpInfo {
     /**
-     * Наименование эксперимента
+     * Наименование эксперимента.
      */
     private String expName;
     /**
-     * Индекс эксперимента в списке
+     * Индекс эксперимента в списке.
      */
     private int expIndex;
     /**
-     * Список кадров при первом потоке
+     * Список кадров при первом потоке.
      */
     private ArrayList<int[][]> dataArray0;
     /**
-     * Список кадров при втором потоке
+     * Список кадров при втором потоке.
      */
     private ArrayList<int[][]> dataArray1;
 
@@ -30,10 +30,12 @@ public class ExpInfo {
     private int bpInCenter = -1;
     private int bpAll = -1;
     /**
-     * Параметры стенда
+     * Параметры стенда.
      */
     private StendParams params;
-
+    /**
+     * Пустая картинка
+     */
     private BufferedImage tempImage;
 
     private double arifmeticMean;
@@ -52,20 +54,17 @@ public class ExpInfo {
     private byte[] buffToTXT;
     private boolean withDefPx = true;
     /////////////////
-
+    /**
+     * Лист кадров с дефектами
+     */
     private ArrayList<Utils.Frame> frList;
+    /**
+     * Лист картинок для отчета
+     */
     private ArrayList<BufferedImage> scList;
-
-    public String getExpName() {
-        return expName;
-    }
 
     public void setExpName(String expName) {
         this.expName = expName;
-    }
-
-    public int getExpIndex() {
-        return expIndex;
     }
 
     public void setExpIndex(int expIndex) {

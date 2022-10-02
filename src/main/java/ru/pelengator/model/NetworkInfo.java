@@ -1,4 +1,4 @@
-package ru.pelengator.API.driver;
+package ru.pelengator.model;
 
 import java.net.InetAddress;
 import java.net.InterfaceAddress;

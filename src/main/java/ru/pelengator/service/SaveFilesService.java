@@ -3,11 +3,7 @@ package ru.pelengator.service;
 import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.Pane;
-import javafx.stage.Screen;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.pelengator.ParamsController;
@@ -18,7 +14,7 @@ import static ru.pelengator.API.utils.Utils.*;
 import static ru.pelengator.API.utils.Utils.saveOrder;
 
 /**
- * Сервис сбора данных
+ * Сервис записи файлов.
  */
 public class SaveFilesService extends Service<Void> {
     /**
@@ -26,17 +22,19 @@ public class SaveFilesService extends Service<Void> {
      */
     private static final Logger LOG = LoggerFactory.getLogger(SaveFilesService.class);
     /**
-     * Ссылка на контроллер
+     * Ссылка на контроллер.
      */
     private ParamsController controller;
 
     private ExecutorService service;
+    /**
+     * Количество ядер ПК
+     */
     static private int MP;
 
     {
         MP = Runtime.getRuntime().availableProcessors();
     }
-
 
     private File pdfFile;
     static  volatile double  k = 0.4;
@@ -45,7 +43,7 @@ public class SaveFilesService extends Service<Void> {
     boolean f3=true;
 
     /**
-     * Конструктор
+     * Конструктор.
      *
      * @param controller
      */
@@ -66,28 +64,28 @@ public class SaveFilesService extends Service<Void> {
                 service = Executors.newFixedThreadPool(MP);
 
                 updateProgress(0.1, 1);
-                ExelSaver exelSaver = new ExelSaver();
-                Future<String> future1 = service.submit(exelSaver);
+                ExelTask exelSaver = new ExelTask();
+                Future<String> ExelFuture = service.submit(exelSaver);
                 updateProgress(0.2, 1);
-                TxtSaver txtSaver = new TxtSaver();
-                Future<String> future2 = service.submit(txtSaver);
+                TxtTask txtSaver = new TxtTask();
+                Future<String> txtFuture = service.submit(txtSaver);
                 updateProgress(0.3, 1);
-                PdfSaver pdfSaver = new PdfSaver();
-                Future<String> future3 = service.submit(pdfSaver);
+                PdfTask pdfSaver = new PdfTask();
+                Future<String> pdfFuture = service.submit(pdfSaver);
                 updateProgress(0.4, 1);
                 do {
                     try {
-                        String s1 = future1.get(250, TimeUnit.MILLISECONDS);
+                        ExelFuture.get(250, TimeUnit.MILLISECONDS);
                        if(f1){
                            k = k+0.1;
                            f1=false;
                        }
-                        String s2 = future2.get(250, TimeUnit.MILLISECONDS);
+                        txtFuture.get(250, TimeUnit.MILLISECONDS);
                         if(f2){
                             k = k+0.1;
                             f2=false;
                         }
-                        String s3 = future3.get(250, TimeUnit.MILLISECONDS);
+                        pdfFuture.get(250, TimeUnit.MILLISECONDS);
                         if(f3){
                             k = k+0.1;
                             f3=false;
@@ -95,7 +93,7 @@ public class SaveFilesService extends Service<Void> {
                     } catch (TimeoutException e) {
                         updateProgress(k, 1);
                     }
-                    if(future1.isDone() && future2.isDone() && future3.isDone()){
+                    if(ExelFuture.isDone() && txtFuture.isDone() && pdfFuture.isDone()){
                         break;
                     }
                 } while (true);
@@ -106,10 +104,10 @@ public class SaveFilesService extends Service<Void> {
                     service.shutdown();
                     service.awaitTermination(2, TimeUnit.SECONDS);
                 } catch (InterruptedException e) {
-                    LOG.error("Экстренное завершение");
+                    LOG.error("Error while saving Files");
                 } finally {
                     if (!service.isTerminated()) {
-                        LOG.error("Отмена незаконченных задач");
+                        LOG.error("Tasks not shatdown. Forsing");
                         service.shutdownNow();
                     }
                 }
@@ -119,42 +117,6 @@ public class SaveFilesService extends Service<Void> {
             }
         };
     }
-
-    /**
-     * Создание узла с текстром ошибки
-     *
-     * @param exception
-     * @return
-     */
-    private Node setErrorMSG(Throwable exception) {
-        Pane pane = new Pane();
-        pane.getChildren().add(new TextArea(exception.getMessage()));
-        return pane;
-    }
-
-
-    /**
-     * Вывод окна предупреждения
-     *
-     * @param s Текст предупреждения
-     */
-    private void showAlert(String s) {
-
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("WARNING");
-                alert.setHeaderText(null);
-                alert.setContentText(s);
-                Rectangle2D bounds = Screen.getPrimary().getBounds();
-                alert.setX(bounds.getMaxX() / 2 - alert.getDialogPane().getWidth() / 2);
-                alert.setY(bounds.getMaxY() / 2 + alert.getDialogPane().getHeight() * 2);
-                alert.show();
-            }
-        });
-    }
-
 
     @Override
     protected void succeeded() {
@@ -197,7 +159,7 @@ public class SaveFilesService extends Service<Void> {
         return super.cancel();
     }
 
-    class ExelSaver implements Callable<String> {
+    class ExelTask implements Callable<String> {
         @Override
         public String call() throws Exception {
 
@@ -210,7 +172,7 @@ public class SaveFilesService extends Service<Void> {
         }
     }
 
-    class TxtSaver implements Callable<String> {
+    class TxtTask implements Callable<String> {
         @Override
         public String call() throws Exception {
             if (controller.getController().getSelExp().isPrintBpList()
@@ -223,7 +185,7 @@ public class SaveFilesService extends Service<Void> {
         }
     }
 
-    class PdfSaver implements Callable<String> {
+    class PdfTask implements Callable<String> {
         @Override
         public String call() throws Exception {
             boolean b = saveOrder(controller.getController().getSelExp(), controller.getScrlPane(), pdfFile);
@@ -234,6 +196,5 @@ public class SaveFilesService extends Service<Void> {
             return "PDF файл записан";
         }
     }
-
 
 }

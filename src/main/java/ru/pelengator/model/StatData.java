@@ -4,7 +4,7 @@ import ru.pelengator.API.utils.StatisticsUtils;
 import ru.pelengator.Controller;
 
 /**
- * Статистические данные
+ * Статистические данные.
  */
 public class StatData {
 
@@ -14,9 +14,9 @@ public class StatData {
     private StatisticsUtils statisticsUtils;
 
     /**
-     * Конструктор
+     * Конструктор.
      *
-     * @param data входящий массив данных
+     * @param data входящий массив данных.
      */
     public StatData(int[][] data) {
         this.data = data;
@@ -24,10 +24,10 @@ public class StatData {
     }
 
     /**
-     * Возврат массива СКО
+     * Возврат массива СКО.
      * i- Y; k- X
      *
-     * @return массив СКО
+     * @return массив СКО.
      */
     public float[] getSKOArray() {
         StatisticsUtils[] statSKO = new StatisticsUtils[data.length];
@@ -45,9 +45,9 @@ public class StatData {
     }
 
     /**
-     * Возврат массива СКО по столбцам
+     * Возврат массива СКО по столбцам.
      *
-     * @return массив СКО
+     * @return массив СКО.
      */
     public float[] getSKOArrayHorisontal() {
         StatisticsUtils[] statSKO = new StatisticsUtils[data[0].length];
@@ -66,9 +66,9 @@ public class StatData {
 
 
     /**
-     * Инициализация массива данных
+     * Инициализация массива данных.
      *
-     * @param data массив данных
+     * @param data массив данных.
      */
     private void init(int[][] data) {
         int i = 0;
@@ -83,18 +83,18 @@ public class StatData {
     }
 
     /**
-     * Перевод двумерного массива в список
+     * Перевод двумерного массива в список.
      *
-     * @return список исходных данных
+     * @return список исходных данных.
      */
     public float[] getDataArray() {
         return dataArray;
     }
 
     /**
-     * Средний сигнал по выборке
+     * Средний сигнал по выборке.
      *
-     * @return мВ
+     * @return мВ.
      */
     public float getMean() {
         float value = (float) (statisticsUtils.getMean() * Controller.getMASHTAB());
@@ -103,9 +103,9 @@ public class StatData {
     }
 
     /**
-     * Среднее СКО по выборке
+     * Среднее СКО по выборке.
      *
-     * @return мВ
+     * @return мВ.
      */
     public float getSKO() {
         float value;
@@ -120,9 +120,9 @@ public class StatData {
 
 
     /**
-     * Максимальный сигнал по выборке
+     * Максимальный сигнал по выборке.
      *
-     * @return мВ
+     * @return мВ.
      */
     public float getMAX() {
         float value = statisticsUtils.getMax() * Controller.getMASHTAB();
@@ -131,9 +131,9 @@ public class StatData {
     }
 
     /**
-     * Минимальный сигнал по выборке
+     * Минимальный сигнал по выборке.
      *
-     * @return мВ
+     * @return мВ.
      */
     public float getMin() {
         float value = statisticsUtils.getMin() * Controller.getMASHTAB();

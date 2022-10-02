@@ -8,8 +8,9 @@ import sun.misc.SignalHandler;
 
 
 /**
- * Примитивный обработчик сигналов. Этот класс использует недокументированные классы из
- * sun.misc.* и поэтому следует использовать с осторожностью.
+ * Примитивный обработчик сигналов.
+ * Этот класс использует недокументированные классы из
+ * sun.misc.* и поэтому следует использовать его с осторожностью.
  */
 @SuppressWarnings("restriction")
 final class DetectorSignalHandler implements SignalHandler {

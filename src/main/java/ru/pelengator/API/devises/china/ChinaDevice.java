@@ -86,6 +86,9 @@ public class ChinaDevice implements DetectorDevice, DetectorDevice.ChinaSource {
         }
     }
 
+    /**
+     * Пауза чтения кадров
+     */
     private int PAUSE = 50;
 
     /**
@@ -95,6 +98,10 @@ public class ChinaDevice implements DetectorDevice, DetectorDevice.ChinaSource {
 
         private final AtomicReference<ByteBuffer> result = new AtomicReference<>();
 
+        /**
+         * Получение видео с паузой чтения
+         * @param device
+         */
         public GetDataImageTask(DetectorDevice device) {
             super(device);
         }
@@ -111,7 +118,7 @@ public class ChinaDevice implements DetectorDevice, DetectorDevice.ChinaSource {
         @Override
         protected void handle() {
             try {
-                TimeUnit.MILLISECONDS.sleep(PAUSE);//todo Проверить работу без паузы
+                TimeUnit.MILLISECONDS.sleep(PAUSE);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

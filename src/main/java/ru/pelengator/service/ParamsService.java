@@ -4,10 +4,7 @@ import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
-import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,14 +16,12 @@ import ru.pelengator.model.StendParams;
 
 import java.awt.image.BufferedImage;
 import java.nio.charset.StandardCharsets;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static ru.pelengator.API.utils.Utils.*;
 
 /**
- * Сервис расчета параметров
+ * Сервис расчета параметров.
  */
 public class ParamsService extends Service<Void> {
     /**
@@ -79,28 +74,28 @@ public class ParamsService extends Service<Void> {
     private boolean withDefPx;
     private List<BadBigPoint> badBigPoints;
     /**
-     * Лист с фреймами
+     * Лист с фреймами.
      */
     private ArrayList<Utils.Frame> frList;
     /**
-     * Лист с квадратами для печати
+     * Лист с квадратами для печати.
      */
     private ArrayList<BufferedImage> scList;
     /**
-     * Ссылка на контроллер
+     * Ссылка на контроллер.
      */
     private ParamsController controller;
     /**
-     * Контейер для гистограмм и квадратов
+     * Контейер для гистограмм и квадратов.
      */
     private VBox pane;
     /**
-     * Контейер для итога
+     * Контейер для итога.
      */
     private VBox pane1;
 
     /**
-     * Заготовка для отрисовки квадрата
+     * Заготовка для отрисовки квадрата.
      */
     private BufferedImage tempImage;
 
@@ -115,6 +110,7 @@ public class ParamsService extends Service<Void> {
         return new Task<>() {
             @Override
             protected Void call() throws Exception {
+                LOG.trace("Starting");
                 Platform.runLater(() -> controller.getpIndicator2().setVisible(true));
 
                 updateMessage("Старт");
@@ -218,11 +214,11 @@ public class ParamsService extends Service<Void> {
     }
 
     /**
-     * Расчет NETD и проверка брака
+     * Расчет NETD и проверка брака.
      *
-     * @param selected     считаем ли
-     * @param noCorrection с учетом бракованных пикселей или нет
-     * @return среднее значение по ФПУ
+     * @param selected     считаем ли.
+     * @param noCorrection с учетом бракованных пикселей или нет.
+     * @return среднее значение по ФПУ.
      */
     private double calculateAndCheckNETD(boolean selected, boolean noCorrection) {
         double persent = params.getNETDPersent();
@@ -241,11 +237,11 @@ public class ParamsService extends Service<Void> {
     }
 
     /**
-     * Расчет удельной обнаруж. способн. и проверка брака
+     * Расчет удельной обнаруж. способн. и проверка брака.
      *
-     * @param selected     считаем ли
-     * @param noCorrection с учетом бракованных пикселей или нет
-     * @return среднее значение по ФПУ
+     * @param selected     считаем ли.
+     * @param noCorrection с учетом бракованных пикселей или нет.
+     * @return среднее значение по ФПУ.
      */
     private double calculateAndCheckDetectivityStar(boolean selected, boolean noCorrection) {
         double persent = params.getDetectivityStarPersent();
@@ -264,11 +260,11 @@ public class ParamsService extends Service<Void> {
     }
 
     /**
-     * Расчет обнаруж. способн и проверка брака
+     * Расчет обнаруж. способн и проверка брака.
      *
-     * @param selected     считаем ли
-     * @param noCorrection с учетом бракованных пикселей или нет
-     * @return среднее значение по ФПУ
+     * @param selected     считаем ли.
+     * @param noCorrection с учетом бракованных пикселей или нет.
+     * @return среднее значение по ФПУ.
      */
     private double calculateAndCheckDetectivity(boolean selected, boolean noCorrection) {
         double persent = params.getDetectivityPersent();
@@ -287,11 +283,11 @@ public class ParamsService extends Service<Void> {
     }
 
     /**
-     * Расчет удельного порога и проверка брака
+     * Расчет удельного порога и проверка брака.
      *
-     * @param selected     считаем ли
-     * @param noCorrection с учетом бракованных пикселей или нет
-     * @return среднее значение по ФПУ
+     * @param selected     считаем ли.
+     * @param noCorrection с учетом бракованных пикселей или нет.
+     * @return среднее значение по ФПУ.
      */
     private double calculateAndCheckPorogStar(boolean selected, boolean noCorrection) {
         double persent = params.getPorogStarPersent();
@@ -310,11 +306,11 @@ public class ParamsService extends Service<Void> {
     }
 
     /**
-     * Расчет порога и проверка брака
+     * Расчет порога и проверка брака.
      *
-     * @param selected     считаем ли
-     * @param noCorrection с учетом бракованных пикселей или нет
-     * @return среднее значение по ФПУ
+     * @param selected     считаем ли.
+     * @param noCorrection с учетом бракованных пикселей или нет.
+     * @return среднее значение по ФПУ.
      */
     private double calculateAndCheckPorog(boolean selected, boolean noCorrection) {
         double persent = params.getPorogPersent();
@@ -333,11 +329,11 @@ public class ParamsService extends Service<Void> {
     }
 
     /**
-     * Расчет вольтовой чувствительности и проверка брака
+     * Расчет вольтовой чувствительности и проверка брака.
      *
-     * @param selected     считаем ли
-     * @param noCorrection с учетом бракованных пикселей или нет
-     * @return среднее значение по ФПУ
+     * @param selected     считаем ли.
+     * @param noCorrection с учетом бракованных пикселей или нет.
+     * @return среднее значение по ФПУ.
      */
     private double calculateAndCheckVw(boolean selected, boolean noCorrection) {
         double persent = params.getVwPersent();
@@ -358,11 +354,11 @@ public class ParamsService extends Service<Void> {
 
 
     /**
-     * Расчет СКО и проверка брака
+     * Расчет СКО и проверка брака.
      *
-     * @param selected     считаем ли
-     * @param noCorrection с учетом бракованных пикселей или нет
-     * @return среднее значение по ФПУ
+     * @param selected     считаем ли.
+     * @param noCorrection с учетом бракованных пикселей или нет.
+     * @return среднее значение по ФПУ.
      */
     private double calculateAndCheckSKO(boolean selected, boolean noCorrection) {
         double persent = params.getSKOPersent();
@@ -379,11 +375,11 @@ public class ParamsService extends Service<Void> {
     }
 
     /**
-     * Расчет среднего квадрат. значения и проверка брака
+     * Расчет среднего квадрат. значения и проверка брака.
      *
-     * @param selected     считаем ли
-     * @param noCorrection с учетом бракованных пикселей или нет
-     * @return среднее значение по ФПУ
+     * @param selected     считаем ли.
+     * @param noCorrection с учетом бракованных пикселей или нет.
+     * @return среднее значение по ФПУ.
      */
     private double calculateAndCheckQuadraticSignal(boolean selected, boolean noCorrection) {
         double persent = params.getQuadraticMeanPersent();
@@ -400,11 +396,11 @@ public class ParamsService extends Service<Void> {
     }
 
     /**
-     * Расчет среднего арифм. значения и проверка брака
+     * Расчет среднего арифм. значения и проверка брака.
      *
-     * @param selected     считаем ли
-     * @param noCorrection с учетом бракованных пикселей или нет
-     * @return среднее значение по ФПУ
+     * @param selected     считаем ли.
+     * @param noCorrection с учетом бракованных пикселей или нет.
+     * @return среднее значение по ФПУ.
      */
     private double calculateAndCheckArifmSignal(boolean selected,
                                                 boolean noCorrection) {
@@ -422,7 +418,7 @@ public class ParamsService extends Service<Void> {
     }
 
     /**
-     * Расчет среднего значения и ско
+     * Расчет среднего значения и ско.
      */
     private void calculateMeanValuesAndSKO() {
 
@@ -447,7 +443,7 @@ public class ParamsService extends Service<Void> {
     }
 
     /**
-     * Инициализация параметров
+     * Инициализация параметров.
      */
     private void initParams() {
         int[][] dta = controller.getController().getSelExp().getDataArray0().get(0);
@@ -536,19 +532,7 @@ public class ParamsService extends Service<Void> {
     }
 
     /**
-     * Создание узла с текстром ошибки
-     *
-     * @param exception
-     * @return
-     */
-    private Node setErrorMSG(Throwable exception) {
-        Pane pane = new Pane();
-        pane.getChildren().add(new TextArea(exception.getMessage()));
-        return pane;
-    }
-
-    /**
-     * Набираем массив статистики
+     * Набираем массив статистики.
      */
     private void takeStat() {
         ArrayList<int[][]> dataArray0 = controller.getController().getSelExp().getDataArray0();
@@ -567,7 +551,7 @@ public class ParamsService extends Service<Void> {
     }
 
     /**
-     * Отображение результатов
+     * Отображение результатов.
      */
     private void showResults() {
 
@@ -582,7 +566,7 @@ public class ParamsService extends Service<Void> {
     }
 
     /**
-     * Отрисовка гистограммы и малого квадрата
+     * Отрисовка гистограммы и малого квадрата.
      *
      * @param pane
      */
@@ -663,8 +647,9 @@ public class ParamsService extends Service<Void> {
     }
 
     /**
-     * Заполнение полей брака
-     * @param pane панель
+     * Заполнение полей брака.
+     *
+     * @param pane панель.
      */
     private void fillItogpane(VBox pane) {
         Platform.runLater(() -> {
@@ -677,18 +662,18 @@ public class ParamsService extends Service<Void> {
 
     /**
      * Переделать //todo супер переделка
+     *
      * @param color цвет пикселя.
      * @return
      */
     private List<BadBigPoint> bedPxToList(String color) {
-
 
         String lineseparator = System.getProperty("line.separator");
 
         List<BadBigPoint> list = null;
 
         //todo  30 секунд
-        long k=0;
+        long k = 0;
 
         for (Frame fr : frList) {
             if (!fr.getBpList().isEmpty()) {
@@ -715,6 +700,7 @@ public class ParamsService extends Service<Void> {
 
     /**
      * Создание строки дефектных элементов для печати.
+     *
      * @param lineseparator
      * @param list
      * @return
@@ -722,7 +708,7 @@ public class ParamsService extends Service<Void> {
     private byte[] extructTextLine(String lineseparator, List<BadBigPoint> list) {
         StringBuilder tempStr = new StringBuilder();
         if (list != null) {
-            int count=0;
+            int count = 0;
             for (BadBigPoint bp : list) {
                 tempStr.append(++count).append(".");
                 tempStr.append(bp).append(lineseparator);
@@ -815,7 +801,7 @@ public class ParamsService extends Service<Void> {
      * Сохраняем полученные данные.
      */
     public boolean saveExpData() {
-
+        LOG.trace("Saving");
         ExpInfo exp = controller.getController().getSelExp();
         exp.setArifmeticMean(arifmeticMean);
         exp.setQuadraticMean(quadraticMean);
@@ -829,7 +815,6 @@ public class ParamsService extends Service<Void> {
         exp.setExposure(exposure);
         exp.setFrList(frList);
         exp.setScList(scList);
-        //addExpToList(exp);
         exp.setBpInCenter(bpInCenter);
         exp.setBpAll(bpAll);
         exp.setWithDefPx(withDefPx);
@@ -839,16 +824,6 @@ public class ParamsService extends Service<Void> {
         return true;
     }
 
-    private void addExpToList(ExpInfo exp) {
-        int numb = controller.getController().getExpCounter();
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-
-        exp.setExpName(numb + ": " + dateFormat.format(timestamp) + " | Int: " + params.getTempInt() + " | VOS: " + params.getTempVOS() + " | VR0: " + params.getTempVR0() + " | counts:" + params.getCountFrames());
-        exp.setExpIndex(numb);
-        controller.getController().getOptionsExp().add(exp);
-        //  Platform.runLater(() -> controller.getController().getCbExpOptions().getSelectionModel().select(exp));
-    }
 
     @Override
     protected void succeeded() {
@@ -865,6 +840,7 @@ public class ParamsService extends Service<Void> {
         });
 
     }
+
     @Override
     protected void cancelled() {
         super.cancelled();
@@ -886,6 +862,7 @@ public class ParamsService extends Service<Void> {
             controller.getpIndicator2().setVisible(false);
         });
     }
+
     @Override
     public boolean cancel() {
         LOG.error("Canceled!");
@@ -901,8 +878,9 @@ public class ParamsService extends Service<Void> {
         });
         return super.cancel();
     }
+
     /**
-     * Запись листа с матрицами
+     * Запись листа с матрицами.
      *
      * @return
      */

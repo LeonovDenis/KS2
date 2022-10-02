@@ -10,7 +10,7 @@ public class DetectorEvent extends EventObject{
     private static final long serialVersionUID = 1L;
 
     /**
-     * Полученное изображение
+     * Полученное изображение.
      */
     private BufferedImage image = null;
 
@@ -22,8 +22,8 @@ public class DetectorEvent extends EventObject{
     /**
      * Событие детектора.
      *
-     * @param type тип события
-     * @param d объект события
+     * @param type тип события.
+     * @param d объект события.
      */
 
     public DetectorEvent(DetectorEventType type, Detector d) {
@@ -33,9 +33,9 @@ public class DetectorEvent extends EventObject{
     /**
      * Событие детектора.
      *
-     * @param type тип события
-     * @param d объект события
-     * @param image Полученное изображение
+     * @param type тип события.
+     * @param d объект события.
+     * @param image Полученное изображение.
      */
     public DetectorEvent(DetectorEventType type, Detector d, BufferedImage image) {
         super(d);
@@ -49,9 +49,10 @@ public class DetectorEvent extends EventObject{
     }
 
     /**
-     * Возврат изображения, полученного устройством. Этот метод вернет ненулевой объект
-     * <b>только</b> в случае получения нового изображения. Для всех остальных событий это
-     * просто вернет ноль.
+     * Возврат изображения, полученного устройством.
+     * Этот метод вернет ненулевой объект
+     * <b>только</b> в случае получения нового изображения.
+     * Для всех остальных событий это просто вернет <b>null</b>.
      *
      * @return Полученное изображение
      */

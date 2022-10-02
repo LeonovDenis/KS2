@@ -6,9 +6,8 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.NOPLoggerFactory;
 
 /**
- * Используется внутри
+ * Обертка обработчика ошибок
  *
- * @author
  */
 public class DetectorExceptionHandler implements UncaughtExceptionHandler {
     /**
