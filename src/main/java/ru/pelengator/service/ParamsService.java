@@ -673,26 +673,48 @@ public class ParamsService extends Service<Void> {
         List<BadBigPoint> list = null;
 
         //todo  30 секунд
-        long k = 0;
+        //создаем массив
+        BadBigPoint[][] tempMatrix = new BadBigPoint[sizeY][sizeX];
+        //перебиваем все кадры
+        int x, y = 0;
 
         for (Frame fr : frList) {
+            //если в кадре есть дефекты,то
             if (!fr.getBpList().isEmpty()) {
-                if (list == null) {
-                    list = new ArrayList<>();
-                }
+                //список брака в этом кадре
+                ArrayList<BadPoint> bpList = fr.getBpList();
+                //перебираем все пиксели
                 for (BadPoint bp :
-                        fr.getBpList()) {
-                    BadBigPoint badbBigPoint = new BadBigPoint(bp, convertcolor(color));
-                    int indexOf = list.indexOf(badbBigPoint);
-                    if (indexOf < 0) {
-                        list.add(badbBigPoint);
-                    } else {
-                        list.get(indexOf).addToList(bp);
+                        bpList) {
+                    x = bp.getX();
+                    y = bp.getY();
+
+                    if (tempMatrix[y][x] == null) {//если еще нет такого пикселя
+                        BadBigPoint badbBigPoint = new BadBigPoint(bp, convertcolor(color));
+                        tempMatrix[y][x] = badbBigPoint;
+                    } else {//если есть, то добавляем в пиксель тип брака
+                        tempMatrix[y][x].addToList(bp);
                     }
                 }
             }
         }
 
+        //Если массив имеет попадания, то создаём лист идобавляем точки
+
+        for (int h = 0; h < sizeY; h++) {
+            for (int w = 0; w < sizeX; w++) {
+
+                if (tempMatrix[h][w] != null) {
+                    if (list == null) {
+                        list = new ArrayList<>();
+                    }
+
+                    list.add(tempMatrix[h][w]);
+                }
+            }
+        }
+
+        //создаем массив для записи в файл
         buffToTXT = extructTextLine(lineseparator, list);
 
         return list;

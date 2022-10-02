@@ -317,7 +317,7 @@ public class DetectorPanel extends JPanel implements DetectorListener {
                 String str = String.format("%.1f", detector.getFPS());
 
                 int sx = 5;
-                int sy = ph-5;
+                int sy = ph - 5;
 
                 g2.setFont(getFont());
                 g2.setColor(Color.BLACK);
@@ -586,7 +586,7 @@ public class DetectorPanel extends JPanel implements DetectorListener {
 
                 tmp = copyImage(tmp);
 
-                convertImageRGB(tmp); //todo перенести в трансформер
+                tmp = transform(tmp);
 
                 // игнорировать перерисовку, если изображение такое же, как и предыдущее
                 if (image == tmp) {
@@ -715,6 +715,10 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     private int aimWidth = 32;
     private int aimHeight = 32;
 
+    /**
+     * Трансформер изображения.
+     */
+    private volatile DetectorImageTransformer transformer = null;
 
     /**
      * Контроллер.
@@ -1121,6 +1125,42 @@ public class DetectorPanel extends JPanel implements DetectorListener {
         return defaultPainter;
     }
 
+    /**
+     * Возврат трансформера изображения.
+     *
+     * @return Экземпляр трансформера
+     */
+    public DetectorImageTransformer getImageTransformer() {
+        return transformer;
+    }
+
+    /**
+     * Установка трансформера изображений.
+     *
+     * @param transformer трансформер, который нужно установить
+     */
+    public void setImageTransformer(DetectorImageTransformer transformer) {
+        this.transformer = transformer;
+    }
+
+    /**
+     * Изображение трансформируется с помощью преобразователя изображения.
+     * Если преобразователь изображения не был установлен, этот метод
+     * возвращает экземпляр, переданный в аргументе, без каких-либо модификаций.
+     *
+     * @param image изображение, которое нужно преобразовать
+     * @return Преобразованное изображение (если установлено преобразование)
+     */
+    protected BufferedImage transform(BufferedImage image) {
+        if (image != null) {
+            DetectorImageTransformer tr = getImageTransformer();
+            if (tr != null) {
+                return tr.transform(image);
+            }
+        }
+        return image;
+    }
+
     @Override
     public void detectorOpen(DetectorEvent we) {
 
@@ -1235,6 +1275,7 @@ public class DetectorPanel extends JPanel implements DetectorListener {
 
     /**
      * Получение строки со значением FPS.
+     *
      * @return значение.
      */
     public String getStringFPS() {

@@ -42,6 +42,7 @@ import ru.pelengator.API.*;
 import ru.pelengator.API.devises.china.ChinaDriver;
 import ru.pelengator.API.devises.china.ChinaDriverEth;
 import ru.pelengator.API.driver.FT_STATUS;
+import ru.pelengator.API.transformer.MyChinaRgbImageTransformer;
 import ru.pelengator.model.NetworkInfo;
 import ru.pelengator.model.DetectorInfo;
 import ru.pelengator.model.ExpInfo;
@@ -343,6 +344,8 @@ public class Controller implements Initializable {
      */
     private volatile static AtomicBoolean isImageFrash = new AtomicBoolean(false);
     private static int detectorCounter = 0;
+
+    private volatile DetectorImageTransformer imageTransformer =new MyChinaRgbImageTransformer();
 
     /**
      * Инициализация всего и вся.
@@ -718,7 +721,7 @@ public class Controller implements Initializable {
         selDetector = Detector.getDetectors().get(detectorIndex);
         viewSize = selDetector.getViewSize();
         detectorPanel = new DetectorPanel(selDetector, viewSize, true);
-        detectorPanel.setFPSDisplayed(true);
+        detectorPanel.setImageTransformer(imageTransformer);
         snDetectorCapturedImage.setContent(detectorPanel);
         initFPSservice();
         initStatService();
@@ -879,7 +882,7 @@ public class Controller implements Initializable {
 
                         }
                     } catch (Exception e) {
-                        LOG.error("Error in staticService {}",e);
+                        LOG.error("Error in staticService {}", e);
                     }
                 }
                 return null;
@@ -1121,7 +1124,9 @@ public class Controller implements Initializable {
     private void drawRect(Graphics2D g2, int value, int i, int length) {
 
         int shaG = 300 / length;
-        int color = qvantFilterRGB((int) ((16384.0 / length) * (i)));
+        float acp = detectorPanel.getImageTransformer().getRazryadnost();
+        int color = detectorPanel.getImageTransformer()
+                .convertValueToColor((int) ((acp / length) * (i)));
         g2.setColor(new Color(color));
 
         int visota = (int) (195 * value * 0.01);
@@ -1155,7 +1160,9 @@ public class Controller implements Initializable {
         }
 
         int countOtrezkov = 50;
-        double delta = 16384.0 / countOtrezkov;
+        float acp = detectorPanel.getImageTransformer().getRazryadnost();
+
+        double delta = acp / countOtrezkov;
         int[] tempArray = new int[countOtrezkov];
         int length = dataArray.length;
         //отработка вхождений

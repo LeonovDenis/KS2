@@ -267,8 +267,9 @@ public class Utils {
      */
     public static int qvantFilterRGB(int sourceValue) {
 
+
         int BITBYTE = 255;
-        double koef = 16384.0 / (BITBYTE * 4.0 + 1.0);
+        double koef = ACP / (BITBYTE * 4.0 + 1.0);
         sourceValue = (int) (sourceValue / koef);
         int a = 0xff000000;
         int r = 0;
@@ -339,9 +340,14 @@ public class Utils {
     }
 
     /**
+     * Количество отсчетов АЦП (16384.0)
+     */
+    public static float ACP = (float) (Math.pow(2, 14));
+
+    /**
      * Масштаб
      */
-    public static float MASHTAB = (5000 / (float) (Math.pow(2, 14)));
+    public static float MASHTAB = (5000 / ACP);
 
 
     /**
@@ -755,6 +761,10 @@ public class Utils {
 
         }
 
+        /**
+         * Добавка типа дефекта в список
+         * @param badPoint
+         */
         public void addToList(BadPoint badPoint) {
             list.add(badPoint.getType());
         }
