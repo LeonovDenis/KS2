@@ -147,6 +147,8 @@ public class StendParams {
     private BooleanProperty cbWithBP = new SimpleBooleanProperty();
     private BooleanProperty cbPrint = new SimpleBooleanProperty();
 
+    private int PAUSE = 0;
+
     private int detPortVideo;
     private int detPortCommand;
     private String detIP;
@@ -154,7 +156,7 @@ public class StendParams {
     private int serverVideoBuff;
     private int commandBuff;
 
-    private   NetworkInfo selNetworkInterface;
+    private NetworkInfo selNetworkInterface;
 
     Properties properties = new Properties();//Ссыль на настройки
 
@@ -172,13 +174,13 @@ public class StendParams {
             try {
                 properties.load(Files.newBufferedReader(path));
             } catch (IOException e) {
-                LOG.error("Error in load params file {}",e);
+                LOG.error("Error in load params file {}", e);
             }
         } else {
             try {
                 properties.load(App.class.getResourceAsStream(PATH));
             } catch (IOException e) {
-                LOG.error("Error in load params in zip file {}",e);
+                LOG.error("Error in load params in zip file {}", e);
             }
         }
 
@@ -215,6 +217,9 @@ public class StendParams {
         controller.getTfVR0().setText(String.valueOf(tempVR0));
         tempKU = Boolean.parseBoolean(properties.getProperty("KU", "true"));
         controller.getCbCCCOptions().getSelectionModel().select(tempKU ? 1 : 0);
+
+        PAUSE = Integer.parseInt(properties.getProperty("PAUSE", "50"));
+        controller.getTfSpeedPlata().setText(String.valueOf(PAUSE));
 
         temp0 = Double.parseDouble(properties.getProperty("temp0", "303.0"));
         temp1 = Double.parseDouble(properties.getProperty("temp1", "513.0"));
@@ -312,6 +317,9 @@ public class StendParams {
         properties.setProperty("VOS", String.valueOf(tempVOS));
         properties.setProperty("VR0", String.valueOf(tempVR0));
         properties.setProperty("KU", String.valueOf(tempKU));
+
+        properties.setProperty("PAUSE", String.valueOf(PAUSE));
+
 //////////////////////////////////////////////////////////////////////////////////////
         String text = String.format(Locale.CANADA, "%.1f", temp0);
         properties.setProperty("temp0", text);
@@ -410,12 +418,11 @@ public class StendParams {
         properties.setProperty("commandBuff", String.valueOf(commandBuff));
 
 
-
         Path of = Paths.get(PATH);
         try (BufferedWriter bufferedWriter = Files.newBufferedWriter(of)) {
             properties.store(bufferedWriter, "");
         } catch (IOException e) {
-            LOG.error("Error in save params to file {}",e);
+            LOG.error("Error in save params to file {}", e);
         }
     }
 
@@ -1015,4 +1022,12 @@ public class StendParams {
         this.selNetworkInterface = selNetworkInterface;
     }
 
+    public void setPAUSE(int PAUSE) {
+        this.PAUSE = PAUSE;
+    }
+
+    public int getPAUSE() {
+
+        return this.PAUSE;
+    }
 }

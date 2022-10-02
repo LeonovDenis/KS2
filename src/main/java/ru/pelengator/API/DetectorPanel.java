@@ -27,6 +27,7 @@ import javax.swing.SwingWorker;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.pelengator.API.driver.FT_STATUS;
 import ru.pelengator.Controller;
 
 import static java.awt.RenderingHints.*;
@@ -88,6 +89,11 @@ public class DetectorPanel extends JPanel implements DetectorListener {
 
         @Override
         public BufferedImage get() {
+            try {
+                TimeUnit.MILLISECONDS.sleep(PAUSE);
+            } catch (InterruptedException e) {
+                //ignore
+            }
             return detector.getImage();
         }
     }
@@ -716,6 +722,11 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     private int aimHeight = 32;
 
     /**
+     * Пауза чтения кадров
+     */
+    private static int PAUSE = 0;
+
+    /**
      * Трансформер изображения.
      */
     private volatile DetectorImageTransformer transformer = null;
@@ -1280,5 +1291,22 @@ public class DetectorPanel extends JPanel implements DetectorListener {
      */
     public String getStringFPS() {
         return String.format("%.1f", detector.getFPS());
+    }
+
+    /**
+     * Установка паузы на выборку между кадрами
+     *
+     * @param pause в миллисекундах
+     * @return
+     */
+
+    public void setPause(int pause) {
+        if (pause > 10000) {
+            pause = 10000;
+        }
+        if (pause < 0) {
+            pause = 0;
+        }
+        PAUSE = pause;
     }
 }

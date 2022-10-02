@@ -87,11 +87,6 @@ public class ChinaDevice implements DetectorDevice, DetectorDevice.ChinaSource {
     }
 
     /**
-     * Пауза чтения кадров
-     */
-    private int PAUSE = 50;
-
-    /**
      * Задание на получение картинки.
      */
     private class GetDataImageTask extends DetectorTask {
@@ -117,11 +112,6 @@ public class ChinaDevice implements DetectorDevice, DetectorDevice.ChinaSource {
 
         @Override
         protected void handle() {
-            try {
-                TimeUnit.MILLISECONDS.sleep(PAUSE);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             result.set(grabber.getImage());
         }
     }
@@ -730,18 +720,6 @@ public class ChinaDevice implements DetectorDevice, DetectorDevice.ChinaSource {
             LOG.trace("Session start normal {}", ft_status);
         }
         return true;
-    }
-
-    /**
-     * Установка паузы между кадрами
-     * @param pause в миллисекундах
-     * @return
-     */
-    @Override
-    public FT_STATUS setPause(int pause) {
-
-        PAUSE = pause;
-        return FT_STATUS.FT_OK;
     }
 
     @Override

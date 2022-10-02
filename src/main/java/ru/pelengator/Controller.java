@@ -345,7 +345,7 @@ public class Controller implements Initializable {
     private volatile static AtomicBoolean isImageFrash = new AtomicBoolean(false);
     private static int detectorCounter = 0;
 
-    private volatile DetectorImageTransformer imageTransformer =new MyChinaRgbImageTransformer();
+    private volatile DetectorImageTransformer imageTransformer = new MyChinaRgbImageTransformer();
 
     /**
      * Инициализация всего и вся.
@@ -722,6 +722,7 @@ public class Controller implements Initializable {
         viewSize = selDetector.getViewSize();
         detectorPanel = new DetectorPanel(selDetector, viewSize, true);
         detectorPanel.setImageTransformer(imageTransformer);
+        detectorPanel.setPause(params.getPAUSE());
         snDetectorCapturedImage.setContent(detectorPanel);
         initFPSservice();
         initStatService();
@@ -790,12 +791,16 @@ public class Controller implements Initializable {
     public void setPauseOnPlate(ActionEvent event) {
         TextField source = (TextField) event.getSource();
         try {
-            if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
-                ((DetectorDevice.ChinaSource) selDetector.getDevice()).setPause(Integer.parseInt(source.getText()));
-            }
+            String text = source.getText();
+            int value = Integer.parseInt(text);
+            detectorPanel.setPause(value);
+            source.setText(text);
+            params.setPAUSE(value);
         } catch (Exception e) {
+            setError(source, "Error");
             LOG.error("Integer processing error", e);
         }
+
         source.selectAll();
         source.getParent().requestFocus();
     }
@@ -1470,6 +1475,10 @@ public class Controller implements Initializable {
 
     public ComboBox<String> getCbCCCOptions() {
         return cbCCCOptions;
+    }
+
+    public TextField getTfSpeedPlata() {
+        return tfSpeedPlata;
     }
 
     /**

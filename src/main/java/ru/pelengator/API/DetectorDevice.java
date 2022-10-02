@@ -67,7 +67,6 @@ public interface DetectorDevice {
 
         int[][] getFrame();
 
-        FT_STATUS setPause(int pause);
 
     }
 
