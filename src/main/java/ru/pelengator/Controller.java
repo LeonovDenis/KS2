@@ -13,7 +13,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -43,6 +46,9 @@ import ru.pelengator.API.devises.china.ChinaDriver;
 import ru.pelengator.API.devises.china.ChinaDriverEth;
 import ru.pelengator.API.driver.FT_STATUS;
 import ru.pelengator.API.transformer.MyChinaRgbImageTransformer;
+import ru.pelengator.API.transformer.comFilters.JHFlipFilter;
+import ru.pelengator.API.transformer.comFilters.JHGrayFilter;
+import ru.pelengator.API.transformer.comFilters.JHNormalizeFilter;
 import ru.pelengator.model.NetworkInfo;
 import ru.pelengator.model.DetectorInfo;
 import ru.pelengator.model.ExpInfo;
@@ -51,6 +57,7 @@ import ru.pelengator.model.StendParams;
 import ru.pelengator.service.DataService;
 
 
+import static ru.pelengator.API.transformer.comFilters.JHFlipFilter.*;
 import static ru.pelengator.API.utils.Utils.*;
 import static ru.pelengator.API.driver.ethernet.NetUtils.findInterfaces;
 
@@ -227,9 +234,55 @@ public class Controller implements Initializable {
     @FXML
     private Label lab_exp_status;
     /**
+     * Режим рисования DRAW_NONE
+     */
+    @FXML
+    private ToggleButton tb_none;
+    /**
+     * Режим рисования DRAW_FILL
+     */
+    @FXML
+    private ToggleButton tb_fill;
+    /**
+     * Режим рисования DRAW_FIT
+     */
+    @FXML
+    private ToggleButton tb_fit;
+    /**
+     * Группа ддля режимов рисования.
+     */
+    private final ToggleGroup growModeGroup = new ToggleGroup();
+    /**
+     * Режим зеркалирования
+     */
+    @FXML
+    private ToggleButton tb_mirror;
+    /**
+     * Режим показа отладочной информации
+     */
+    @FXML
+    private ToggleButton tb_debug;
+    /**
+     * Сглаживание картинки.
+     */
+    @FXML
+    private ToggleButton tb_antialising;
+    /**
+     * Поворот изображения на угол кратный 90 градусов.
+     */
+    @FXML
+    private ChoiceBox<String> cb_flip;
+    @FXML
+    private ToggleButton tb_rgb;
+    @FXML
+    private ToggleButton tb_gray;
+    @FXML
+    private ToggleButton tb_norm;
+
+    /**
      * Пакет ресурсов.
      */
-    private Properties properties = new Properties();
+    private final Properties properties = new Properties();
     /**
      * Текущее разрешение картинки.
      */
@@ -246,11 +299,11 @@ public class Controller implements Initializable {
     /**
      * Масштаб оцифровки АЦП.
      */
-    private static float MASHTAB = (5000 / (float) (Math.pow(2, 14)));
+    private static final float MASHTAB = (5000 / (float) (Math.pow(2, 14)));
     /**
      * Параметры стенда.
      */
-    private StendParams params = new StendParams(this);
+    private final StendParams params = new StendParams(this);
 
     /**
      * Запись параметров при выходе.
@@ -274,15 +327,15 @@ public class Controller implements Initializable {
     /**
      * Свойства для отображения картинки гистограммы.
      */
-    private ObjectProperty<Image> gistImageProperty = new SimpleObjectProperty<Image>();
+    private final ObjectProperty<Image> gistImageProperty = new SimpleObjectProperty<Image>();
     /**
      * Свойства для отображения картинки гистограммы низ верт.
      */
-    private ObjectProperty<Image> gistImagePropertyV = new SimpleObjectProperty<Image>();
+    private final ObjectProperty<Image> gistImagePropertyV = new SimpleObjectProperty<Image>();
     /**
      * Свойства для отображения картинки гистограммы низ гориз.
      */
-    private ObjectProperty<Image> gistImagePropertyH = new SimpleObjectProperty<Image>();
+    private final ObjectProperty<Image> gistImagePropertyH = new SimpleObjectProperty<Image>();
     /**
      * Активный детектор.
      */
@@ -290,7 +343,7 @@ public class Controller implements Initializable {
     /**
      * Активный эксперимент.
      */
-    private ExpInfo selExp = new ExpInfo();
+    private final ExpInfo selExp = new ExpInfo();
     /**
      * Активный интерфейс драйвера сети.
      */
@@ -302,19 +355,19 @@ public class Controller implements Initializable {
     /**
      * FPS по умолчанию.
      */
-    private double FPSVideo = 25;
+    private final double FPSVideo = 25;
     /**
      * Подсказка в список детекторов.
      */
-    private String detectorListPromptText = "Выбрать";
+    private final String detectorListPromptText = "Выбрать";
     /**
      * Подсказка в список эксп.
      */
-    private String expListPromptText = "Нет данных";
+    private final String expListPromptText = "Нет данных";
     /**
      * Подсказка в список драйверов.
      */
-    private String networkListPromptText = "Выбрать драйвер";
+    private final String networkListPromptText = "Выбрать драйвер";
     /**
      * Список для меню детекторов.
      */
@@ -322,19 +375,24 @@ public class Controller implements Initializable {
     /**
      * Список для меню экспериментов.
      */
-    private ObservableList<ExpInfo> optionsExp = FXCollections.observableArrayList();
+    private final ObservableList<ExpInfo> optionsExp = FXCollections.observableArrayList();
     /**
      * Список для меню драйвера.
      */
-    private ObservableList<NetworkInfo> optionsNetwork = FXCollections.observableArrayList();
+    private final ObservableList<NetworkInfo> optionsNetwork = FXCollections.observableArrayList();
     /**
      * Список коэф. усиления.
      */
-    private ObservableList<String> optionsCCC = FXCollections.observableArrayList("1", "3");
+    private final ObservableList<String> optionsCCC = FXCollections.observableArrayList("1", "3");
     /**
      * Список для допустимых разрешений.
      */
-    private ObservableList<String> optionsDimension = FXCollections.observableArrayList("128*128", "92*90");
+    private final ObservableList<String> optionsDimension = FXCollections.observableArrayList("128*128", "92*90");
+    /**
+     * Список допустимых поворотов картинки.
+     */
+    private final ObservableList<String> optionsFlip = FXCollections.observableArrayList("Нет поворота", "Поворот: +90\u00B0", "Поворот: -90\u00B0", "Поворот: 180\u00B0");
+
     /**
      * Счетчик экспериментов.
      */
@@ -342,10 +400,10 @@ public class Controller implements Initializable {
     /**
      * Создание списка детекторов.
      */
-    private volatile static AtomicBoolean isImageFrash = new AtomicBoolean(false);
+    private static final AtomicBoolean isImageFrash = new AtomicBoolean(false);
     private static int detectorCounter = 0;
 
-    private volatile DetectorImageTransformer imageTransformer = new MyChinaRgbImageTransformer();
+    private final DetectorImageTransformer imageTransformer = new MyChinaRgbImageTransformer();
 
     /**
      * Инициализация всего и вся.
@@ -355,6 +413,11 @@ public class Controller implements Initializable {
      */
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
+
+        setDrawButton();//инициализация кнопок режимов рисования
+
+        setAllAnotherButtons();//инициализация кнопок управления стендом
+
         /**
          * Выключение интерфейса управления.
          */
@@ -564,6 +627,89 @@ public class Controller implements Initializable {
         lab_exp_status.setText("");
     }
 
+    private void setAllAnotherButtons() {
+        tb_antialising.selectedProperty().addListener((observable, oldValue, newValue) -> detectorPanel.setAntialiasingEnabled(newValue));
+        tb_mirror.selectedProperty().addListener((observable, oldValue, newValue) -> detectorPanel.setMirrored(newValue));
+        tb_debug.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            detectorPanel.setFPSDisplayed(newValue);
+            detectorPanel.setImageSizeDisplayed(newValue);
+            detectorPanel.setDisplayDebugInfo(newValue);
+
+        });
+
+        cb_flip.setItems(optionsFlip);
+        cb_flip.getSelectionModel().select(optionsFlip.get(0));
+        cb_flip.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+
+            switch (newValue) {
+                case "Нет поворота":
+                    DetectorPanel.setFlipper(null);
+                    break;
+                case "Поворот: +90\u00B0":
+                    DetectorPanel.setFlipper(new JHFlipFilter(FLIP_90CW));
+                    break;
+                case "Поворот: -90\u00B0":
+                    DetectorPanel.setFlipper(new JHFlipFilter(FLIP_90CCW));
+                    break;
+                case "Поворот: 180\u00B0":
+                    DetectorPanel.setFlipper(new JHFlipFilter(FLIP_180));
+                    break;
+            }
+        });
+
+        tb_rgb.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                tb_gray.selectedProperty().setValue(false);
+                detectorPanel.setFilter(null);
+            }
+        });
+
+        tb_gray.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                tb_rgb.selectedProperty().setValue(false);
+                detectorPanel.setFilter(new JHGrayFilter());
+            }
+        });
+
+        tb_norm.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                detectorPanel.setNormalayzer(new JHNormalizeFilter());
+            }else{
+                detectorPanel.setNormalayzer(null);
+            }
+        });
+    }
+
+    /**
+     * Настройка кнопок рисования.
+     */
+    private void setDrawButton() {
+
+        ArrayList<ToggleButton> toggleMode = new ArrayList<>();
+        toggleMode.add(tb_none);
+        toggleMode.add(tb_fill);
+        toggleMode.add(tb_fit);
+        int i = 0;
+        for (ToggleButton tb :
+                toggleMode) {
+            tb.setToggleGroup(growModeGroup);
+            tb.setUserData(i++);
+        }
+        growModeGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                if ((int) newValue.getUserData() == 0) {
+                    detectorPanel.setDrawMode(DetectorPanel.DrawMode.NONE);
+                } else if ((int) newValue.getUserData() == 1) {
+                    detectorPanel.setDrawMode(DetectorPanel.DrawMode.FILL);
+                } else {
+                    detectorPanel.setDrawMode(DetectorPanel.DrawMode.FIT);
+                }
+            } else {
+                growModeGroup.selectToggle(tb_none);
+            }
+        });
+    }
+
     /**
      * Скан детекторов и заполнение списка.
      */
@@ -605,7 +751,7 @@ public class Controller implements Initializable {
         Thread thread = new Thread(() -> {
             boolean selectedFullScr = cbDimOptions.getSelectionModel().isSelected(0);
             waitNewImage();
-            if (FT_STATUS.FT_OK != ((DetectorDevice.ChinaSource) selDetector.getDevice()).setDim(selectedFullScr ? true : false)) {
+            if (FT_STATUS.FT_OK != ((DetectorDevice.ChinaSource) selDetector.getDevice()).setDim(selectedFullScr)) {
                 return;
             }
             waitNewImage();
@@ -626,7 +772,7 @@ public class Controller implements Initializable {
             }
             boolean selectedCcc = cbCCCOptions.getSelectionModel().isSelected(1);
             waitNewImage();
-            if (FT_STATUS.FT_OK != ((DetectorDevice.ChinaSource) selDetector.getDevice()).setССС(selectedCcc ? true : false)) {
+            if (FT_STATUS.FT_OK != ((DetectorDevice.ChinaSource) selDetector.getDevice()).setССС(selectedCcc)) {
                 return;
             }
             waitNewImage();
@@ -1281,7 +1427,7 @@ public class Controller implements Initializable {
         } else {
             g2.setColor(new Color(68, 133, 3));
         }
-        int visota = (int) (height - value);
+        int visota = height - value;
         g2.fillRect(300 - 22 - shaG * i, visota, shaG, value);
     }
 
@@ -1296,7 +1442,8 @@ public class Controller implements Initializable {
      * @param width        ширина.
      * @param TYPE_DIAGRAM тип диаграммы: строка, столбец.
      */
-    private void drawMaxValueOnGist(Graphics2D g2, int bochka, float maxVhogrenie, int size, int height, int width, boolean TYPE_DIAGRAM) {
+    private void drawMaxValueOnGist(Graphics2D g2, int bochka, float maxVhogrenie, int size, int height, int width,
+                                    boolean TYPE_DIAGRAM) {
         Font font = new Font("sans-serif", Font.BOLD, 10);
         g2.setFont(font);
         FontMetrics metrics = g2.getFontMetrics(font);

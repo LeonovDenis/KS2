@@ -27,7 +27,8 @@ import javax.swing.SwingWorker;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.pelengator.API.driver.FT_STATUS;
+import ru.pelengator.API.transformer.comFilters.JHFilter;
+import ru.pelengator.API.transformer.comFilters.JHFlipFilter;
 import ru.pelengator.Controller;
 
 import static java.awt.RenderingHints.*;
@@ -65,6 +66,19 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     }
 
     /**
+     * Библиотека для разворота изображения.
+     */
+    private static JHFlipFilter flipper = null;
+    /**
+     * Фильтр обработки изображения
+     */
+    private static JHFilter filter = null;
+    /**
+     * Фильтр нормалайзер
+     */
+    private static JHFilter normalayzer = null;
+
+    /**
      * Этот интерфейс можно использовать для передачи {@link BufferedImage} на {@link DetectorPanel}.
      */
     public interface ImageSupplier {
@@ -94,8 +108,24 @@ public class DetectorPanel extends JPanel implements DetectorListener {
             } catch (InterruptedException e) {
                 //ignore
             }
-            return detector.getImage();
+            BufferedImage tempImage = detector.getImage();
+
+            if (tempImage != null) {
+
+                if (flipper != null) {
+                    tempImage = flipper.filter(tempImage, null);
+                }
+
+                if (filter != null) {
+                    tempImage = filter.filter(tempImage, null);
+                }
+                if (normalayzer != null) {
+                    tempImage = normalayzer.filter(tempImage, null);
+                }
+            }
+            return tempImage;
         }
+
     }
 
     /**
@@ -1308,5 +1338,32 @@ public class DetectorPanel extends JPanel implements DetectorListener {
             pause = 0;
         }
         PAUSE = pause;
+    }
+
+    /**
+     * Установка поворота изображения.
+     *
+     * @param flipper
+     */
+    public static void setFlipper(JHFlipFilter flipper) {
+        DetectorPanel.flipper = flipper;
+    }
+
+    /**
+     * Установка фильтра.
+     *
+     * @param filter
+     */
+    public static void setFilter(JHFilter filter) {
+        DetectorPanel.filter = filter;
+    }
+
+    /**
+     * Установка нормалайзера.
+     *
+     * @param normalayzer
+     */
+    public static void setNormalayzer(JHFilter normalayzer) {
+        DetectorPanel.normalayzer = normalayzer;
     }
 }
