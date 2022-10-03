@@ -800,5 +800,10 @@ public class ChinaDevice implements DetectorDevice, DetectorDevice.ChinaSource {
         return null;
     }
 
+    @Override
+    public boolean isOnline() {
+        return grabber.getValidHendler().get();
+    }
+
 
 }

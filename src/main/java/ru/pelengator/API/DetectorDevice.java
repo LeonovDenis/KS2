@@ -21,6 +21,7 @@ public interface DetectorDevice {
          * Чтение базового буфера памяти изображений.
          * Этот метод вернет новыйбайтовый буфер, где байты изображения хранится.
          * Размер этого буфера равен ширине изображения * высоте * 3 байтам .
+         *
          * @return Буфер
          */
         ByteBuffer getImageBytes();
@@ -67,7 +68,7 @@ public interface DetectorDevice {
 
         int[][] getFrame();
 
-
+        boolean isOnline();
     }
 
 
@@ -82,7 +83,7 @@ public interface DetectorDevice {
          * Каждая реализация устройства может принимать свои собственные наборы параметров.
          * Может вызываться до метода <b>open</b> или позже.
          *
-         * @param parameters  Карта параметров, изменяющих настройки устройства по умолчанию
+         * @param parameters Карта параметров, изменяющих настройки устройства по умолчанию
          * @see Detector#setParameters(Map)
          */
         FT_STATUS setParameters(Map<String, ?> parameters);

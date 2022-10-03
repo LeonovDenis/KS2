@@ -262,6 +262,7 @@ public class Utils {
      * <br>
      * <br>
      * Границы цвета: синий, голубой, салатовый,желтый, красный.
+     *
      * @param sourceValue отсчеты АЦП [16384]
      * @return Цвет, один из 1021
      */
@@ -305,6 +306,58 @@ public class Utils {
 
         return a | (r << 16) | (g << 8) | b;
     }
+
+    /**
+     * Квантователь для картинки.256 оттенков.
+     *
+     * @param src преобразуемое изображение.
+     */
+    public static void convertImageGray(BufferedImage src) {
+
+        int width = src.getWidth();
+        int height = src.getHeight();
+        int[][] tempData = new int[height][width];
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                tempData[y][x] = src.getRGB(x, y) & 0xffffff;
+            }
+        }
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                src.setRGB(x, y, qvantFilterGray(tempData[y][x]));
+            }
+        }
+    }
+
+    /**
+     * Квантователь для оттенков серого.
+     *
+     * @param sourceValue
+     * @return
+     */
+    public static int qvantFilterGray(int sourceValue) {
+
+
+        int BITBYTE = 255;
+        double koef = ACP / (BITBYTE + 1.0);
+        sourceValue = (int) (sourceValue / koef);
+
+        if (sourceValue < 0) {
+            sourceValue = 0;
+        }
+        if (sourceValue > BITBYTE) {
+            sourceValue = BITBYTE;
+        }
+
+        int a = 0xff000000;
+        int r = sourceValue;
+        int g = sourceValue;
+        int b = sourceValue;
+
+        return a | (r << 16) | (g << 8) | b;
+    }
+
 
     /**
      * Конвертер изображения в массив.
@@ -763,6 +816,7 @@ public class Utils {
 
         /**
          * Добавка типа дефекта в список
+         *
          * @param badPoint
          */
         public void addToList(BadPoint badPoint) {

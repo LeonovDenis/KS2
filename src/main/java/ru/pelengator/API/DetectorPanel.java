@@ -25,6 +25,9 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
+import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.pelengator.API.transformer.comFilters.JHFilter;
@@ -120,7 +123,7 @@ public class DetectorPanel extends JPanel implements DetectorListener {
                     tempImage = filter.filter(tempImage, null);
                 }
                 if (normalayzer != null) {
-                     normalayzer.filter(tempImage,tempImage);
+                    normalayzer.filter(tempImage, tempImage);
                 }
             }
             return tempImage;
@@ -380,7 +383,7 @@ public class DetectorPanel extends JPanel implements DetectorListener {
             /**
              * Открисовка квадрата
              */
-            if (isAimDisplayed()&&s!=0) {
+            if (isAimDisplayed() && s != 0) {
                 drawRect(g2, iw, ih, aimWidth, aimHeight, x, y, s);
             }
 
@@ -629,15 +632,15 @@ public class DetectorPanel extends JPanel implements DetectorListener {
                 }
                 errored = false;
                 image = tmp;
-            }else{
+
+
+            } else {
             }
             if (repaint) {
                 repaintPanel();
             }
         }
     }
-
-
     /**
      * Режим того, как изображение будет изменено, чтобы соответствовать границам панели.
      * По умолчанию {@link DrawMode#FIT}
@@ -1366,4 +1369,5 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     public static void setNormalayzer(JHFilter normalayzer) {
         DetectorPanel.normalayzer = normalayzer;
     }
+
 }

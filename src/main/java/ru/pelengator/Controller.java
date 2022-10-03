@@ -45,9 +45,9 @@ import ru.pelengator.API.*;
 import ru.pelengator.API.devises.china.ChinaDriver;
 import ru.pelengator.API.devises.china.ChinaDriverEth;
 import ru.pelengator.API.driver.FT_STATUS;
+import ru.pelengator.API.transformer.MyChinaGrayTramsformer;
 import ru.pelengator.API.transformer.MyChinaRgbImageTransformer;
 import ru.pelengator.API.transformer.comFilters.JHFlipFilter;
-import ru.pelengator.API.transformer.comFilters.JHGrayFilter;
 import ru.pelengator.API.transformer.comFilters.JHNormalizeFilter;
 import ru.pelengator.model.NetworkInfo;
 import ru.pelengator.model.DetectorInfo;
@@ -278,7 +278,8 @@ public class Controller implements Initializable {
     private ToggleButton tb_gray;
     @FXML
     private ToggleButton tb_norm;
-
+    @FXML
+    private Label lb_online;
     /**
      * Пакет ресурсов.
      */
@@ -417,6 +418,7 @@ public class Controller implements Initializable {
         setDrawButton();//инициализация кнопок режимов рисования
 
         setAllAnotherButtons();//инициализация кнопок управления стендом
+
 
         /**
          * Выключение интерфейса управления.
@@ -660,17 +662,23 @@ public class Controller implements Initializable {
 
         tb_rgb.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
+                detectorPanel.setImageTransformer(new MyChinaRgbImageTransformer());
                 tb_gray.selectedProperty().setValue(false);
-                detectorPanel.setFilter(null);
-            }else{
+                BufferedImage bufferedImage = fillPolosa();
+                ivPolosa.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+            } else {
                 tb_gray.selectedProperty().setValue(true);
             }
+
         });
+
         tb_gray.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
+                detectorPanel.setImageTransformer(new MyChinaGrayTramsformer());
                 tb_rgb.selectedProperty().setValue(false);
-                detectorPanel.setFilter(new JHGrayFilter());
-            }else{
+                BufferedImage bufferedImage = fillPolosa();
+                ivPolosa.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+            } else {
                 tb_rgb.selectedProperty().setValue(true);
             }
         });
@@ -678,7 +686,7 @@ public class Controller implements Initializable {
         tb_norm.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 detectorPanel.setNormalayzer(new JHNormalizeFilter());
-            }else{
+            } else {
                 detectorPanel.setNormalayzer(null);
             }
         });
@@ -878,6 +886,7 @@ public class Controller implements Initializable {
         initStatService();
         BufferedImage bufferedImage = fillPolosa();
         ivPolosa.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+
     }
 
     /**
@@ -965,7 +974,13 @@ public class Controller implements Initializable {
                 while (!stopVideo) {
                     try {
                         TimeUnit.SECONDS.sleep(1);
-                        Platform.runLater(() -> tfFPS.setText(detectorPanel.getStringFPS()));
+                        Platform.runLater(() -> {
+                            tfFPS.setText(detectorPanel.getStringFPS());
+
+                                lb_online.setVisible(!((DetectorDevice.ChinaSource) selDetector
+                                        .getDevice()).isOnline());
+
+                        });
                     } catch (Exception e) {
                         //ignore
                     }
@@ -1632,6 +1647,10 @@ public class Controller implements Initializable {
         return tfSpeedPlata;
     }
 
+    public Label getLb_online() {
+        return lb_online;
+    }
+
     /**
      * Инициализация сети.
      *
@@ -1641,4 +1660,5 @@ public class Controller implements Initializable {
         selNetworkInterface = optionsNetwork.get(index);
         params.setSelNetworkInterface(selNetworkInterface);
     }
+
 }

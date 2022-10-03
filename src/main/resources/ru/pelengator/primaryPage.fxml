@@ -27,7 +27,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane minHeight="500.0" minWidth="760.0" style="-fx-background-color: #ccc;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.pelengator.Controller">
+<BorderPane minHeight="500.0" minWidth="760.0" style="-fx-background-color: #ccc;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.pelengator.Controller">
     <center>
         <BorderPane fx:id="bpDetectorPaneHolder" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #ccc;" BorderPane.alignment="CENTER">
          <center>
@@ -200,6 +200,14 @@
                                              </font>
                                              <GridPane.margin>
                                                 <Insets left="5.0" right="5.0" />
+                                             </GridPane.margin>
+                                          </Label>
+                                          <Label fx:id="lb_online" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Нет изображения!" textFill="#c60805" visible="false" GridPane.columnIndex="2" GridPane.columnSpan="2">
+                                             <font>
+                                                <Font name="Arial Narrow Bold Italic" size="12.0" />
+                                             </font>
+                                             <GridPane.margin>
+                                                <Insets right="5.0" />
                                              </GridPane.margin>
                                           </Label>
                                        </children>
