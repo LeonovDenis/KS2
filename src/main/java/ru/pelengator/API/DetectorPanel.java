@@ -120,7 +120,7 @@ public class DetectorPanel extends JPanel implements DetectorListener {
                     tempImage = filter.filter(tempImage, null);
                 }
                 if (normalayzer != null) {
-                    tempImage = normalayzer.filter(tempImage, null);
+                     normalayzer.filter(tempImage,tempImage);
                 }
             }
             return tempImage;
@@ -349,8 +349,7 @@ public class DetectorPanel extends JPanel implements DetectorListener {
 
             if (isFPSDisplayed()) {
 
-
-                String str = String.format("%.1f", detector.getFPS());
+                String str = String.format("DEBUG: frames per second: %.1f", detector.getFPS());
 
                 int sx = 5;
                 int sy = ph - 5;
@@ -365,7 +364,7 @@ public class DetectorPanel extends JPanel implements DetectorListener {
 
             if (isImageSizeDisplayed()) {
 
-                String res = String.format("%d\u2A2F%d px", iw, ih);
+                String res = String.format("DEBUG: %d\u2A2F%d px", iw, ih);
 
                 FontMetrics metrics = g2.getFontMetrics(getFont());
                 int sw = metrics.stringWidth(res);
@@ -381,7 +380,7 @@ public class DetectorPanel extends JPanel implements DetectorListener {
             /**
              * Открисовка квадрата
              */
-            if (isAimDisplayed()) {
+            if (isAimDisplayed()&&s!=0) {
                 drawRect(g2, iw, ih, aimWidth, aimHeight, x, y, s);
             }
 
@@ -630,6 +629,7 @@ public class DetectorPanel extends JPanel implements DetectorListener {
                 }
                 errored = false;
                 image = tmp;
+            }else{
             }
             if (repaint) {
                 repaintPanel();
@@ -820,7 +820,7 @@ public class DetectorPanel extends JPanel implements DetectorListener {
         this.updater = new ImageUpdater();
         this.supplier = supplier;
 
-        //setDoubleBuffered(true);//todo проверить нужно ли
+        setDoubleBuffered(true);
 
         if (size == null) {
             Dimension r = detector.getViewSize();

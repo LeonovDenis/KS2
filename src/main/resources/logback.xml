@@ -36,12 +36,12 @@
         <queueSize>512</queueSize>
     </appender>
 
-    <logger name="ru.pelengator" level="TRACE" additivity="false">
+    <logger name="ru.pelengator" level="ERROR" additivity="false">
         <appender-ref ref="ASYNC"/>
         <appender-ref ref="CONSOLE"/>
     </logger>
 
-    <root level="TRACE">
+    <root level="ERROR">
         <appender-ref ref="trace"/>
     </root>
 

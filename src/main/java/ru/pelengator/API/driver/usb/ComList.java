@@ -247,7 +247,7 @@ public class ComList {
             grabber.close();
             return null;
         }
-        LOG.trace("Parsing frame {}",bytesData);
+       // LOG.trace("Parsing frame {}",bytesData);
         /**
          * Есть заголовок?
          */
@@ -277,6 +277,7 @@ public class ComList {
                       //выход при обрыве данных
                         if (btData.isEmpty()) {
                             //Выход сюда, когда нет связи.
+                            LOG.error("Выкод в середине цикла. когда пропала связь!");
                             grabber.close();
                             clearBuffer();
                             return null;
@@ -286,7 +287,7 @@ public class ComList {
 
                     Bytes bytes = summPartsOfFrame();
                     if (bytes.length() < (2 * grabber.getHeight() * grabber.getWidth())) {
-                        LOG.error("Dimension not same!");
+                        LOG.trace("Dimension not same!");
                         return null;
                     }
                     return bytes;
@@ -310,7 +311,8 @@ public class ComList {
                 LOG.trace("Answer on Set ID " + bytesData);
                 grabber.getNeedToWaite().set(false);
             }
-            LOG.error("Answer without header " + bytesData);
+
+            LOG.trace("Answer without header " + bytesData);
             return null;
         }
     }

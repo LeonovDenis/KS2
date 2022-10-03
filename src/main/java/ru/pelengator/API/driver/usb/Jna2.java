@@ -110,10 +110,12 @@ public class Jna2 {
             if (value == FT_STATUS.FT_OK) {
                 isOpened.compareAndSet(false, true);
                 validHendler.compareAndSet(false, true);
+                LOG.trace("Detector opened.Create hendler,status {} hendler {}", value, validHendler.get());
             } else {
                 validHendler.set(false);
+                LOG.trace("Detector not opened. Dont create hendler, status {} hendler {}", value, validHendler.get());
             }
-            LOG.trace("Detector not open. Dont create hendler, error {} hendler {}", value, validHendler.get());
+
         } else {
             return FT_STATUS.FT_BUSY;
         }
@@ -133,7 +135,7 @@ public class Jna2 {
         //тест
         FT_STATUS status = FT_STATUS.values()[i];
         if (status != FT_STATUS.FT_OK) {
-            LOG.error("Writing error {}",status);
+            LOG.error("Writing error {}", status);
             validHendler.set(false);
         }
         return status;
@@ -151,7 +153,7 @@ public class Jna2 {
         //тест
         FT_STATUS status = FT_STATUS.values()[i];
         if (status != FT_STATUS.FT_OK) {
-            LOG.error("Reading error {}",status);
+            LOG.error("Reading error {}", status);
             validHendler.set(false);
         }
         return from;
@@ -219,7 +221,7 @@ public class Jna2 {
     public ByteBuffer getImage() {
         ByteBuffer bytes = null;
         Bytes frame = nextFrame();
-        LOG.trace("Detector status: isOnline: {}, validHendler {},needWaite {}", isOpened, validHendler, needToWaite);
+        //  LOG.trace("Detector status: isOnline: {}, validHendler {},needWaite {}", isOpened, validHendler, needToWaite);
         if (frame == null) {
             return null;
         }
@@ -253,6 +255,7 @@ public class Jna2 {
      */
     public void stopSession() {
         LOG.trace("Start stop session");
+       needToWaite.set(true);
         nextFrame();
         close();
     }
@@ -340,6 +343,7 @@ public class Jna2 {
             nextFrame();
             needToWaite.set(true);
             ft_status = comList.setPower(set);
+            LOG.info("Setting Power in power session {}",ft_status);
         } else {
 
             if (!validHendler.get()) {
@@ -435,6 +439,7 @@ public class Jna2 {
 
     /**
      * Запрос целого кадра.
+     *
      * @return
      */
     public Bytes nextFrame() {
@@ -443,18 +448,19 @@ public class Jna2 {
 
             do {
                 bytes = comList.nextFrame();
+
                 if (countFR++ > 10) {
                     needToWaite.set(false);
                     countFR = 0;
                 }
-            } while (needToWaite.get());
+            } while (needToWaite.get()&&validHendler.get());
+            countFR = 0;
         } else {
             if (validHendler.get() && needToWaite.get() && isOpened.get()) {
                 close();
             }
             //выход, кагда нет связи или старт без включения
             bytes = null;
-            LOG.error("Hendler not valid. Video null");
         }
         return bytes;
     }
@@ -466,6 +472,7 @@ public class Jna2 {
         comList.clearBuffer();
 
     }
+
     public static AtomicBoolean getNeedToWaite() {
         return needToWaite;
     }

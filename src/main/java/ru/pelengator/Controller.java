@@ -657,17 +657,21 @@ public class Controller implements Initializable {
             }
         });
 
+
         tb_rgb.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 tb_gray.selectedProperty().setValue(false);
                 detectorPanel.setFilter(null);
+            }else{
+                tb_gray.selectedProperty().setValue(true);
             }
         });
-
         tb_gray.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 tb_rgb.selectedProperty().setValue(false);
                 detectorPanel.setFilter(new JHGrayFilter());
+            }else{
+                tb_rgb.selectedProperty().setValue(true);
             }
         });
 
