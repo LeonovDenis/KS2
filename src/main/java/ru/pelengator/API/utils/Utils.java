@@ -791,7 +791,7 @@ public class Utils {
     }
 
     /**
-     * Класс общих дефектов. //todo переделать на более эфективное
+     * Класс общих дефектов.
      */
     public static class BadBigPoint {
         private Color color;

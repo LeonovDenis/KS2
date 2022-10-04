@@ -13,10 +13,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -1136,27 +1133,27 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Отработка установки VOS1.
+     * Отработка установки VREF и VOUTREF.
      *
      * @param event
      */
-    public void setReference(ActionEvent event) {//todo проверить нужен ли метод для работы
+    public void setReference(ActionEvent event) {
 
         int i = parseIntText(event, true);
         if (i < 0) {
             return;
         }
-        params.setTempVOS1(i);
+        params.setTempREF(i);
         setReference();
         resetBTNS();
     }
 
     /**
-     * Установка референса VOS1.//todo нуженли
+     * Установка VREF и VOUTREF.
      */
     public FT_STATUS setReference() {
         if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
-            FT_STATUS ft_status = ((DetectorDevice.ChinaSource) selDetector.getDevice()).setReference(params.getTempVOS1());
+            FT_STATUS ft_status = ((DetectorDevice.ChinaSource) selDetector.getDevice()).setReference(params.getTempREF());
             return ft_status;
         }
         return null;

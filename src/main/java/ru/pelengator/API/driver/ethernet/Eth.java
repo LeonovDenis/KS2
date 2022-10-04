@@ -546,7 +546,7 @@ public class Eth extends Jna2 {
      * @param value - в миливольтах
      * @return
      */
-    public FT_STATUS setVVA1(int value) {
+    public FT_STATUS setREF(int value) {
         float floatValue = value / 1000f;
         byte[] data = Bytes.from(floatValue).reverse().array();
         Bytes msg = HEADER            //маска+ID

@@ -19,7 +19,6 @@ import java.awt.*;
 import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static ru.pelengator.App.getFtd3XX;
@@ -402,19 +401,19 @@ public class Jna2 {
     }
 
     /**
-     * Установка рефов1 //todo проверить нужен ли метод
+     * Установка VREF и VOUTREF.
      *
      * @param value - в миливольтах
      * @return
      */
-    public FT_STATUS setVVA1(int value) {
+    public FT_STATUS setREF(int value) {
 
         if (!validHendler.get()) {
             LOG.error("Hendler not valid");
             return FT_STATUS.FT_BUSY;
         }
         needToWaite.set(true);
-        return comList.setVVA1(value);
+        return comList.setREF(value);
     }
 
     /**

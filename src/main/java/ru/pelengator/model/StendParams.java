@@ -89,7 +89,7 @@ public class StendParams {
     ///////////Состояния/////
     private boolean tempPower = false;//Нажата ли кнопка ПОВЕР
     private int tempInt = 500; //время интегрирования
-    private int tempVOS1 = 1600; // напряжение референса два
+    private int tempREF = 1600; // напряжение референса два
     private int tempVOS = 1600; // напряжение скимминга
     private int tempVR0 = 20; //Напряжение смещения
     private boolean tempKU = false; //Коэф. усиления
@@ -194,23 +194,22 @@ public class StendParams {
         otk.set(properties.getProperty("otk", "Иванов"));
         data.set(properties.getProperty("data", "0x8C140001"));
 
-        TXT_0_0.set(properties.getProperty("TXT_0_0", "---"));
-        TXT_0_1.set(properties.getProperty("TXT_0_1", "---"));
-        TXT_0_2.set(properties.getProperty("TXT_0_2", "---"));
-        TXT_0_3.set(properties.getProperty("TXT_0_3", "---"));
-        TXT_0_4.set(properties.getProperty("TXT_0_4", "---"));
-        TXT_0_5.set(properties.getProperty("TXT_0_5", "---"));
-        TXT_0_6.set(properties.getProperty("TXT_0_6", "---"));
-        TXT_0_7.set(properties.getProperty("TXT_0_7", "---"));
-        TXT_0_8.set(properties.getProperty("TXT_0_8", "---"));
-        TXT_0_9.set(properties.getProperty("TXT_0_9", "---"));
+        TXT_0_0.set(properties.getProperty("TXT_0_0", "---"));// среднее арифм.
+        TXT_0_1.set(properties.getProperty("TXT_0_1", "---"));// среднее квадратическое
+        TXT_0_2.set(properties.getProperty("TXT_0_2", "---"));// средний шум СКО
+        TXT_0_3.set(properties.getProperty("TXT_0_3", "---"));// вольтовая чувствительность
+        TXT_0_4.set(properties.getProperty("TXT_0_4", "---"));// порог чувствительности
+        TXT_0_5.set(properties.getProperty("TXT_0_5", "---"));// удельный
+        TXT_0_6.set(properties.getProperty("TXT_0_6", "---"));// обнаружительная способность
+        TXT_0_7.set(properties.getProperty("TXT_0_7", "Не менее 8.0Е+09"));// удельная обнаружительная
+        TXT_0_8.set(properties.getProperty("TXT_0_8", "---"));// ЭШРТ
+        TXT_0_9.set(properties.getProperty("TXT_0_9", "Не более 5.0Е-08"));//пороговая облученность
 
 
         tempPower = Boolean.parseBoolean(properties.getProperty("POWER_ON", "true"));
         tempInt = Integer.parseInt(properties.getProperty("INT", "500"));
         controller.getTfInt().setText(String.valueOf(tempInt));
-        tempVOS1 = Integer.parseInt(properties.getProperty("VOS1", "1600"));
-        //  tfVOS1.setText(String.valueOf(tempVOS1));
+        tempREF = Integer.parseInt(properties.getProperty("REF", "1600"));
         tempVOS = Integer.parseInt(properties.getProperty("VOS", "1600"));
         controller.getTfVOS().setText(String.valueOf(tempVOS));
         tempVR0 = Integer.parseInt(properties.getProperty("VR0", "20"));
@@ -313,7 +312,7 @@ public class StendParams {
 
         properties.setProperty("POWER_ON", String.valueOf(tempPower));
         properties.setProperty("INT", String.valueOf(tempInt));
-        properties.setProperty("VOS1", String.valueOf(tempVOS1));
+        properties.setProperty("REF", String.valueOf(tempREF));
         properties.setProperty("VOS", String.valueOf(tempVOS));
         properties.setProperty("VR0", String.valueOf(tempVR0));
         properties.setProperty("KU", String.valueOf(tempKU));
@@ -590,12 +589,12 @@ public class StendParams {
         this.tempInt = tempInt;
     }
 
-    public int getTempVOS1() {
-        return tempVOS1;
+    public int getTempREF() {
+        return tempREF;
     }
 
-    public void setTempVOS1(int tempVOS1) {
-        this.tempVOS1 = tempVOS1;
+    public void setTempREF(int tempREF) {
+        this.tempREF = tempREF;
     }
 
     public int getTempVOS() {

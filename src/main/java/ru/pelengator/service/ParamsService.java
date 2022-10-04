@@ -661,7 +661,7 @@ public class ParamsService extends Service<Void> {
     }
 
     /**
-     * Переделать //todo супер переделка
+     * Переделать.
      *
      * @param color цвет пикселя.
      * @return
@@ -671,8 +671,6 @@ public class ParamsService extends Service<Void> {
         String lineseparator = System.getProperty("line.separator");
 
         List<BadBigPoint> list = null;
-
-        //todo  30 секунд
         //создаем массив
         BadBigPoint[][] tempMatrix = new BadBigPoint[sizeY][sizeX];
         //перебиваем все кадры

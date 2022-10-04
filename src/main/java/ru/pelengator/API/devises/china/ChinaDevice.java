@@ -11,7 +11,6 @@ import java.awt.color.ColorSpace;
 import java.awt.image.*;
 import java.nio.ByteBuffer;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -219,7 +218,7 @@ public class ChinaDevice implements DetectorDevice, DetectorDevice.ChinaSource {
     }
 
     /**
-     * Задача на поставку референса. //todo Нужна ли?
+     * Задача на поставку референса.
      */
     private class SetReferenceTask extends DetectorTask {
 
@@ -242,7 +241,7 @@ public class ChinaDevice implements DetectorDevice, DetectorDevice.ChinaSource {
 
         @Override
         protected void handle() {
-            result.set(grabber.setVVA1(value.get()));
+            result.set(grabber.setREF(value.get()));
         }
     }
 

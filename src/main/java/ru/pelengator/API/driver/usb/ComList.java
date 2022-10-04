@@ -181,12 +181,12 @@ public class ComList {
     }
 
     /**
-     * Установка рефов1.
+     * Установка VREF и VOUTREF.
      *
      * @param value - в миливольтах
      * @return
      */
-    public FT_STATUS setVVA1(int value) {
+    public FT_STATUS setREF(int value) {
 
         float floatValue = value / 1000f;
         byte[] data = Bytes.from(floatValue).reverse().array();
@@ -277,7 +277,7 @@ public class ComList {
                       //выход при обрыве данных
                         if (btData.isEmpty()) {
                             //Выход сюда, когда нет связи.
-                            LOG.error("Выкод в середине цикла. когда пропала связь!");
+                            LOG.trace("Exiting in center of frame!");
                             grabber.close();
                             clearBuffer();
                             return null;
