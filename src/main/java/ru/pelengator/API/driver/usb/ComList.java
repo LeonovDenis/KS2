@@ -38,16 +38,10 @@ public class ComList {
     byte DEV_ID = 0x05;
     Bytes HEADER = Bytes.from((byte) 0xA2, DEV_ID);
     byte[] SETPOWER = new byte[]{(byte) 0x02, (byte) 0x08};
-    byte[] SETRESET = new byte[]{(byte) 0x02, (byte) 0x04};
-    byte[] SETRE = new byte[]{(byte) 0x05, (byte) 0x1B};
-    byte[] SETRO = new byte[]{(byte) 0x05, (byte) 0x1A};
     byte[] SETINT = new byte[]{(byte) 0x05, (byte) 0x00};
     byte[] VIDEOHEADER = new byte[]{(byte) 0x28};
-    byte[] SETVVA = new byte[]{(byte) 0x05, (byte) 0x01};
-
-    byte[] SETVVA1 = new byte[]{(byte) 0x05, (byte) 0x02};
-    byte[] SETVVA2 = new byte[]{(byte) 0x05, (byte) 0x03};
-
+    byte[] SETVOS = new byte[]{(byte) 0x05, (byte) 0x01};
+    byte[] SETREF = new byte[]{(byte) 0x05, (byte) 0x02};
     byte[] SETVR0 = new byte[]{(byte) 0x05, (byte) 0x23};
     byte[] SETID = new byte[]{(byte) 0x05, (byte) 0x09};
     byte[] SETDIM = new byte[]{(byte) 0x05, (byte) 0x1C};
@@ -172,9 +166,9 @@ public class ComList {
         float floatValue = value / 1000f;
         byte[] data = Bytes.from(floatValue).reverse().array();
         Bytes msg = HEADER            //маска+ID
-                .append(SETVVA[0])    //функция
+                .append(SETVOS[0])    //функция
                 .append((byte) 0x05)  //размер[команда+данные]||
-                .append(SETVVA[1])    //команда               |
+                .append(SETVOS[1])    //команда               |
                 .append(data);        //данные               _|
         FT_STATUS ft_status = grabber.writePipe(msg);
         return ft_status;
@@ -191,9 +185,9 @@ public class ComList {
         float floatValue = value / 1000f;
         byte[] data = Bytes.from(floatValue).reverse().array();
         Bytes msg = HEADER             //маска+ID
-                .append(SETVVA1[0])    //функция
+                .append(SETREF[0])    //функция
                 .append((byte) 0x05)   //размер[команда+данные]||
-                .append(SETVVA1[1])    //команда               |
+                .append(SETREF[1])    //команда               |
                 .append(data);         //данные               _|
         FT_STATUS ft_status = grabber.writePipe(msg);
 
