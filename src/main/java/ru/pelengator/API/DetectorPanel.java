@@ -775,7 +775,7 @@ public class DetectorPanel extends JPanel implements DetectorListener {
      * @param detector   детектор, который будет использоваться для получения изображений
      * @param controller ссылка на контроллер
      */
-    public DetectorPanel(Detector detector, Controller controller) {
+    public DetectorPanel(Detector detector, Controller controller,boolean asinc) {
         this(detector, true);
         this.controller = controller;
     }
@@ -785,8 +785,8 @@ public class DetectorPanel extends JPanel implements DetectorListener {
      *
      * @param detector детектор, который будет использоваться для получения изображений
      */
-    public DetectorPanel(Detector detector) {
-        this(detector, true);
+    public DetectorPanel(Detector detector,boolean asinc) {
+        this(detector, true,asinc);
     }
 
     /**
@@ -795,8 +795,8 @@ public class DetectorPanel extends JPanel implements DetectorListener {
      * @param detector детектор, который будет использоваться для получения изображений
      * @param start    true, если детектор должен запускаться автоматически
      */
-    public DetectorPanel(Detector detector, boolean start) {
-        this(detector, null, start);
+    public DetectorPanel(Detector detector, boolean start,boolean asinc) {
+        this(detector, null, start,asinc);
     }
 
     /**
@@ -807,11 +807,11 @@ public class DetectorPanel extends JPanel implements DetectorListener {
      * @param size     размер панели
      * @param start    true, если детектор должен запускаться автоматически
      */
-    public DetectorPanel(Detector detector, Dimension size, boolean start) {
-        this(detector, size, start, new DefaultImageSupplier(detector));
+    public DetectorPanel(Detector detector, Dimension size, boolean start,boolean asinc) {
+        this(detector, size, start, new DefaultImageSupplier(detector),asinc);
     }
 
-    public DetectorPanel(Detector detector, Dimension size, boolean start, ImageSupplier supplier) {
+    public DetectorPanel(Detector detector, Dimension size, boolean start, ImageSupplier supplier,boolean asinc) {
 
         if (detector == null) {
             throw new IllegalArgumentException(String.format("Detector argument in %s constructor cannot be null!",
@@ -836,7 +836,7 @@ public class DetectorPanel extends JPanel implements DetectorListener {
         }
 
         if (start) {
-            start();
+            start(asinc);
         }
     }
 
@@ -880,7 +880,7 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     /**
      * Открытие панели, старт рендеринга и открытие устройства.
      */
-    public void start() {
+    public void start(boolean async) {
 
         if (!started.compareAndSet(false, true)) {
             return;
@@ -903,7 +903,7 @@ public class DetectorPanel extends JPanel implements DetectorListener {
 
                 try {
                     if (!detector.isOpen()) {
-                        errored = !detector.open();
+                        errored = !detector.open(async);
                     }
                 } catch (DetectorException e) {
                     errored = true;

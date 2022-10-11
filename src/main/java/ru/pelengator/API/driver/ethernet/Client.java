@@ -23,7 +23,6 @@ public class Client {
             System.err.println("Сокет занят на клиенте");
         }
 
-
     }
 
     public Client(String ip, int port, NetworkInfo selNetworkInterface, DatagramSocket ds) throws UnknownHostException, SocketException {

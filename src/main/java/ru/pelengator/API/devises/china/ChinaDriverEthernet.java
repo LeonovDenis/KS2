@@ -6,7 +6,8 @@ import ru.pelengator.API.DetectorDevice;
 import ru.pelengator.API.DetectorDiscoverySupport;
 import ru.pelengator.API.DetectorDriver;
 import ru.pelengator.API.DetectorTask;
-import ru.pelengator.API.driver.ethernet.Eth;
+import ru.pelengator.API.driver.Driver;
+import ru.pelengator.API.driver.ethernet.EthernetDriver;
 import ru.pelengator.model.StendParams;
 
 import java.util.ArrayList;
@@ -17,17 +18,17 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * Реализация китайского детектора через Ethernet
  */
-public class ChinaDriverEth implements DetectorDriver, DetectorDiscoverySupport {
+public class ChinaDriverEthernet implements DetectorDriver, DetectorDiscoverySupport {
 
     private static class DetectorNewGrabberTask extends DetectorTask {
 
-        private AtomicReference<Eth> grabber = new AtomicReference<Eth>();
+        private AtomicReference<Driver> grabber = new AtomicReference<Driver>();
 
         public DetectorNewGrabberTask(DetectorDriver driver) {
             super(driver, null);
         }
 
-        public Eth newGrabber() {
+        public Driver newGrabber() {
             try {
                 process();
             } catch (InterruptedException e) {
@@ -39,14 +40,14 @@ public class ChinaDriverEth implements DetectorDriver, DetectorDiscoverySupport 
 
         @Override
         protected void handle() {
-            grabber.set(new Eth(params));
+            grabber.set(new EthernetDriver(params));
         }
     }
 
     private static class GetDevicesTask extends DetectorTask {
 
         private volatile List<DetectorDevice> devices = null;
-        private volatile Eth grabber = null;
+        private volatile Driver grabber = null;
 
         public GetDevicesTask(DetectorDriver driver) {
             super(driver, null);
@@ -58,7 +59,7 @@ public class ChinaDriverEth implements DetectorDriver, DetectorDiscoverySupport 
          * @param grabber собственный граббер для поиска
          * @return Устройство.
          */
-        public List<DetectorDevice> getDevices(Eth grabber) {
+        public List<DetectorDevice> getDevices(Driver grabber) {
 
             this.grabber = grabber;
 
@@ -85,7 +86,7 @@ public class ChinaDriverEth implements DetectorDriver, DetectorDiscoverySupport 
      */
     private static final Logger LOG = LoggerFactory.getLogger(ChinaDriver.class);
     private static StendParams params=null;
-    private static Eth grabber = null;
+    private static Driver grabber = null;
 
     @Override
     public List<DetectorDevice> getDevices() {
@@ -111,7 +112,7 @@ public class ChinaDriverEth implements DetectorDriver, DetectorDiscoverySupport 
 
         return devices;
     }
-    public ChinaDriverEth(StendParams params) {
+    public ChinaDriverEthernet(StendParams params) {
         this.params=params;
 
     }

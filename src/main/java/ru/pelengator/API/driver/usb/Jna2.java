@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import ru.pelengator.API.DetectorDevice;
 import ru.pelengator.API.DetectorResolution;
 import ru.pelengator.API.devises.china.ChinaDevice;
+import ru.pelengator.API.driver.Driver;
 import ru.pelengator.API.driver.FT_STATUS;
 
 
@@ -26,7 +27,7 @@ import static ru.pelengator.App.getFtd3XX;
 /**
  * Драйвер с java на c++
  */
-public class Jna2 {
+public class Jna2 implements Driver {
 
     /**
      * Логгер.
@@ -254,7 +255,7 @@ public class Jna2 {
      */
     public void stopSession() {
         LOG.trace("Start stop session");
-       needToWaite.set(true);
+        needToWaite.set(true);
         nextFrame();
         close();
     }
@@ -342,7 +343,7 @@ public class Jna2 {
             nextFrame();
             needToWaite.set(true);
             ft_status = comList.setPower(set);
-            LOG.info("Setting Power in power session {}",ft_status);
+            LOG.info("Setting Power in power session {}", ft_status);
         } else {
 
             if (!validHendler.get()) {
@@ -448,11 +449,10 @@ public class Jna2 {
             do {
                 bytes = comList.nextFrame();
 
-                if (countFR++ > 10) {
+                if (countFR++ > 30) {
                     needToWaite.set(false);
-                    countFR = 0;
                 }
-            } while (needToWaite.get()&&validHendler.get());
+            } while (needToWaite.get() && validHendler.get());
             countFR = 0;
         } else {
             if (validHendler.get() && needToWaite.get() && isOpened.get()) {
@@ -472,6 +472,14 @@ public class Jna2 {
 
     }
 
+    @Override
+    public boolean isOnline() {
+        if (validHendler != null) {
+            return validHendler.get();
+        }
+        return false;
+    }
+
     public static AtomicBoolean getNeedToWaite() {
         return needToWaite;
     }
@@ -479,5 +487,6 @@ public class Jna2 {
     public static AtomicBoolean getValidHendler() {
         return validHendler;
     }
+
 }
 

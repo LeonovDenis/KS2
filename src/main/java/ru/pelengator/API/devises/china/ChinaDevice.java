@@ -3,6 +3,7 @@ package ru.pelengator.API.devises.china;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.pelengator.API.*;
+import ru.pelengator.API.driver.Driver;
 import ru.pelengator.API.driver.FT_STATUS;
 import ru.pelengator.API.driver.usb.Jna2;
 
@@ -94,6 +95,7 @@ public class ChinaDevice implements DetectorDevice, DetectorDevice.ChinaSource {
 
         /**
          * Получение видео с паузой чтения
+         *
          * @param device
          */
         public GetDataImageTask(DetectorDevice device) {
@@ -365,7 +367,7 @@ public class ChinaDevice implements DetectorDevice, DetectorDevice.ChinaSource {
     /***
      * Ссылка на граббер/драйвер.
      */
-    private Jna2 grabber = null;
+    private Driver grabber = null;
     /**
      * Разрешение.
      */
@@ -421,7 +423,7 @@ public class ChinaDevice implements DetectorDevice, DetectorDevice.ChinaSource {
      * @param id      ID
      * @param grabber драйвер
      */
-    public ChinaDevice(String name, String id, Jna2 grabber) {
+    public ChinaDevice(String name, String id, Driver grabber) {
         this.name = name;
         this.id = id;
         this.grabber = grabber;
@@ -715,7 +717,7 @@ public class ChinaDevice implements DetectorDevice, DetectorDevice.ChinaSource {
         FT_STATUS ft_status = new StartSessionTask(this).startSession();
         if (ft_status != FT_STATUS.FT_OK) {
             LOG.error("Error in startSession {}", ft_status);
-        }else{
+        } else {
             LOG.trace("Session start normal {}", ft_status);
         }
         return true;
@@ -801,7 +803,7 @@ public class ChinaDevice implements DetectorDevice, DetectorDevice.ChinaSource {
 
     @Override
     public boolean isOnline() {
-        return grabber.getValidHendler().get();
+        return grabber.isOnline();
     }
 
 

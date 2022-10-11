@@ -7,6 +7,7 @@ import ru.pelengator.API.DetectorDevice;
 import ru.pelengator.API.DetectorDiscoverySupport;
 import ru.pelengator.API.DetectorDriver;
 import ru.pelengator.API.DetectorTask;
+import ru.pelengator.API.driver.Driver;
 import ru.pelengator.API.driver.usb.Jna2;
 import ru.pelengator.model.StendParams;
 
@@ -27,13 +28,13 @@ public class ChinaDriver implements DetectorDriver, DetectorDiscoverySupport {
      */
     private static class DetectorNewGrabberTask extends DetectorTask {
 
-        private AtomicReference<Jna2> grabber = new AtomicReference<Jna2>();
+        private AtomicReference<Driver> grabber = new AtomicReference<>();
 
         public DetectorNewGrabberTask(DetectorDriver driver) {
             super(driver, null);
         }
 
-        public Jna2 newGrabber() {
+        public Driver newGrabber() {
             try {
                 process();
             } catch (InterruptedException e) {
@@ -55,7 +56,7 @@ public class ChinaDriver implements DetectorDriver, DetectorDiscoverySupport {
     private static class GetDevicesTask extends DetectorTask {
 
         private volatile List<DetectorDevice> devices = null;
-        private volatile Jna2 grabber = null;
+        private volatile Driver grabber = null;
 
         public GetDevicesTask(DetectorDriver driver) {
             super(driver, null);
@@ -67,7 +68,7 @@ public class ChinaDriver implements DetectorDriver, DetectorDiscoverySupport {
          * @param grabber собственный граббер для поиска.
          * @return Устройство.
          */
-        public List<DetectorDevice> getDevices(Jna2 grabber) {
+        public List<DetectorDevice> getDevices(Driver grabber) {
 
             this.grabber = grabber;
 
@@ -100,7 +101,7 @@ public class ChinaDriver implements DetectorDriver, DetectorDiscoverySupport {
     /**
      * Драйвер.
      */
-    private static Jna2 grabber = null;
+    private static Driver grabber = null;
 
     @Override
     public List<DetectorDevice> getDevices() {
@@ -115,7 +116,7 @@ public class ChinaDriver implements DetectorDriver, DetectorDiscoverySupport {
                 return Collections.emptyList();
             }
         }
-        LOG.debug("Found device");
+        LOG.debug("Founding devices");
         List<DetectorDevice> devices = new GetDevicesTask(this).getDevices(grabber);
         LOG.debug("Found device {}", Arrays.asList(devices));
         if (LOG.isDebugEnabled()) {

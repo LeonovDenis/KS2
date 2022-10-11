@@ -40,7 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.pelengator.API.*;
 import ru.pelengator.API.devises.china.ChinaDriver;
-import ru.pelengator.API.devises.china.ChinaDriverEth;
+import ru.pelengator.API.devises.china.ChinaDriverEthernet;
 import ru.pelengator.API.driver.FT_STATUS;
 import ru.pelengator.API.transformer.MyChinaGrayTramsformer;
 import ru.pelengator.API.transformer.MyChinaRgbImageTransformer;
@@ -403,6 +403,9 @@ public class Controller implements Initializable {
 
     private final DetectorImageTransformer imageTransformer = new MyChinaRgbImageTransformer();
 
+
+    private boolean  async=false;
+
     /**
      * Инициализация всего и вся.
      *
@@ -468,12 +471,14 @@ public class Controller implements Initializable {
                      * Регистрация драйвера детектора для USB 3.0.
                      */
                     Detector.setDriver(new ChinaDriver(params));
+                    async=false;
 
                 } else {
                     /**
                      * Регистрация драйвера детектора для ethernet.
                      */
-                    Detector.setDriver(new ChinaDriverEth(params));
+                    Detector.setDriver(new ChinaDriverEthernet(params));
+                    async=true;
                 }
 
                 /**
@@ -875,7 +880,7 @@ public class Controller implements Initializable {
     private void initPanel(int detectorIndex, double FPS) {
         selDetector = Detector.getDetectors().get(detectorIndex);
         viewSize = selDetector.getViewSize();
-        detectorPanel = new DetectorPanel(selDetector, viewSize, true);
+        detectorPanel = new DetectorPanel(selDetector, viewSize, true,async);
         detectorPanel.setImageTransformer(imageTransformer);
         detectorPanel.setPause(params.getPAUSE());
         snDetectorCapturedImage.setContent(detectorPanel);
