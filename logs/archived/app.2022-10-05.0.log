@@ -1,0 +1,8 @@
+2022-10-05 17:18:36,637 ERROR ru.pelengator.API.driver.usb.Jna2 [Atomic-processor-1] Writing error FT_TIMEOUT
+2022-10-05 17:18:36,640 ERROR ru.pelengator.API.driver.usb.Jna2 [Atomic-processor-1] Cant set ID in Power session
+2022-10-05 17:18:36,640 ERROR ru.pelengator.API.devises.china.ChinaDevice [JavaFX Application Thread] Error while setPower[true]: FT_BUSY
+2022-10-05 17:18:36,761 ERROR ru.pelengator.API.driver.usb.Jna2 [Atomic-processor-1] Hendler not valid
+2022-10-05 17:18:36,762 ERROR ru.pelengator.API.devises.china.ChinaDevice [Thread-9] Error while setDim[true]: FT_BUSY
+2022-10-05 17:18:59,378 ERROR ru.pelengator.API.driver.usb.Jna2 [Atomic-processor-1] Hendler not valid
+2022-10-05 17:18:59,380 ERROR ru.pelengator.API.devises.china.ChinaDevice [JavaFX Application Thread] Error while setPower[false]: FT_BUSY
+2022-10-05 17:18:59,457 ERROR ru.pelengator.API.driver.usb.Jna2 [Atomic-processor-1] Hendler not valid

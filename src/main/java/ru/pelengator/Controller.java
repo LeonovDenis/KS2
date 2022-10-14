@@ -21,6 +21,7 @@ import javafx.concurrent.Worker;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -58,7 +59,7 @@ import static ru.pelengator.API.transformer.comFilters.JHFlipFilter.*;
 import static ru.pelengator.API.utils.Utils.*;
 import static ru.pelengator.API.driver.ethernet.NetUtils.findInterfaces;
 
-public class Controller implements Initializable {
+public class Controller implements Initializable, DetectorDiscoveryListener {
     /**
      * Логгер.
      */
@@ -277,6 +278,11 @@ public class Controller implements Initializable {
     private ToggleButton tb_norm;
     @FXML
     private Label lb_online;
+
+    @FXML
+    private Button btnLookUp;
+
+
     /**
      * Пакет ресурсов.
      */
@@ -369,7 +375,8 @@ public class Controller implements Initializable {
     /**
      * Список для меню детекторов.
      */
-    private ObservableList<DetectorInfo> options;
+    private final ObservableList<DetectorInfo> options = FXCollections.observableArrayList();
+    ;
     /**
      * Список для меню экспериментов.
      */
@@ -404,7 +411,7 @@ public class Controller implements Initializable {
     private final DetectorImageTransformer imageTransformer = new MyChinaRgbImageTransformer();
 
 
-    private boolean  async=false;
+    private boolean async = false;
 
     /**
      * Инициализация всего и вся.
@@ -419,7 +426,9 @@ public class Controller implements Initializable {
 
         setAllAnotherButtons();//инициализация кнопок управления стендом
 
+        Detector.addDiscoveryListener(this);//добавка в слушатели
 
+        btnLookUp.setVisible(false);
         /**
          * Выключение интерфейса управления.
          */
@@ -471,14 +480,15 @@ public class Controller implements Initializable {
                      * Регистрация драйвера детектора для USB 3.0.
                      */
                     Detector.setDriver(new ChinaDriver(params));
-                    async=false;
+                    async = false;
 
                 } else {
                     /**
                      * Регистрация драйвера детектора для ethernet.
                      */
                     Detector.setDriver(new ChinaDriverEthernet(params));
-                    async=true;
+                    async = true;
+                    btnLookUp.setVisible(true);
                 }
 
                 /**
@@ -506,10 +516,13 @@ public class Controller implements Initializable {
          */
         cbDetectorOptions.getSelectionModel().selectedItemProperty().addListener((arg01, arg11, newValue) -> {
             if (newValue != null) {
-                LOG.trace("Detector Index: " + newValue.getDetectorIndex() + ": Detector Name: " + newValue.getDetectorName() + " choosed");
+                String detectorName = newValue.getDetectorName();
+                LOG.trace("Detector Index: " + newValue.getDetectorIndex() + ": Detector Name: " + detectorName + " choosed");
                 /**
                  * Передача индекса детектора в инициализатор.
                  */
+                saveDetIp(detectorName);
+                btnLookUp.setVisible(false);
                 initializeDetector(newValue.getDetectorIndex());
                 if (!myPane.isVisible()) {
                     myPane.setVisible(true);
@@ -621,7 +634,7 @@ public class Controller implements Initializable {
             }
             resetBTNS();
         });
-
+        btnLookUp.setOnAction(event -> Detector.getDiscoveryService().scan());
 
         Platform.runLater(() -> setImageViewSize());
         /**
@@ -629,6 +642,19 @@ public class Controller implements Initializable {
          */
         pb_exp.setVisible(false);
         lab_exp_status.setText("");
+    }
+
+    /**
+     * Запись ip выбранного детектора
+     *
+     * @param detectorName
+     */
+    private void saveDetIp(String detectorName) {
+        String[] strings = detectorName.split(" ");
+        boolean driverSelect = cbNetworkOptions.getSelectionModel().isSelected(0);
+        if (!driverSelect) {
+            params.setDetIP(strings[0]);
+        }
     }
 
     private void setAllAnotherButtons() {
@@ -728,23 +754,18 @@ public class Controller implements Initializable {
      * Скан детекторов и заполнение списка.
      */
     private void fillDetectors() {
-        detectorCounter = 0;
-        options = FXCollections.observableArrayList();
+
         /**
          * Заполнение списка детекторов.
          */
-        for (Detector detector : Detector.getDetectors()) {
-            DetectorInfo detectorInfo = new DetectorInfo();
-            detectorInfo.setDetectorIndex(detectorCounter);
-            detectorInfo.setDetectorName(detector.getName());
-            options.add(detectorInfo);
-            detectorCounter++;
-        }
+        Detector.getDetectors();
+
         /**
          * Установка списка в комбобокс.
          */
         cbDetectorOptions.setItems(options);
     }
+
 
     /**
      * Небольшая пауза.
@@ -880,7 +901,7 @@ public class Controller implements Initializable {
     private void initPanel(int detectorIndex, double FPS) {
         selDetector = Detector.getDetectors().get(detectorIndex);
         viewSize = selDetector.getViewSize();
-        detectorPanel = new DetectorPanel(selDetector, viewSize, true,async);
+        detectorPanel = new DetectorPanel(selDetector, viewSize, true, async);
         detectorPanel.setImageTransformer(imageTransformer);
         detectorPanel.setPause(params.getPAUSE());
         snDetectorCapturedImage.setContent(detectorPanel);
@@ -977,10 +998,8 @@ public class Controller implements Initializable {
                     try {
                         TimeUnit.SECONDS.sleep(1);
                         Platform.runLater(() -> {
-                            tfFPS.setText(detectorPanel.getStringFPS());
-
-                                lb_online.setVisible(!((DetectorDevice.ChinaSource) selDetector
-                                        .getDevice()).isOnline());
+                            lb_online.setVisible(!((DetectorDevice.ChinaSource) selDetector
+                                    .getDevice()).isOnline());
 
                         });
                     } catch (Exception e) {
@@ -1661,6 +1680,26 @@ public class Controller implements Initializable {
     protected void initializeNetwork(final int index) {
         selNetworkInterface = optionsNetwork.get(index);
         params.setSelNetworkInterface(selNetworkInterface);
+    }
+
+    @Override
+    public void detectorFound(DetectorDiscoveryEvent event) {
+
+        int size = options.size();
+        Detector detector = event.getDetector();
+        DetectorInfo detectorInfo = new DetectorInfo();
+        detectorInfo.setDetectorIndex(size);
+        detectorInfo.setDetectorName(detector.getName());
+
+        Platform.runLater(() -> options.add(detectorInfo));
+
+    }
+
+
+    @Override
+    public void detectorGone(DetectorDiscoveryEvent event) {
+        LOG.debug("Детектор ушел");
+
     }
 
 }

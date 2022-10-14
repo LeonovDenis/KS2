@@ -25,9 +25,6 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
-import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.pelengator.API.transformer.comFilters.JHFilter;
@@ -42,6 +39,7 @@ import static ru.pelengator.API.utils.Utils.*;
  * Простая реализация JPanel, позволяющая пользователям отображать изображения
  */
 public class DetectorPanel extends JPanel implements DetectorListener {
+
 
     /**
      * Это перечисление предназначено для управления тем, как изображение будет отображаться в границах панели.
@@ -1315,15 +1313,6 @@ public class DetectorPanel extends JPanel implements DetectorListener {
      */
     public void setAimHeight(int aimHeight) {
         this.aimHeight = aimHeight;
-    }
-
-    /**
-     * Получение строки со значением FPS.
-     *
-     * @return значение.
-     */
-    public String getStringFPS() {
-        return String.format("%.1f", detector.getFPS());
     }
 
     /**

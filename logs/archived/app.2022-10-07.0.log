@@ -1,0 +1,197 @@
+2022-10-07 11:24:49,724 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:25:00,213 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:25:11,105 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:25:21,481 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:25:32,969 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:25:43,345 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:25:54,027 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:26:04,378 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:26:14,728 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:26:25,221 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:26:35,572 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:26:45,949 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:26:56,300 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:27:06,687 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:27:17,046 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:27:27,468 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:27:37,820 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:27:48,170 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:27:58,536 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:28:08,887 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:28:19,238 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:28:29,594 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:28:40,157 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:28:50,612 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:29:01,010 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:29:11,434 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:29:21,852 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:29:26,379 ERROR ru.pelengator.API.DetectorExceptionHandler [Shutdown-hook-1] Exception in thread Shutdown-hook-1
+ru.pelengator.API.DetectorException: Cannot execute task
+	at ru.pelengator.API.DetectorProcessor$AtomicProcessor.process(DetectorProcessor.java:73)
+	at ru.pelengator.API.DetectorProcessor.process(DetectorProcessor.java:141)
+	at ru.pelengator.API.DetectorTask.process(DetectorTask.java:46)
+	at ru.pelengator.API.tasks.DetectorDisposeTask.dispose(DetectorDisposeTask.java:19)
+	at ru.pelengator.API.Detector.dispose(Detector.java:448)
+	at ru.pelengator.API.DetectorShutdownHook.run(DetectorShutdownHook.java:42)
+Caused by: java.lang.NullPointerException: Cannot invoke "at.favre.lib.bytes.Bytes.array()" because "data" is null
+	at ru.pelengator.API.driver.usb.Jna2.writePipe(Jna2.java:132)
+	at ru.pelengator.API.driver.ethernet.EthernetDriver.setPower(EthernetDriver.java:197)
+	at ru.pelengator.API.devises.china.ChinaDevice$SetPowerTask.handle(ChinaDevice.java:84)
+	at ru.pelengator.API.DetectorTask.process(DetectorTask.java:40)
+	at ru.pelengator.API.devises.china.ChinaDevice$SetPowerTask.setPower(ChinaDevice.java:75)
+	at ru.pelengator.API.devises.china.ChinaDevice.close(ChinaDevice.java:666)
+	at ru.pelengator.API.devises.china.ChinaDevice.dispose(ChinaDevice.java:682)
+	at ru.pelengator.API.tasks.DetectorDisposeTask.handle(DetectorDisposeTask.java:24)
+	at ru.pelengator.API.DetectorProcessor$AtomicProcessor.run(DetectorProcessor.java:82)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1130)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:630)
+	at java.base/java.lang.Thread.run(Thread.java:831)
+2022-10-07 11:30:04,697 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:30:15,049 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:30:25,400 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:30:35,753 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:30:46,209 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:30:56,561 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:31:06,912 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:31:17,264 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:31:27,615 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:31:37,970 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:31:48,322 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:31:58,680 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:32:09,429 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:32:19,781 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 11:55:47,662 ERROR ru.pelengator.API.driver.usb.Jna2 [Atomic-processor-1] Hendler not valid
+2022-10-07 12:04:27,296 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 12:05:18,103 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 12:08:23,705 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 12:09:11,823 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 12:09:26,641 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 12:12:11,891 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 12:12:41,165 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 12:12:51,517 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 12:13:15,336 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 12:13:25,689 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 12:13:36,094 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 12:13:46,466 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 12:13:56,817 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 12:14:07,166 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 12:14:17,515 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 12:16:13,388 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 12:18:31,203 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 12:18:41,556 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 12:18:51,907 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 12:19:02,258 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 12:19:12,796 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 12:19:23,146 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 12:19:33,496 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 12:19:43,847 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 12:19:54,280 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 12:21:03,583 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 13:19:06,187 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 14:01:40,791 ERROR ru.pelengator.API.driver.usb.Jna2 [Atomic-processor-1] Hendler not started inpower session
+2022-10-07 14:01:40,793 ERROR ru.pelengator.API.devises.china.ChinaDevice [JavaFX Application Thread] Error while setPower[true]: FT_EEPROM_NOT_PRESENT
+2022-10-07 14:01:40,907 ERROR ru.pelengator.API.driver.usb.Jna2 [Atomic-processor-1] Hendler not valid
+2022-10-07 14:01:40,907 ERROR ru.pelengator.API.devises.china.ChinaDevice [Thread-9] Error while setDim[true]: FT_BUSY
+2022-10-07 14:01:46,921 ERROR ru.pelengator.API.driver.usb.Jna2 [Atomic-processor-1] Hendler not valid
+2022-10-07 14:01:57,614 ERROR ru.pelengator.API.devises.china.ChinaDevice [Atomic-processor-1] Error in startSession null
+2022-10-07 14:02:08,106 ERROR ru.pelengator.API.DetectorUpdater [Detector-panel-scheduled-executor-1] Image has not been found for more than 10 seconds
+2022-10-07 14:02:17,372 ERROR ru.pelengator.API.DetectorExceptionHandler [Shutdown-hook-1] Exception in thread Shutdown-hook-1
+ru.pelengator.API.DetectorException: Cannot execute task
+	at ru.pelengator.API.DetectorProcessor$AtomicProcessor.process(DetectorProcessor.java:73)
+	at ru.pelengator.API.DetectorProcessor.process(DetectorProcessor.java:141)
+	at ru.pelengator.API.DetectorTask.process(DetectorTask.java:46)
+	at ru.pelengator.API.tasks.DetectorDisposeTask.dispose(DetectorDisposeTask.java:19)
+	at ru.pelengator.API.Detector.dispose(Detector.java:448)
+	at ru.pelengator.API.DetectorShutdownHook.run(DetectorShutdownHook.java:42)
+Caused by: java.lang.RuntimeException: java.net.BindException: Address already in use: bind
+	at ru.pelengator.API.driver.ethernet.EthernetDriver.create(EthernetDriver.java:61)
+	at ru.pelengator.API.driver.ethernet.EthernetDriver.setPower(EthernetDriver.java:209)
+	at ru.pelengator.API.devises.china.ChinaDevice$SetPowerTask.handle(ChinaDevice.java:85)
+	at ru.pelengator.API.DetectorTask.process(DetectorTask.java:40)
+	at ru.pelengator.API.devises.china.ChinaDevice$SetPowerTask.setPower(ChinaDevice.java:76)
+	at ru.pelengator.API.devises.china.ChinaDevice.close(ChinaDevice.java:668)
+	at ru.pelengator.API.devises.china.ChinaDevice.dispose(ChinaDevice.java:684)
+	at ru.pelengator.API.tasks.DetectorDisposeTask.handle(DetectorDisposeTask.java:24)
+	at ru.pelengator.API.DetectorProcessor$AtomicProcessor.run(DetectorProcessor.java:82)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1130)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:630)
+	at java.base/java.lang.Thread.run(Thread.java:831)
+Caused by: java.net.BindException: Address already in use: bind
+	at java.base/sun.nio.ch.Net.bind0(Native Method)
+	at java.base/sun.nio.ch.Net.bind(Net.java:552)
+	at java.base/sun.nio.ch.DatagramChannelImpl.bindInternal(DatagramChannelImpl.java:1189)
+	at java.base/sun.nio.ch.DatagramChannelImpl.bind(DatagramChannelImpl.java:1160)
+	at java.base/sun.nio.ch.DatagramSocketAdaptor.bind(DatagramSocketAdaptor.java:107)
+	at java.base/java.net.DatagramSocket.createDelegate(DatagramSocket.java:1127)
+	at java.base/java.net.DatagramSocket.<init>(DatagramSocket.java:197)
+	at java.base/java.net.DatagramSocket.<init>(DatagramSocket.java:256)
+	at ru.pelengator.API.driver.ethernet.UDPInputStream.open(UDPInputStream.java:40)
+	at ru.pelengator.API.driver.ethernet.UDPInputStream.<init>(UDPInputStream.java:33)
+	at ru.pelengator.API.driver.ethernet.EthernetDriver.create(EthernetDriver.java:57)
+	... 11 common frames omitted
+2022-10-07 14:12:06,731 ERROR ru.pelengator.API.devises.china.ChinaDevice [Atomic-processor-1] Error in startSession null
+2022-10-07 14:12:14,592 ERROR ru.pelengator.API.DetectorExceptionHandler [Shutdown-hook-1] Exception in thread Shutdown-hook-1
+ru.pelengator.API.DetectorException: Cannot execute task
+	at ru.pelengator.API.DetectorProcessor$AtomicProcessor.process(DetectorProcessor.java:73)
+	at ru.pelengator.API.DetectorProcessor.process(DetectorProcessor.java:141)
+	at ru.pelengator.API.DetectorTask.process(DetectorTask.java:46)
+	at ru.pelengator.API.tasks.DetectorDisposeTask.dispose(DetectorDisposeTask.java:19)
+	at ru.pelengator.API.Detector.dispose(Detector.java:448)
+	at ru.pelengator.API.DetectorShutdownHook.run(DetectorShutdownHook.java:42)
+Caused by: java.lang.NullPointerException: Cannot invoke "java.util.concurrent.atomic.AtomicBoolean.compareAndSet(boolean, boolean)" because "ru.pelengator.API.driver.ethernet.EthernetDriver.isOpened" is null
+	at ru.pelengator.API.driver.ethernet.EthernetDriver.create(EthernetDriver.java:62)
+	at ru.pelengator.API.driver.ethernet.EthernetDriver.setPower(EthernetDriver.java:211)
+	at ru.pelengator.API.devises.china.ChinaDevice$SetPowerTask.handle(ChinaDevice.java:85)
+	at ru.pelengator.API.DetectorTask.process(DetectorTask.java:40)
+	at ru.pelengator.API.devises.china.ChinaDevice$SetPowerTask.setPower(ChinaDevice.java:76)
+	at ru.pelengator.API.devises.china.ChinaDevice.close(ChinaDevice.java:668)
+	at ru.pelengator.API.devises.china.ChinaDevice.dispose(ChinaDevice.java:684)
+	at ru.pelengator.API.tasks.DetectorDisposeTask.handle(DetectorDisposeTask.java:24)
+	at ru.pelengator.API.DetectorProcessor$AtomicProcessor.run(DetectorProcessor.java:82)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1130)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:630)
+	at java.base/java.lang.Thread.run(Thread.java:831)
+2022-10-07 14:13:39,593 ERROR ru.pelengator.API.devises.china.ChinaDevice [Atomic-processor-1] Error in startSession null
+2022-10-07 14:13:42,150 ERROR ru.pelengator.API.DetectorExceptionHandler [Shutdown-hook-1] Exception in thread Shutdown-hook-1
+ru.pelengator.API.DetectorException: Cannot execute task
+	at ru.pelengator.API.DetectorProcessor$AtomicProcessor.process(DetectorProcessor.java:73)
+	at ru.pelengator.API.DetectorProcessor.process(DetectorProcessor.java:141)
+	at ru.pelengator.API.DetectorTask.process(DetectorTask.java:46)
+	at ru.pelengator.API.tasks.DetectorDisposeTask.dispose(DetectorDisposeTask.java:19)
+	at ru.pelengator.API.Detector.dispose(Detector.java:448)
+	at ru.pelengator.API.DetectorShutdownHook.run(DetectorShutdownHook.java:42)
+Caused by: java.lang.NullPointerException: Cannot invoke "java.util.concurrent.atomic.AtomicBoolean.compareAndSet(boolean, boolean)" because "ru.pelengator.API.driver.ethernet.EthernetDriver.isOpened" is null
+	at ru.pelengator.API.driver.ethernet.EthernetDriver.create(EthernetDriver.java:61)
+	at ru.pelengator.API.driver.ethernet.EthernetDriver.setPower(EthernetDriver.java:210)
+	at ru.pelengator.API.devises.china.ChinaDevice$SetPowerTask.handle(ChinaDevice.java:85)
+	at ru.pelengator.API.DetectorTask.process(DetectorTask.java:40)
+	at ru.pelengator.API.devises.china.ChinaDevice$SetPowerTask.setPower(ChinaDevice.java:76)
+	at ru.pelengator.API.devises.china.ChinaDevice.close(ChinaDevice.java:668)
+	at ru.pelengator.API.devises.china.ChinaDevice.dispose(ChinaDevice.java:684)
+	at ru.pelengator.API.tasks.DetectorDisposeTask.handle(DetectorDisposeTask.java:24)
+	at ru.pelengator.API.DetectorProcessor$AtomicProcessor.run(DetectorProcessor.java:82)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1130)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:630)
+	at java.base/java.lang.Thread.run(Thread.java:831)
+2022-10-07 14:14:23,435 ERROR ru.pelengator.API.devises.china.ChinaDevice [Atomic-processor-1] Error in startSession null
+2022-10-07 14:14:30,598 ERROR ru.pelengator.API.DetectorExceptionHandler [Shutdown-hook-1] Exception in thread Shutdown-hook-1
+ru.pelengator.API.DetectorException: Cannot execute task
+	at ru.pelengator.API.DetectorProcessor$AtomicProcessor.process(DetectorProcessor.java:73)
+	at ru.pelengator.API.DetectorProcessor.process(DetectorProcessor.java:141)
+	at ru.pelengator.API.DetectorTask.process(DetectorTask.java:46)
+	at ru.pelengator.API.tasks.DetectorDisposeTask.dispose(DetectorDisposeTask.java:19)
+	at ru.pelengator.API.Detector.dispose(Detector.java:448)
+	at ru.pelengator.API.DetectorShutdownHook.run(DetectorShutdownHook.java:42)
+Caused by: java.lang.NullPointerException: Cannot invoke "java.util.concurrent.atomic.AtomicBoolean.compareAndSet(boolean, boolean)" because "ru.pelengator.API.driver.ethernet.EthernetDriver.isOpened" is null
+	at ru.pelengator.API.driver.ethernet.EthernetDriver.create(EthernetDriver.java:61)
+	at ru.pelengator.API.driver.ethernet.EthernetDriver.setPower(EthernetDriver.java:210)
+	at ru.pelengator.API.devises.china.ChinaDevice$SetPowerTask.handle(ChinaDevice.java:85)
+	at ru.pelengator.API.DetectorTask.process(DetectorTask.java:40)
+	at ru.pelengator.API.devises.china.ChinaDevice$SetPowerTask.setPower(ChinaDevice.java:76)
+	at ru.pelengator.API.devises.china.ChinaDevice.close(ChinaDevice.java:668)
+	at ru.pelengator.API.devises.china.ChinaDevice.dispose(ChinaDevice.java:684)
+	at ru.pelengator.API.tasks.DetectorDisposeTask.handle(DetectorDisposeTask.java:24)
+	at ru.pelengator.API.DetectorProcessor$AtomicProcessor.run(DetectorProcessor.java:82)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1130)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:630)
+	at java.base/java.lang.Thread.run(Thread.java:831)

@@ -27,11 +27,20 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane minHeight="500.0" minWidth="760.0" style="-fx-background-color: #ccc;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.pelengator.Controller">
+<BorderPane minHeight="500.0" minWidth="760.0" style="-fx-background-color: #ccc;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.pelengator.Controller">
     <center>
         <BorderPane fx:id="bpDetectorPaneHolder" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #ccc;" BorderPane.alignment="CENTER">
          <center>
-            <SwingNode fx:id="snDetectorCapturedImage" BorderPane.alignment="CENTER" />
+            <StackPane BorderPane.alignment="CENTER">
+               <children>
+                  <SwingNode fx:id="snDetectorCapturedImage" />
+                  <Button fx:id="btnLookUp" mnemonicParsing="false" text="Поиск устройств">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Button>
+               </children>
+            </StackPane>
          </center>
          <BorderPane.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -423,7 +432,6 @@
                                           <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" vgrow="SOMETIMES" />
                                           <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" vgrow="SOMETIMES" />
                                           <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" vgrow="SOMETIMES" />
-                                          <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" vgrow="SOMETIMES" />
                                        </rowConstraints>
                                        <children>
                                           <TextField fx:id="tfSpeedPlata" layoutX="164.0" layoutY="423.0" onAction="#setPauseOnPlate" promptText="50" text="50" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1">
@@ -431,20 +439,7 @@
                                                 <Insets left="5.0" right="5.0" />
                                              </GridPane.margin>
                                           </TextField>
-                                          <TextField fx:id="tfFPS" disable="true" editable="false" layoutX="159.0" layoutY="523.0" text="---" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2">
-                                             <GridPane.margin>
-                                                <Insets left="5.0" right="5.0" />
-                                             </GridPane.margin>
-                                          </TextField>
                                           <Label text="Пауза опроса, мс" GridPane.rowIndex="1">
-                                             <font>
-                                                <Font size="13.0" />
-                                             </font>
-                                             <GridPane.margin>
-                                                <Insets left="5.0" right="5.0" />
-                                             </GridPane.margin>
-                                          </Label>
-                                          <Label text="Текущий FPS" GridPane.rowIndex="2">
                                              <font>
                                                 <Font size="13.0" />
                                              </font>
@@ -467,34 +462,34 @@
                                                 <Insets left="5.0" right="5.0" />
                                              </GridPane.margin>
                                           </TextField>
-                                          <ToggleButton fx:id="tb_fit" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" selected="true" text="FIT" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-                                          <ToggleButton fx:id="tb_fill" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="FILL" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                                          <ToggleButton fx:id="tb_fit" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" selected="true" text="FIT" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                                          <ToggleButton fx:id="tb_fill" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="FILL" GridPane.columnIndex="2" GridPane.rowIndex="2">
                                              <GridPane.margin>
                                                 <Insets left="2.0" right="2.0" />
                                              </GridPane.margin></ToggleButton>
-                                          <ToggleButton fx:id="tb_none" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="NONE" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                          <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Режим рисования" GridPane.rowIndex="3">
+                                          <ToggleButton fx:id="tb_none" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="NONE" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                          <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Режим рисования" GridPane.rowIndex="2">
                                              <GridPane.margin>
                                                 <Insets left="5.0" />
                                              </GridPane.margin>
                                           </Label>
-                                          <ToggleButton fx:id="tb_mirror" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Mirror" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                                          <ToggleButton fx:id="tb_mirror" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Mirror" GridPane.columnIndex="2" GridPane.rowIndex="3">
                                              <GridPane.margin>
                                                 <Insets left="2.0" right="2.0" />
                                              </GridPane.margin></ToggleButton>
-                                          <ToggleButton fx:id="tb_debug" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Debug" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-                                          <ToggleButton fx:id="tb_antialising" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" selected="true" text="A.alias" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                                          <ChoiceBox fx:id="cb_flip" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.rowIndex="4">
+                                          <ToggleButton fx:id="tb_debug" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Debug" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                                          <ToggleButton fx:id="tb_antialising" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" selected="true" text="A.alias" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                          <ChoiceBox fx:id="cb_flip" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.rowIndex="3">
                                              <GridPane.margin>
                                                 <Insets right="2.0" />
                                              </GridPane.margin></ChoiceBox>
-                                          <ToggleButton fx:id="tb_rgb" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" selected="true" text="RGB" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                                          <ToggleButton fx:id="tb_gray" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Gray" GridPane.columnIndex="2" GridPane.rowIndex="5">
+                                          <ToggleButton fx:id="tb_rgb" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" selected="true" text="RGB" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                          <ToggleButton fx:id="tb_gray" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Gray" GridPane.columnIndex="2" GridPane.rowIndex="4">
                                              <GridPane.margin>
                                                 <Insets left="2.0" right="2.0" />
                                              </GridPane.margin>
                                           </ToggleButton>
-                                          <ToggleButton fx:id="tb_norm" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Normal" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+                                          <ToggleButton fx:id="tb_norm" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Normal" GridPane.columnIndex="3" GridPane.rowIndex="4" />
                                        </children>
                                     </GridPane>
                                  </children>

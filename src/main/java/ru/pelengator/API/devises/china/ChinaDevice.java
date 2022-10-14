@@ -806,5 +806,16 @@ public class ChinaDevice implements DetectorDevice, DetectorDevice.ChinaSource {
         return grabber.isOnline();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChinaDevice that = (ChinaDevice) o;
+        return fullname.equals(that.fullname);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(fullname);
+    }
 }

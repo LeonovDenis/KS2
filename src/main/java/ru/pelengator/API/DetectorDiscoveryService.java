@@ -292,8 +292,8 @@ public class DetectorDiscoveryService implements Runnable{
         }
     }
 
-    private static void notifyDetectorFound(Detector webcam, DetectorDiscoveryListener[] listeners) {
-        DetectorDiscoveryEvent event = new DetectorDiscoveryEvent(webcam, DetectorDiscoveryEvent.ADDED);
+    private static void notifyDetectorFound(Detector detector, DetectorDiscoveryListener[] listeners) {
+        DetectorDiscoveryEvent event = new DetectorDiscoveryEvent(detector, DetectorDiscoveryEvent.ADDED);
         for (DetectorDiscoveryListener l : listeners) {
             try {
                 l.detectorFound(event);
@@ -369,8 +369,8 @@ public class DetectorDiscoveryService implements Runnable{
 
     /**
      * Служба обнаружения детектора будет запущена автоматически, если она включена,
-     * в противном случае, если установлено значение disabled, он никогда не запустится, даже если пользователь попытается
-     * чтобы запустить его.
+     * в противном случае, если установлено значение disabled, она никогда не запустится, даже если пользователь попытается
+     * её запустить.
      *
      * @param enabled параметр, управляющий запуском обнаружения
      */

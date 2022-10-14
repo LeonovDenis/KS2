@@ -1,12 +1,24 @@
 package ru.pelengator.service;
 
+import javafx.application.Platform;
+import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.Node;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.Chart;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import org.apache.pdfbox.cos.COSArray;
 import org.apache.pdfbox.cos.COSDictionary;
 import org.apache.pdfbox.cos.COSName;
+import org.apache.pdfbox.multipdf.PDFCloneUtility;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.PDResources;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
 import org.apache.pdfbox.pdmodel.interactive.form.PDField;
@@ -16,15 +28,23 @@ import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.pelengator.API.utils.ImageUtils;
+import ru.pelengator.API.utils.Utils;
+import ru.pelengator.App;
 import ru.pelengator.model.ExpInfo;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static ru.pelengator.API.utils.Utils.bpInCentral;
+import static ru.pelengator.API.utils.Utils.separator;
 import static ru.pelengator.App.loadFilePath;
 
 /**
@@ -41,12 +61,17 @@ public class DocMaker {
     PDResources pDResources;
     String fileName = "protokol.pdf";
     File pdfFile;
+    Node src;
+    ExpInfo exp;
 
-    public DocMaker(ExpInfo exp, File pdfFile) {
+    public DocMaker(ExpInfo exp, Node src, File pdfFile) {
 
         map = createList(exp);
         this.pdfFile = pdfFile;
+        this.src = src;
+        this.exp = exp;
     }
+
 
     /**
      * Набивка полей.
@@ -366,5 +391,195 @@ public class DocMaker {
         COSDictionary fieldDict = field.getCOSObject();
         COSArray fieldAreaArray = (COSArray) fieldDict.getDictionaryObject(COSName.RECT);
         return new PDRectangle(fieldAreaArray);
+    }
+
+    public boolean saveImages() {
+        PDDocument pDDocument = null;
+        LOG.trace("Startsaving parse images to PDF file");
+        try {
+            pDDocument = PDDocument.load(pdfFile);
+            PDDocument finalPDDocument = pDDocument;
+            ArrayList<PDImageXObject> list = new ArrayList<>();
+            AtomicBoolean flag = new AtomicBoolean(false);
+            Platform.runLater(() -> {
+                try {
+                    VBox vbox = (VBox) src;
+                    ObservableList<Node> children = vbox.getChildren();
+                    Node[] nodes = children.toArray(new Node[0]);
+                    for (int i = 0; i < nodes.length; i = i + 3) {
+                        BufferedImage bufImage;
+                        if (nodes[i] instanceof HBox) {
+                            HBox node = (HBox) nodes[i];
+                            Node chartNode = node.getChildren().get(0);
+                            if (chartNode instanceof Chart) {
+                                BarChart<String, Number> bar_chart = (BarChart<String, Number>) chartNode;
+                                bar_chart.getStylesheets().add(this.getClass().getResource("chart.css").toExternalForm());
+                                bufImage = SwingFXUtils.fromFXImage(nodes[i].snapshot(null, null), null);
+                                bar_chart.getStylesheets().clear();
+                            } else {
+                                bufImage = SwingFXUtils.fromFXImage(nodes[i].snapshot(null, null), null);
+                            }
+                        } else {
+                            bufImage = SwingFXUtils.fromFXImage(nodes[i].snapshot(null, null), null);
+                        }
+
+                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                        try {
+                            ImageIO.write(bufImage, ImageUtils.FORMAT_PNG, bos);
+                            bos.flush();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        PDImageXObject pdImage = null;
+                        pdImage = PDImageXObject.createFromByteArray(finalPDDocument, bos.toByteArray(),
+                                nodes[i].getId());
+                        list.add(pdImage);
+                        bos.close();
+                    }
+                } catch (IOException e) {
+                    LOG.error("ERROR {}", e.getCause());
+                } finally {
+                    flag.set(true);
+                }
+            });
+            while (!flag.get()) {
+                TimeUnit.MILLISECONDS.sleep(500);
+            }
+
+            for (BufferedImage bi :
+                    exp.getScList()) {
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                try {
+                    ImageIO.write(bi, ImageUtils.FORMAT_PNG, bos);
+                    bos.flush();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                PDImageXObject pdImage = null;
+                pdImage = PDImageXObject.createFromByteArray(finalPDDocument, bos.toByteArray(),
+                        "");
+                list.add(pdImage);
+                bos.close();
+            }
+
+            int listSize = list.size();
+            float x = 30;
+            float y = 0;
+            float k = 0;
+            PDPage tempPage = pDDocument.getPage(3);
+            for (int i = 0; i < listSize / 2; i++) {
+                //   if (i % 2 == 0) {
+                PDFCloneUtility cloner = new PDFCloneUtility(pDDocument);
+                COSDictionary pageDictionary = (COSDictionary) cloner.cloneForNewDocument(tempPage);
+                PDPage page2 = new PDPage(pageDictionary);
+                pDDocument.addPage(page2);
+                y = page2.getMediaBox().getHeight() - 150;
+                k = page2.getMediaBox().getWidth();
+                //   }
+
+                PDImageXObject img = list.get(i);
+                float height = img.getHeight();
+                float width = img.getWidth();
+                try (PDPageContentStream contentStream = new PDPageContentStream(pDDocument,
+                        pDDocument.getPage(pDDocument.getNumberOfPages() - 1),
+                        PDPageContentStream.AppendMode.APPEND, true)) {
+                    contentStream.drawImage(img, (k - width) / 2, y - height, width, height);
+                }
+                y = y - height;
+
+                PDImageXObject img2 = list.get(i + listSize / 2);
+                height = img2.getHeight();
+                width = img2.getWidth();
+                try (PDPageContentStream contentStream = new PDPageContentStream(pDDocument,
+                        pDDocument.getPage(pDDocument.getNumberOfPages() - 1),
+                        PDPageContentStream.AppendMode.APPEND, true)) {
+                    contentStream.drawImage(img2, (k - width) / 2, y - height, width, height);
+                }
+
+            }
+            if (listSize % 2 == 1) {
+                //Итоговая страница 4
+                PDPage page = pDDocument.getPage(3);
+                y = page.getMediaBox().getHeight() - 150;
+                k = page.getMediaBox().getWidth();
+                //   }
+
+                float height = 100;
+                float width = 100;
+                try (PDPageContentStream contentStream = new PDPageContentStream(pDDocument,
+                        pDDocument.getPage(3),
+                        PDPageContentStream.AppendMode.APPEND, true)) {
+                    contentStream.beginText();
+
+                    PDFont font = PDType0Font.load(pDDocument,
+                            this.getClass().getResourceAsStream("ARIALUNI.TTF"));
+                    contentStream.setFont(font, 12);
+                    contentStream.setLeading(14.5f);
+                    contentStream.newLineAtOffset(150, 680);
+                    String text1 = "Дефектные элементы по всем выбранным параметрам";
+                    contentStream.showText(text1);
+                    contentStream.newLineAtOffset(20, -15);
+                    contentStream.setFont(font, 10);
+                    String text2 = "Всего дефектных элементов в центральной зоне 32*32 px: " + exp.getBpInCenter();
+                    contentStream.showText(text2);
+                    contentStream.newLine();
+
+                    String text3 = String.format("Всего дефектных элементов в зоне %d*%d px: %d",
+                            exp.getSizeX(), exp.getSizeY(), exp.getBpAll());
+                    contentStream.showText(text3);
+
+                    byte[] bytes = exp.getBuffToTXT();
+
+                    try (BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(bytes)));) {
+                        float h = 10.5f;
+                        contentStream.setLeading(h);
+
+                        contentStream.setFont(font, 8);
+                        contentStream.newLineAtOffset(-90, -350);
+                        String line;
+                        int count = 0;
+                        for (int i = 0; i < 2; i++) {
+
+                            while ((line = br.readLine()) != null && (count++) < 50) {
+                                contentStream.newLine();
+                                contentStream.showText(line);
+                                if ((count) > 24 && i == 0) {
+                                    break;
+                                }
+                            }
+                            contentStream.newLineAtOffset(260, h * 25);
+                        }
+
+                    } catch (Exception e) {
+                        LOG.error("Error while printing list pdf");
+                    }
+
+                    contentStream.endText();
+                }
+
+                y = 320;
+                PDImageXObject img = list.get(listSize - 1);
+                height = img.getHeight();
+                width = img.getWidth();
+                try (PDPageContentStream contentStream = new PDPageContentStream(pDDocument,
+                        pDDocument.getPage(3),
+                        PDPageContentStream.AppendMode.APPEND, true)) {
+                    contentStream.drawImage(img, (k - width) / 2, y, width, height);
+
+                }
+            } else {
+
+                pDDocument.removePage(3);
+            }
+            pDDocument.save(pdfFile);
+            pDDocument.close();
+
+        } catch (
+                Exception e) {
+            LOG.error("Exeption in images {}", e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 }

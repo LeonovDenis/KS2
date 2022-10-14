@@ -479,20 +479,10 @@
                         <Insets bottom="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </ToolBar>
-                  <Label fx:id="lbIP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="IP адрес блока" underline="true" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="11">
-                     <GridPane.margin>
-                        <Insets left="5.0" />
-                     </GridPane.margin>
-                  </Label>
                   <Label fx:id="lbPorts" layoutX="20.0" layoutY="401.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Порты: ком./видео" underline="true" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="13">
                      <GridPane.margin>
                         <Insets left="5.0" />
                      </GridPane.margin></Label>
-                  <TextField fx:id="tfBlockIP" onAction="#setIP" prefHeight="25.0" prefWidth="105.0" text="192.168.127.127" GridPane.columnIndex="2" GridPane.rowIndex="11">
-                     <GridPane.margin>
-                        <Insets bottom="5.0" right="5.0" top="5.0" />
-                     </GridPane.margin>
-                  </TextField>
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0" GridPane.columnIndex="2" GridPane.rowIndex="13">
                      <children>
                         <TextField fx:id="tfComPort" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#setComPort" text="2525" />

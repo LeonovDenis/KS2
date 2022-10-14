@@ -92,4 +92,12 @@ public class NetworkInfo {
             return fullName ;
         }
     }
+
+    public InetAddress getBroadcast() {
+        return broadcast;
+    }
+
+    public InetAddress getAddress() {
+        return address;
+    }
 }

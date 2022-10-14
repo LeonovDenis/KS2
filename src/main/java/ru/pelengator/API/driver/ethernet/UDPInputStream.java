@@ -15,6 +15,8 @@ public class UDPInputStream extends InputStream {
     private static final int PACKET_BUFFER_SIZE = 5000;
     private int SO_TIME_OUT = 0;
 
+    private InetAddress clientIP;
+    private int clientPort;
     DatagramSocket dsock = null;
     DatagramPacket dpack = null;
 
@@ -156,6 +158,8 @@ public class UDPInputStream extends InputStream {
         dsock.receive(dpack);
         packIdx = 0;
         packSize = dpack.getLength();
+        this.clientIP = dpack.getAddress();
+        this.clientPort = dpack.getPort();
     }
 
     /********* marking and reseting are unsupported ********/
@@ -170,4 +174,11 @@ public class UDPInputStream extends InputStream {
         return false;
     }
 
+    public InetAddress getClientIP() {
+        return clientIP;
+    }
+
+    public int getClientPort() {
+        return clientPort;
+    }
 }

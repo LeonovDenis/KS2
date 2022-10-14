@@ -235,13 +235,9 @@ public class PotokController implements Initializable {
     @FXML
     private Label tx6;
     @FXML
-    private TextField tfBlockIP;
-    @FXML
     private TextField tfComPort;
     @FXML
     private TextField tfVideoPort;
-    @FXML
-    private Label lbIP;
     @FXML
     private Label lbPorts;
     @FXML
@@ -310,10 +306,8 @@ public class PotokController implements Initializable {
      */
     private void showEthernet() {
         ArrayList<Parent> controls = new ArrayList<>();
-        controls.add(tfBlockIP);
         controls.add(tfComPort);
         controls.add(tfVideoPort);
-        controls.add(lbIP);
         controls.add(lbPorts);
         controls.add(lbSlath);
         String netName = mainController.getParams().getSelNetworkInterface().getName();
@@ -387,7 +381,6 @@ public class PotokController implements Initializable {
         tbExel.selectedProperty().bindBidirectional(controller.getParams().tbExelProperty());
         tbTxt.selectedProperty().bindBidirectional(controller.getParams().tbTxtProperty());
         tbPdf.selectedProperty().bindBidirectional(controller.getParams().tbPdfProperty());
-        tfBlockIP.setText(controller.getParams().getDetIP());
         tfComPort.setText(String.valueOf(controller.getParams().getDetPortCommand()));
         tfVideoPort.setText(String.valueOf(controller.getParams().getDetPortVideo()));
         tfFrameCount.setText(String.valueOf(controller.getParams().getCountFrames()));
@@ -628,7 +621,6 @@ public class PotokController implements Initializable {
      *
      * @param event
      */
-    @FXML
     private void setIP(ActionEvent event) {
         TextField source = (TextField) event.getSource();
         String text = source.getText().trim();

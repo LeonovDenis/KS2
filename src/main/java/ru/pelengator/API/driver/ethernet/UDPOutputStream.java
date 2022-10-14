@@ -213,4 +213,8 @@ public class UDPOutputStream extends OutputStream {
             buffer = new byte[1];
         }
     }
+
+    public void setiAdd(InetAddress iAdd) {
+        this.iAdd = iAdd;
+    }
 }

@@ -422,7 +422,7 @@ public class Jna2 implements Driver {
      *
      * @return
      */
-    public FT_STATUS setID() {
+        public FT_STATUS setID() {
 
         if (!validHendler.get()) {
             LOG.error("Hendler not valid");

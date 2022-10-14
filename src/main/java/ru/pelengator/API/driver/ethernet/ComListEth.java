@@ -3,44 +3,55 @@ package ru.pelengator.API.driver.ethernet;
 import at.favre.lib.bytes.Bytes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.pelengator.API.DetectorDevice;
+import ru.pelengator.API.devises.china.ChinaDevice;
 import ru.pelengator.API.driver.FT_STATUS;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.net.InetAddress;
+import java.util.*;
 
 public class ComListEth {
     /**
      * Логгер.
      */
     private static final Logger LOG = LoggerFactory.getLogger(ComListEth.class);
-
+    private InetAddress myIp;
+    private InetAddress broadcastIp;
     private EthernetDriver grabber;
 
-    public ComListEth(EthernetDriver grabber) {
+    public ComListEth(EthernetDriver grabber, InetAddress myIp, InetAddress broadcastIp) {
         this.grabber = grabber;
+        this.myIp = myIp;
+        this.broadcastIp = broadcastIp;
+
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////методы управления
-    byte DEV_ID = 0x05;
-    Bytes COM_HEADER = Bytes.from((byte) 0xA1, DEV_ID);
-    byte[] VIDEO_HEADER = new byte[]{(byte) 0xA2, DEV_ID};
-    byte WRITE = 0x01;
+    private final byte DEV_ID = 0x05;
+    private final Bytes COM_HEADER = Bytes.from((byte) 0xA1, DEV_ID);
+    private final byte[] VIDEO_HEADER = new byte[]{(byte) 0xA2, DEV_ID};
 
+    //команды
+    private final byte COM_WHO_IS_THERE = (byte) 0x00;
+    private final byte COM_WRITE = (byte) 0x01;
+    private final byte COM_READ = (byte) 0x02;
+    private final byte COM_BLK_WRITE = (byte) 0x03;
+    private final byte COM_BLK_READ = (byte) 0x04;
 
-    byte WHO_IS_THERE = (byte) 0x00;
-    byte ID = (byte) 0x01;
-    byte POWER = (byte) 0x02;
-    byte INT = (byte) 0x03;
-    byte VR0 = (byte) 0x04;
-    byte REF = (byte) 0x05;
-    byte VOS = (byte) 0x06;
-    byte CCC = (byte) 0x07;
-    byte DIM = (byte) 0x08;
+    //Функции
+    private final byte FUNC_WHO_IS_THERE = (byte) 0x00;
+    private final byte FUNC_ID = (byte) 0x01;
+    private final byte FUNC_POWER = (byte) 0x02;
+    private final byte FUNC_INT = (byte) 0x03;
+    private final byte FUNC_VR0 = (byte) 0x04;
+    private final byte FUNC_REF = (byte) 0x05;
+    private final byte FUNC_VOS = (byte) 0x06;
+    private final byte FUNC_CCC = (byte) 0x07;
+    private final byte FUNC_DIM = (byte) 0x08;
 
 
     /**
@@ -57,8 +68,8 @@ public class ComListEth {
             data = (byte) 0x00;//92*90
         }
         Bytes msg = COM_HEADER          //маска+ID
-                .append(WRITE)          //команда
-                .append(DIM)            //функция
+                .append(COM_WRITE)          //команда
+                .append(FUNC_DIM)            //функция
                 .append(1)              //размер данных
                 .append(data);          //данные
         grabber.sendMSG(msg.array());
@@ -80,8 +91,8 @@ public class ComListEth {
             data = (byte) 0x00;//1
         }
         Bytes msg = COM_HEADER          //маска+ID
-                .append(WRITE)          //команда
-                .append(CCC)            //функция
+                .append(COM_WRITE)          //команда
+                .append(FUNC_CCC)            //функция
                 .append(1)              //размер данных
                 .append(data);          //данные
         grabber.sendMSG(msg.array());
@@ -104,8 +115,8 @@ public class ComListEth {
             data = (byte) 0x00;//off
         }
         Bytes msg = COM_HEADER          //маска+ID
-                .append(WRITE)          //команда
-                .append(POWER)          //функция
+                .append(COM_WRITE)          //команда
+                .append(FUNC_POWER)          //функция
                 .append(1)              //размер данных
                 .append(data);          //данные
         grabber.sendMSG(msg.array());
@@ -122,8 +133,8 @@ public class ComListEth {
     public FT_STATUS setIntTime(int time) {
 
         Bytes msg = COM_HEADER          //маска+ID
-                .append(WRITE)          //команда
-                .append(INT)            //функция
+                .append(COM_WRITE)          //команда
+                .append(FUNC_INT)            //функция
                 .append(4)              //размер данных
                 .append(time);          //данные
         grabber.sendMSG(msg.array());
@@ -140,8 +151,8 @@ public class ComListEth {
     public FT_STATUS setVR0(int value) {
 
         Bytes msg = COM_HEADER          //маска+ID
-                .append(WRITE)          //команда
-                .append(VR0)            //функция
+                .append(COM_WRITE)          //команда
+                .append(FUNC_VR0)            //функция
                 .append(4)              //размер данных
                 .append(value);         //данные
         grabber.sendMSG(msg.array());
@@ -158,8 +169,8 @@ public class ComListEth {
     public FT_STATUS setVVA(int value) {
 
         Bytes msg = COM_HEADER          //маска+ID
-                .append(WRITE)          //команда
-                .append(VOS)            //функция
+                .append(COM_WRITE)          //команда
+                .append(FUNC_VOS)            //функция
                 .append(4)              //размер данных
                 .append(value);         //данные
         grabber.sendMSG(msg.array());
@@ -176,8 +187,8 @@ public class ComListEth {
     public FT_STATUS setREF(int value) {
 
         Bytes msg = COM_HEADER          //маска+ID
-                .append(WRITE)          //команда
-                .append(REF)            //функция
+                .append(COM_WRITE)          //команда
+                .append(FUNC_REF)            //функция
                 .append(4)              //размер данных
                 .append(value);         //данные
         grabber.sendMSG(msg.array());
@@ -193,14 +204,32 @@ public class ComListEth {
     public FT_STATUS setID() {
 
         Bytes msg = COM_HEADER          //маска+ID
-                .append(WRITE)          //команда
-                .append(ID)             //функция
+                .append(COM_WRITE)          //команда
+                .append(FUNC_ID)             //функция
                 .append(1)              //размер данных
                 .append(DEV_ID);        //данные
         grabber.sendMSG(msg.array());
 
         return FT_STATUS.FT_OK;
     }
+
+    private Set<DetectorDevice> devices;
+
+    /**
+     * Поиск устройств в сети с переданным ID.
+     *
+     * @return
+     */
+    public FT_STATUS whoIsThere(Set<DetectorDevice> devices) {
+        this.devices =devices;
+        Bytes msg = COM_HEADER          //маска+ID
+                .append(COM_WHO_IS_THERE)   //команда
+                .append(FUNC_WHO_IS_THERE);    //функция
+        grabber.sendMSG(msg.array(), broadcastIp, true);
+
+        return FT_STATUS.FT_OK;
+    }
+
 
     /**
      * Видео лист
@@ -235,7 +264,7 @@ public class ComListEth {
 
         //Читаем заголовок
         if (is == null) {
-          is = grabber.getVideoIS();
+            is = grabber.getVideoIS();
         }
 
         try {
@@ -329,23 +358,108 @@ public class ComListEth {
         return Bytes.wrap(bytesArray);
     }
 
-    public boolean waitAnsvwer(UDPInputStream comIS, byte[] msg) throws IOException {
+    public boolean waitAnsvwer(UDPInputStream comIS, byte[] msg) throws IOException{
+
         byte[] bytes = new byte[4];
-
-        int read = comIS.read(bytes);
-        int availableBytes = comIS.available();
-
-        if (read == 4 && availableBytes == 0) {
-            if (bytes[3] < 0) {
-                //обработка ошибки
-                LOG.error("ERROR MSG {}, ANSVER CODE: {}", Arrays.toString(msg), Arrays.toString(bytes));
-            } else {
-                //подтверждение записи
-                LOG.error("MSG {}, ANSVER CODE: {}", Arrays.toString(msg), Arrays.toString(bytes));
+        Bytes wrapMsg = Bytes.wrap(bytes);
+        int tick = 0;
+        int availableBytes = -1;
+        do {
+            int read = 0;
+            try {
+                read = comIS.read(bytes);
+                availableBytes = comIS.available();
+            } catch (IOException e) {
+                if (tick == 4) {
+                    LOG.debug("Выход по тику {}",wrapMsg);
+                    throw new IOException(e);
+                }
             }
-        } else if (availableBytes > 0) {
-            //обработка подтверждения
+            if (read == 4) {//если подтверждение или ощибка
+
+                //Читаем заголовок
+                if (wrapMsg.startsWith(COM_HEADER.array())) {
+                    if (isError(wrapMsg)) {
+                        //Если ошибка, то повтор отправки сообщения сообщения
+                        return false;
+                    }
+
+                    switch (wrapMsg.byteAt(2)) {
+
+                        case COM_WHO_IS_THERE:
+                            LOG.debug("COM_WHO_IS_THERE: {}", availableBytes);
+                            if (!comIS.getClientIP().equals(myIp)) {
+                                addDevises(comIS);
+                            }
+                            break;
+                        case COM_WRITE:
+                            tick = 5;
+                            LOG.debug("COM_WRITE: {}", availableBytes);
+                            comIS.skip(availableBytes);
+                            break;
+                        case COM_READ:
+                            tick = 5;
+                            LOG.debug("COM_READ: {}", availableBytes);
+                            comIS.skip(availableBytes);
+                            break;
+                        case COM_BLK_WRITE:
+                            tick = 5;
+                            LOG.debug("COM_BLK_WRITE: {}", availableBytes);
+                            comIS.skip(availableBytes);
+                            break;
+                        case COM_BLK_READ:
+                            tick = 5;
+                            LOG.debug("COM_BLK_READ: {}", availableBytes);
+                            comIS.skip(availableBytes);
+                            break;
+                        default:
+                            comIS.skip(availableBytes);
+                            throw new IllegalStateException("Unexpected value: " + COM_HEADER.byteAt(2));
+                    }
+
+                } else {
+                    //повторно отправить сообщение
+                    LOG.error("AnswerMSG without Header, {}", wrapMsg);
+                    comIS.skip(availableBytes);
+                    return false;
+                }
+
+            }else{
+
+                LOG.debug("Read empty Answer MSG {} try , {}",wrapMsg, tick);
+                return false;
+            }
+
         }
+        while (tick++ < 5);
         return true;
     }
+
+    private void addDevises(UDPInputStream clientIP) {
+
+        String stringDetIP = clientIP.getClientIP().getHostAddress();
+        int detPort = clientIP.getClientPort();
+        String stringID = String.format("Ports C/V [%d/%d]", detPort, detPort + 1);
+        ChinaDevice device = new ChinaDevice(stringDetIP, stringID, grabber);
+        device.setResolution(grabber.getSize());
+
+        devices.add(device);
+        LOG.error("Добавлено устройство {}", device);
+
+    }
+
+    private boolean isError(Bytes wrapMsg) {
+        byte byteAt = wrapMsg.byteAt(3);
+
+        if (byteAt < 0) {
+            //обработка ошибки
+            LOG.error("ERROR MSG {}, ANSVER CODE: {}", wrapMsg, byteAt);
+            return true;
+        } else {
+            //подтверждение записи
+            LOG.debug("MSG {}, ANSVER function: {}", wrapMsg, byteAt);
+        }
+        return false;
+    }
+
 }

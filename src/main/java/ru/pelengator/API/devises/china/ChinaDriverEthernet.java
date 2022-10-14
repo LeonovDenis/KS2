@@ -123,7 +123,7 @@ public class ChinaDriverEthernet implements DetectorDriver, DetectorDiscoverySup
 
     @Override
     public boolean isScanPossible() {
-        return true;
+        return false;
     }
 
     @Override
