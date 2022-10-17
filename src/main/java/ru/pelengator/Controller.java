@@ -1691,7 +1691,10 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         detectorInfo.setDetectorIndex(size);
         detectorInfo.setDetectorName(detector.getName());
 
-        Platform.runLater(() -> options.add(detectorInfo));
+        Platform.runLater(() -> {
+            options.add(detectorInfo);
+            btnLookUp.setStyle("-fx-background-color:  green");
+        });
 
     }
 
@@ -1699,7 +1702,6 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     @Override
     public void detectorGone(DetectorDiscoveryEvent event) {
         LOG.debug("Детектор ушел");
-
     }
 
 }

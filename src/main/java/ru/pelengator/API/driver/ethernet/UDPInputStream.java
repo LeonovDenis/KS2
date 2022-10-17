@@ -31,18 +31,20 @@ public class UDPInputStream extends InputStream {
     public UDPInputStream() {
     }
 
-    public UDPInputStream(String address, int port, int SO_TIME_OUT)
+
+    public UDPInputStream(InetAddress address, int port, int SO_TIME_OUT)
             throws UnknownHostException, SocketException {
         open(address, port, SO_TIME_OUT);
     }
 
     /************ opening and closing the stream ************/
-    public void open(String address, int port, int SO_TIME_OUT)
+    public void open(InetAddress address, int port, int SO_TIME_OUT)
             throws UnknownHostException, SocketException {
 
-        dsock = new DatagramSocket(port, InetAddress.getByName(address));
+        dsock = new DatagramSocket(port, address);
         this.SO_TIME_OUT = SO_TIME_OUT;
     }
+
 
     public void close() throws IOException {
         dsock.close();
@@ -160,6 +162,7 @@ public class UDPInputStream extends InputStream {
         packSize = dpack.getLength();
         this.clientIP = dpack.getAddress();
         this.clientPort = dpack.getPort();
+
     }
 
     /********* marking and reseting are unsupported ********/
@@ -180,5 +183,9 @@ public class UDPInputStream extends InputStream {
 
     public int getClientPort() {
         return clientPort;
+    }
+
+    public DatagramSocket getDsock() {
+        return dsock;
     }
 }

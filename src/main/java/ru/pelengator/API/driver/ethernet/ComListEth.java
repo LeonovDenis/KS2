@@ -4,8 +4,10 @@ import at.favre.lib.bytes.Bytes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.pelengator.API.DetectorDevice;
+import ru.pelengator.API.DetectorException;
 import ru.pelengator.API.devises.china.ChinaDevice;
 import ru.pelengator.API.driver.FT_STATUS;
+import ru.pelengator.API.tasks.DetectorNetTask;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -33,7 +35,7 @@ public class ComListEth {
     ///////////////////////////методы управления
     private final byte DEV_ID = 0x05;
     private final Bytes COM_HEADER = Bytes.from((byte) 0xA1, DEV_ID);
-    private final byte[] VIDEO_HEADER = new byte[]{(byte) 0xA2, DEV_ID};
+    private final Bytes VIDEO_HEADER = Bytes.from((byte) 0xA2, DEV_ID);
 
     //команды
     private final byte COM_WHO_IS_THERE = (byte) 0x00;
@@ -72,7 +74,7 @@ public class ComListEth {
                 .append(FUNC_DIM)            //функция
                 .append(1)              //размер данных
                 .append(data);          //данные
-        grabber.sendMSG(msg.array());
+        sendSynhMSG(msg.array());
         return FT_STATUS.FT_OK;
 
     }
@@ -95,8 +97,7 @@ public class ComListEth {
                 .append(FUNC_CCC)            //функция
                 .append(1)              //размер данных
                 .append(data);          //данные
-        grabber.sendMSG(msg.array());
-
+        sendSynhMSG(msg.array());
         return FT_STATUS.FT_OK;
     }
 
@@ -119,8 +120,7 @@ public class ComListEth {
                 .append(FUNC_POWER)          //функция
                 .append(1)              //размер данных
                 .append(data);          //данные
-        grabber.sendMSG(msg.array());
-
+        sendSynhMSG(msg.array());
         return FT_STATUS.FT_OK;
     }
 
@@ -137,8 +137,7 @@ public class ComListEth {
                 .append(FUNC_INT)            //функция
                 .append(4)              //размер данных
                 .append(time);          //данные
-        grabber.sendMSG(msg.array());
-
+        sendSynhMSG(msg.array());
         return FT_STATUS.FT_OK;
     }
 
@@ -155,8 +154,7 @@ public class ComListEth {
                 .append(FUNC_VR0)            //функция
                 .append(4)              //размер данных
                 .append(value);         //данные
-        grabber.sendMSG(msg.array());
-
+        sendSynhMSG(msg.array());
         return FT_STATUS.FT_OK;
     }
 
@@ -173,8 +171,7 @@ public class ComListEth {
                 .append(FUNC_VOS)            //функция
                 .append(4)              //размер данных
                 .append(value);         //данные
-        grabber.sendMSG(msg.array());
-
+        sendSynhMSG(msg.array());
         return FT_STATUS.FT_OK;
     }
 
@@ -191,8 +188,7 @@ public class ComListEth {
                 .append(FUNC_REF)            //функция
                 .append(4)              //размер данных
                 .append(value);         //данные
-        grabber.sendMSG(msg.array());
-
+        sendSynhMSG(msg.array());
         return FT_STATUS.FT_OK;
     }
 
@@ -208,8 +204,7 @@ public class ComListEth {
                 .append(FUNC_ID)             //функция
                 .append(1)              //размер данных
                 .append(DEV_ID);        //данные
-        grabber.sendMSG(msg.array());
-
+        sendSynhMSG(msg.array());
         return FT_STATUS.FT_OK;
     }
 
@@ -221,12 +216,11 @@ public class ComListEth {
      * @return
      */
     public FT_STATUS whoIsThere(Set<DetectorDevice> devices) {
-        this.devices =devices;
+        this.devices = devices;
         Bytes msg = COM_HEADER          //маска+ID
                 .append(COM_WHO_IS_THERE)   //команда
                 .append(FUNC_WHO_IS_THERE);    //функция
-        grabber.sendMSG(msg.array(), broadcastIp, true);
-
+        sendSynhBroadcastMSG(msg.array());
         return FT_STATUS.FT_OK;
     }
 
@@ -238,7 +232,8 @@ public class ComListEth {
     /**
      * Буфер сырой
      */
-    private byte[] headerBuff = new byte[16];
+    private int HEADER_SIZE = 16;
+    private byte[] headerBuff = new byte[HEADER_SIZE];
     private byte[] videoBuff;
 
     private static int lastFrameID = -1;
@@ -252,7 +247,7 @@ public class ComListEth {
     private static UDPInputStream is;
 
 
-    private int bytesAvaible, videoBytesCount;
+    private int bytesAvaible, lastVideoSize;
 
     /**
      * Запросполногокадра.
@@ -261,42 +256,128 @@ public class ComListEth {
      */
     public Bytes nextFrame() {
 
-
-        //Читаем заголовок
+        //Получаем поток
         if (is == null) {
             is = grabber.getVideoIS();
         }
 
         try {
-            is.read(headerBuff);
+            //Копим заголовок заголовок 16 байт
+            readHeader();
 
+            //Парсим всё в заголовке
+            parseFirstHeaders(headerBuff);
 
-            parseHeaders(headerBuff);
-
+            //Пороверяем оставшиеся количество байт
             bytesAvaible = is.available();
 
-            videoBuff = new byte[videoLen];
+            assert videoLen > 0;
 
-            videoBytesCount = is.read(videoBuff, 0, bytesAvaible);//пишем первую часть видео из первого пакета
+            if (videoBuff != null && videoBuff.length == videoLen) {
+                //continue
+            } else {
+                videoBuff = new byte[videoLen];
+            }
 
+            lastVideoSize = is.read(videoBuff, 0, bytesAvaible);//пишем первую часть видео из первого пакета
 
-            if ((videoLen = videoLen - videoBytesCount) > 0) {//если есть еще фрагменты
+            if ((videoLen = videoLen - lastVideoSize) > 0) {//если есть еще фрагменты
                 //продолжаем читать пакеты
 
                 do {
-                    is.skip(16);
+                    //читаем следующую часть
+                    readHeader();
+                    parseSecondHeaders(headerBuff);
+
                     bytesAvaible = is.available();
-                    videoBytesCount = is.read(videoBuff, videoBytesCount, bytesAvaible);//пишем следующую часть видео из пакета
+                    lastVideoSize = is.read(videoBuff, lastVideoSize, bytesAvaible);//пишем следующую часть видео из пакета
 
-                } while ((videoLen = videoLen - videoBytesCount) > 0);
-
+                } while ((videoLen = videoLen - lastVideoSize) > 0);
 
             }
+
         } catch (IOException e) {
+            LOG.error("Error in DIS metods: {}. No video data.", e.getMessage());
+            return null;
+        } catch (RuntimeException e) {
+
             LOG.error("Error in DIS metods: {}", e.getMessage());
             return null;
+        } finally {
+
+            try {
+                is.skip(is.available());
+            } catch (IOException e) {
+                //ignore
+            }
         }
+
+        if (grabber.getHeight() * grabber.getWidth() != heigth * width) {
+            LOG.error("Error in DIS metods: resolutions not same detector resolution {}x{} / video resolution  {}x{}",
+                    grabber.getWidth(), grabber.getHeight(), width, heigth);
+            return null;
+        }
+
         return Bytes.wrap(videoBuff);
+    }
+
+    private void parseSecondHeaders(byte[] headerBuff) throws IOException, RuntimeException {
+        DataInputStream dataIS = createDataIS(headerBuff);
+
+        byte[] tempHeader = new byte[2];
+        dataIS.read(tempHeader);
+        //Если заголовок не совпадает, тогда кидаем исключение
+        if (!VIDEO_HEADER.startsWith(tempHeader)) {
+            throw new DetectorException("Packege without valid Header");
+        }
+
+        int tempFrameID = dataIS.readUnsignedShort();
+        if (currentFrameID != tempFrameID) {
+            throw new DetectorException("FrameID first and second part not valid");
+        }
+
+        int tempFragID = dataIS.readUnsignedShort();
+        if (fragID != tempFragID - 1) {
+            throw new DetectorException("FragID second part not valid");
+        } else {
+            fragID = tempFragID;
+        }
+
+        int tempWidth = dataIS.readUnsignedShort();
+        int tempHeigth = dataIS.readUnsignedShort();
+
+        if (width != tempWidth && heigth != tempHeigth) {
+            throw new DetectorException("Resolution second part not valid");
+        }
+
+        int tempRo = dataIS.readUnsignedByte();
+        int tempReserv = dataIS.readUnsignedByte();
+
+        if (ro != tempRo && reserv != tempReserv) {
+            throw new DetectorException("Ro and Reserv second part not valid");
+        }
+
+        int tempVideoLen = dataIS.readInt();
+
+        if (videoLen != tempVideoLen) {
+            throw new DetectorException("Video data not for this resolution in second package");
+        }
+        LOG.debug("Incoming second video part: HEADER/DEV_ID {}, FRAME_ID {}, FRAG_ID {}, " +
+                        "WIDTH {}, HEIGTH  {}, RO {}, RESERV {}, DLEN {}.", VIDEO_HEADER, tempFrameID, tempFragID,
+                tempWidth, tempHeigth, tempRo, tempReserv, tempVideoLen);
+
+        closeDIS(dataIS);
+
+    }
+
+    private void readHeader() throws IOException, RuntimeException {
+        int read = is.read(headerBuff);
+
+        if (read < HEADER_SIZE) {
+            LOG.debug("Package size not valid");
+            throw new DetectorException("Package size not valid");
+        }
+
     }
 
     private DataInputStream createDataIS(byte[] inputArray) {
@@ -313,25 +394,39 @@ public class ComListEth {
         }
     }
 
-    private void parseHeaders(byte[] headerBuff) throws IOException {
+    private void parseFirstHeaders(byte[] headerBuff) throws IOException, RuntimeException {
 
         DataInputStream dataIS = createDataIS(headerBuff);
 
-        dataIS.skipBytes(2);
+        byte[] tempHeader = new byte[2];
+        dataIS.read(tempHeader);
+        //Если заголовок не совпадает, тогда кидаем исключение
+        if (!VIDEO_HEADER.startsWith(tempHeader)) {
+            throw new DetectorException("Packege without valid Header");
+        }
 
         currentFrameID = dataIS.readUnsignedShort();
 
+
         fragID = dataIS.readUnsignedShort();
+        if (fragID != 0) {
+            throw new DetectorException("Not first fragment not null in Video data package");
+        }
 
         width = dataIS.readUnsignedShort();
         heigth = dataIS.readUnsignedShort();
 
         ro = dataIS.readUnsignedByte();
-
         reserv = dataIS.readUnsignedByte();
 
         videoLen = dataIS.readInt();
+        if (videoLen != width * heigth * 2) {
+            throw new DetectorException("Video data not for this resolution");
+        }
 
+        LOG.debug("Incoming first video part: HEADER/DEV_ID {}, FRAME_ID {}, FRAG_ID {}, " +
+                        "WIDTH {}, HEIGTH  {}, RO {}, RESERV {}, DLEN {}.", VIDEO_HEADER, currentFrameID, fragID, width,
+                heigth, ro, reserv, videoLen);
         closeDIS(dataIS);
     }
 
@@ -358,7 +453,7 @@ public class ComListEth {
         return Bytes.wrap(bytesArray);
     }
 
-    public boolean waitAnsvwer(UDPInputStream comIS, byte[] msg) throws IOException{
+    public byte[] waitAnsvwer(UDPInputStream comIS, byte[] msg) throws IOException {
 
         byte[] bytes = new byte[4];
         Bytes wrapMsg = Bytes.wrap(bytes);
@@ -366,31 +461,35 @@ public class ComListEth {
         int availableBytes = -1;
         do {
             int read = 0;
+
             try {
                 read = comIS.read(bytes);
                 availableBytes = comIS.available();
             } catch (IOException e) {
-                if (tick == 4) {
-                    LOG.debug("Выход по тику {}",wrapMsg);
+                //выход в случае отсутствия ответа
+                if (tick == 3) {
+                    LOG.debug("Throw IOException {}", e.getMessage());
                     throw new IOException(e);
                 }
             }
-            if (read == 4) {//если подтверждение или ощибка
+
+
+            if (read == 4 && (!comIS.getClientIP().equals(myIp))) {//если подтверждение или ощибка
 
                 //Читаем заголовок
                 if (wrapMsg.startsWith(COM_HEADER.array())) {
                     if (isError(wrapMsg)) {
-                        //Если ошибка, то повтор отправки сообщения сообщения
-                        return false;
+                        LOG.debug("Пришла ошибка на тике{},сообщение {}", tick, wrapMsg);
+                        throw new IOException("Ошибка " + wrapMsg);
                     }
-
+                    //раскадровка по командам
                     switch (wrapMsg.byteAt(2)) {
 
                         case COM_WHO_IS_THERE:
                             LOG.debug("COM_WHO_IS_THERE: {}", availableBytes);
-                            if (!comIS.getClientIP().equals(myIp)) {
-                                addDevises(comIS);
-                            }
+
+                            addDevises(comIS);
+
                             break;
                         case COM_WRITE:
                             tick = 5;
@@ -419,20 +518,19 @@ public class ComListEth {
 
                 } else {
                     //повторно отправить сообщение
-                    LOG.error("AnswerMSG without Header, {}", wrapMsg);
+                    LOG.error("AnswerMSG without Header{} try , {}", wrapMsg, tick);
                     comIS.skip(availableBytes);
-                    return false;
                 }
 
-            }else{
-
-                LOG.debug("Read empty Answer MSG {} try , {}",wrapMsg, tick);
-                return false;
+            } else {
+                LOG.debug("No answer, or my IP, MSG / {} / try : {}", wrapMsg, tick);
             }
 
         }
-        while (tick++ < 5);
-        return true;
+        while (tick++ < 3);
+
+
+        return wrapMsg.array();
     }
 
     private void addDevises(UDPInputStream clientIP) {
@@ -460,6 +558,23 @@ public class ComListEth {
             LOG.debug("MSG {}, ANSVER function: {}", wrapMsg, byteAt);
         }
         return false;
+    }
+
+    private byte[] sendSynhMSG(byte[] MSG) {
+
+        DetectorNetTask detectorNetTask = new DetectorNetTask(grabber.getDriver(), null, MSG);
+        byte[] incMSG = detectorNetTask.sendCMD();
+
+        return incMSG;
+    }
+
+
+    private byte[] sendSynhBroadcastMSG(byte[] MSG) {
+
+        DetectorNetTask detectorNetTask = new DetectorNetTask(grabber.getDriver(), null, MSG, broadcastIp);
+        byte[] incMSG = detectorNetTask.sendCMD();
+
+        return incMSG;
     }
 
 }

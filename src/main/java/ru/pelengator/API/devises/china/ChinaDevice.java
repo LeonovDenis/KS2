@@ -456,6 +456,10 @@ public class ChinaDevice implements DetectorDevice, DetectorDevice.ChinaSource {
         return size;
     }
 
+    public Driver getGrabber() {
+        return grabber;
+    }
+
     @Override
     public void setResolution(Dimension size) {
 

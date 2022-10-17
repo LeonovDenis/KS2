@@ -3,13 +3,14 @@ package ru.pelengator.API.driver;
 
 import at.favre.lib.bytes.Bytes;
 import ru.pelengator.API.DetectorDevice;
+import ru.pelengator.API.DetectorDriver;
 
 import java.awt.*;
 import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public interface Driver {
+public interface Driver{
 
     AtomicBoolean validHendler = new AtomicBoolean(false);
     AtomicBoolean isOpened = new AtomicBoolean(false);

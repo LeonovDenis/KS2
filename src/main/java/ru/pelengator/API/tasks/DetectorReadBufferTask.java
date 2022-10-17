@@ -1,5 +1,7 @@
 package ru.pelengator.API.tasks;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.pelengator.API.Detector;
 import ru.pelengator.API.DetectorDevice;
 import ru.pelengator.API.DetectorDriver;
@@ -16,6 +18,7 @@ public class DetectorReadBufferTask extends DetectorTask {
     /**
      * Логгер.
      */
+    private static final Logger LOG = LoggerFactory.getLogger(DetectorReadBufferTask.class);
     private volatile ByteBuffer target = null;
 
     public DetectorReadBufferTask(DetectorDriver driver, DetectorDevice device, ByteBuffer target) {

@@ -4,7 +4,7 @@ import at.favre.lib.bytes.Bytes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.pelengator.API.DetectorDevice;
-import ru.pelengator.API.DetectorExceptionHandler;
+import ru.pelengator.API.DetectorDriver;
 import ru.pelengator.API.DetectorResolution;
 import ru.pelengator.API.driver.Driver;
 import ru.pelengator.API.driver.FT_STATUS;
@@ -73,10 +73,12 @@ public class EthernetDriver implements Driver {
     private AtomicBoolean dispoced = new AtomicBoolean(false);
     private AtomicBoolean online = new AtomicBoolean(false);
 
+    private DetectorDriver driver = null;
+
     /**
      * Конструктор
      */
-    public EthernetDriver(StendParams params) {
+    public EthernetDriver(StendParams params, DetectorDriver driver) {
         this.params = params;
         NetworkInfo selNetworkInterface = params.getSelNetworkInterface();
         this.videoPort = params.getDetPortVideo();
@@ -85,6 +87,7 @@ public class EthernetDriver implements Driver {
         this.myIp = selNetworkInterface.getAddress();
         this.broadcastIp = selNetworkInterface.getBroadcast();
         this.comList = new ComListEth(this, myIp, broadcastIp);
+        this.driver = driver;
     }
 
     /**
@@ -118,7 +121,6 @@ public class EthernetDriver implements Driver {
         return FT_STATUS.values()[0];
     }
 
-    private Future<?> msgTask;
     private String stend = "ДТ10Э";
 
     private static Dimension size = DetectorResolution.CHINA.getSize();
@@ -141,8 +143,11 @@ public class EthernetDriver implements Driver {
 
             if (comIS == null || comOS == null) {
                 try {
-                    comIS = new UDPInputStream(myIp.getHostAddress(), comPort, 500);
-                    comOS = new UDPOutputStream(broadcastIp, comPort);
+                    comIS = new UDPInputStream(myIp, comPort, 100);
+                    DatagramSocket dsock = comIS.getDsock();
+
+                    comOS = new UDPOutputStream(dsock, broadcastIp, comPort);
+
                 } catch (UnknownHostException e) {
                     throw new RuntimeException(e);
                 } catch (SocketException e) {
@@ -153,14 +158,6 @@ public class EthernetDriver implements Driver {
             }
             detectorDevices = new HashSet<>();
             comList.whoIsThere(detectorDevices);
-
-            while (!msgTask.isDone()) {
-                try {
-                    TimeUnit.MILLISECONDS.sleep(500);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
 
         }
         devices.addAll(detectorDevices);
@@ -228,7 +225,7 @@ public class EthernetDriver implements Driver {
         try {
             clientIp = InetAddress.getByName(params.getDetIP());
         } catch (UnknownHostException e) {
-            LOG.error("Error in starting session, not avaible DetIP, {}",e.getMessage());
+            LOG.error("Error in starting session, not avaible DetIP, {}", e.getMessage());
             throw new RuntimeException(e);
         }
         FT_STATUS status;
@@ -236,18 +233,16 @@ public class EthernetDriver implements Driver {
             /**
              * Создание видеосервиса.
              */
-            videoIS = new UDPInputStream(myIp.getHostAddress(), videoPort, 500);
-            /**
-             * Командный сокет.
-             */
-            //   DatagramSocket clientDatagramSocket = new DatagramSocket(comPort);
+            videoIS = new UDPInputStream(myIp, videoPort, 500);
+
             /**
              * Создание командного сервиса.
              */
             if (comIS != null) {
                 comIS.close();
             }
-            comIS = new UDPInputStream(myIp.getHostAddress(), comPort, 500);
+            comIS = new UDPInputStream(myIp, comPort, 100);
+            DatagramSocket dsock = comIS.getDsock();
 
             /**
              * Создание видеосервиса.
@@ -255,7 +250,7 @@ public class EthernetDriver implements Driver {
             if (comOS != null) {
                 comOS.close();
             }
-            comOS = new UDPOutputStream(clientIp, comPort);
+            comOS = new UDPOutputStream(dsock,clientIp, comPort);
 
             isOpened.compareAndSet(false, true);
 
@@ -392,125 +387,47 @@ public class EthernetDriver implements Driver {
         return online.get();
     }
 
+    /**
+     * Отправить сообщение.
+     */
+    public byte[] sendMSG(byte[] byteMSG) {
+        return sendMSG(byteMSG, clientIp);
+    }
 
     /**
-     * Запланированный исполнитель, действующий как таймер.
+     * Отправить сообщение.
      */
-    private ScheduledExecutorService executor = null;
+    public byte[] sendMSG(byte[] byteMSG, InetAddress Ip) {
+
+        return sendMSG(byteMSG, Ip, false);
+    }
+
+    public byte[] sendMSG(byte[] byteMSG, InetAddress Ip, boolean onlyOneMSG) {
 
 
-    /**
-     * Задание на отправку сообщения.
-     */
-    private class SenderScheduler extends Thread {
+        LOG.debug("Старт отправки сообщения {}", Arrays.toString(byteMSG));
+        int tick = 0;
+        byte[] incomMSG = null;
+        do {
+            try {//отправка сообщения
+                comOS.write(byteMSG);
+                comOS.setiAdd(Ip);
+                comOS.flush();
+                //Прослушивание ответа
 
-        private volatile byte[] MSG;
-        private volatile InetAddress Ip = null;
-        private volatile int N=0;
-        private AtomicBoolean onlyOneMSG = new AtomicBoolean(false);
+                incomMSG = comList.waitAnsvwer(comIS, byteMSG);
 
-        /**
-         * Фабрика в конструкторе.
-         */
-        public SenderScheduler(byte[] byteMSG, InetAddress broadcastIp) {
-            setUncaughtExceptionHandler(DetectorExceptionHandler.getInstance());
-            setName(String.format("DatagramSender-scheduler-%s", stend));
-            setDaemon(true);
-            this.MSG = byteMSG;
-            this.Ip = broadcastIp;
-        }
+                LOG.debug("Ответ на сообщение {} = {}", byteMSG, incomMSG);
 
-        private int tick = 0;
-
-        @Override
-        public void run() {
-            LOG.debug(" {} Старт отправки сообщения {}",N++, MSG);
-            try {
-                if (!onlyOneMSG.get()) {
-                    comOS.write(MSG);
-                    comOS.setiAdd(Ip);
-                    comOS.flush();
-                } else {
-                    comOS.write(MSG);
-                    comOS.setiAdd(Ip);
-                    comOS.flush();
-                    onlyOneMSG.set(false);
-                }
-                boolean quality = comList.waitAnsvwer(comIS, MSG);
-                LOG.debug("quality сообщения {}", quality);
-
-                if (quality) {
-                    LOG.debug("MSG podtvergdeno: {}", MSG);
-                    tick = 0;
-                } else if (tick++ <= 5 && !dispoced.get()) {//если подстверждения нет, то повторяем
-                    executor.schedule(this, 300, TimeUnit.MILLISECONDS);
-                    LOG.debug("Повторная отсылка {} try {}", Arrays.toString(MSG), tick);
-                } else {
-                    tick = 0;
-                    LOG.debug("Нет подтверждения отправки сообщения {}", Arrays.toString(MSG));
-                }
-            } catch (RejectedExecutionException e) {
-                LOG.warn("Executor rejected sender msg");
-                LOG.trace("Executor rejected sender msg because of", e);
             } catch (IOException e) {
-                LOG.debug("сообщение не доставлено, вышло время {} try {}", Arrays.toString(MSG), tick);
-                //   if (tick++ <= 5) {//если подстверждения нет, то повторяем
-                //       executor.schedule(this, 300, TimeUnit.MILLISECONDS);
-                //   } else {
-                //       tick = 0;
-                //    }
+                LOG.debug("Cообщение не доставлено, вышло время {}, повтор {}", Arrays.toString(byteMSG), tick);
             }
-        }
 
-        public void setMSG(byte[] MSG) {
-            this.MSG = MSG;
-        }
+        } while (tick++ < 2 && !onlyOneMSG);
 
-        public void setIp(InetAddress ip) {
-            this.Ip = ip;
-        }
+        LOG.debug("Возврат сообщения {}", Arrays.toString(byteMSG));
 
-        public AtomicBoolean getOnlyOneMSG() {
-            return onlyOneMSG;
-        }
-    }
-
-    /**
-     * Класс для отправки.
-     */
-    private SenderScheduler scheduler = null;
-
-
-    /**
-     * Отправить сообщение.
-     */
-    public void sendMSG(byte[] byteMSG) {
-        sendMSG(byteMSG, clientIp);
-
-    }
-
-    /**
-     * Отправить сообщение.
-     */
-    public void sendMSG(byte[] byteMSG, InetAddress Ip) {
-
-        sendMSG(byteMSG, Ip, false);
-    }
-
-    public void sendMSG(byte[] byteMSG, InetAddress Ip, boolean onlyOneMSG) {
-        if (executor == null) {
-            executor = Executors.newScheduledThreadPool(1);
-        }
-        if (scheduler == null) {
-            scheduler = new SenderScheduler(byteMSG, Ip);
-        } else {
-            scheduler.setMSG(byteMSG);
-            scheduler.setIp(Ip);
-        }
-        scheduler.getOnlyOneMSG().set(onlyOneMSG);
-        msgTask = executor.submit(scheduler);
-
-        //  scheduler.start();
+        return incomMSG;
     }
 
     /**
@@ -520,9 +437,7 @@ public class EthernetDriver implements Driver {
      */
     public void stop() throws InterruptedException {
         LOG.debug("stop()");
-        executor.shutdown();
-        executor.awaitTermination(5000, TimeUnit.MILLISECONDS);
-        scheduler.join();
+
         LOG.debug("stop() закончен");
     }
 
@@ -532,5 +447,9 @@ public class EthernetDriver implements Driver {
 
     public static Dimension getSize() {
         return size;
+    }
+
+    public DetectorDriver getDriver() {
+        return driver;
     }
 }

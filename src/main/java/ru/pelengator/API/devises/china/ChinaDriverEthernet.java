@@ -20,12 +20,15 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class ChinaDriverEthernet implements DetectorDriver, DetectorDiscoverySupport {
 
+    private volatile static DetectorDriver driver= null;
+
     private static class DetectorNewGrabberTask extends DetectorTask {
 
         private AtomicReference<Driver> grabber = new AtomicReference<Driver>();
 
         public DetectorNewGrabberTask(DetectorDriver driver) {
             super(driver, null);
+            ChinaDriverEthernet.driver=driver;
         }
 
         public Driver newGrabber() {
@@ -40,7 +43,7 @@ public class ChinaDriverEthernet implements DetectorDriver, DetectorDiscoverySup
 
         @Override
         protected void handle() {
-            grabber.set(new EthernetDriver(params));
+            grabber.set(new EthernetDriver(params,driver));
         }
     }
 
@@ -116,6 +119,11 @@ public class ChinaDriverEthernet implements DetectorDriver, DetectorDiscoverySup
         this.params=params;
 
     }
+
+    public static Driver getGrabber() {
+        return grabber;
+    }
+
     @Override
     public long getScanInterval() {
         return DEFAULT_SCAN_INTERVAL;

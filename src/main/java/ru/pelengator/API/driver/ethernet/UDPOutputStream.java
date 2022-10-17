@@ -46,10 +46,10 @@ public class UDPOutputStream extends OutputStream {
         open(address, portI);
     }
 
-    public UDPOutputStream(DatagramSocket dsock) {
+    public UDPOutputStream(DatagramSocket dsock,InetAddress address,int portI) {
         this.dsock = dsock;
-        this.iAdd = dsock.getInetAddress();
-        this.port = dsock.getPort();
+        this.iAdd = address;
+        this.port = portI;
     }
 
     public UDPOutputStream(String address, int portI, int buffSize)
@@ -75,6 +75,14 @@ public class UDPOutputStream extends OutputStream {
         iAdd = address;
         port = portI;
     }
+    public void open(DatagramSocket ds,InetAddress address, int portI)
+            throws SocketException, IOException {
+
+        dsock =ds;
+        iAdd = address;
+        port = portI;
+    }
+
 
     public void close() throws IOException {
         dsock.close();
