@@ -201,9 +201,9 @@ public class StendParams {
         TXT_0_4.set(properties.getProperty("TXT_0_4", "---"));// порог чувствительности
         TXT_0_5.set(properties.getProperty("TXT_0_5", "---"));// удельный
         TXT_0_6.set(properties.getProperty("TXT_0_6", "---"));// обнаружительная способность
-        TXT_0_7.set(properties.getProperty("TXT_0_7", ">8.0Е+09"));// удельная обнаружительная
+        TXT_0_7.set(properties.getProperty("TXT_0_7", "> 8.0Е+09"));// удельная обнаружительная
         TXT_0_8.set(properties.getProperty("TXT_0_8", "---"));// ЭШРТ
-        TXT_0_9.set(properties.getProperty("TXT_0_9", "<5.0Е-08"));//пороговая облученность
+        TXT_0_9.set(properties.getProperty("TXT_0_9", "< 5.0Е-08"));//пороговая облученность
 
 
         tempPower = Boolean.parseBoolean(properties.getProperty("POWER_ON", "true"));

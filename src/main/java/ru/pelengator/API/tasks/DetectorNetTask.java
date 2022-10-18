@@ -6,13 +6,10 @@ import org.slf4j.LoggerFactory;
 import ru.pelengator.API.DetectorDevice;
 import ru.pelengator.API.DetectorDriver;
 import ru.pelengator.API.DetectorTask;
-import ru.pelengator.API.devises.china.ChinaDevice;
 import ru.pelengator.API.devises.china.ChinaDriverEthernet;
-import ru.pelengator.API.driver.Driver;
 import ru.pelengator.API.driver.ethernet.EthernetDriver;
 
 import java.net.InetAddress;
-import java.util.Arrays;
 
 
 /**

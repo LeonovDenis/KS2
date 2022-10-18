@@ -12,7 +12,7 @@ import java.net.UnknownHostException;
 
 public class UDPInputStream extends InputStream {
 
-    private static final int PACKET_BUFFER_SIZE = 5000;
+    private static final int PACKET_BUFFER_SIZE = 64000;
     private int SO_TIME_OUT = 0;
 
     private InetAddress clientIP;

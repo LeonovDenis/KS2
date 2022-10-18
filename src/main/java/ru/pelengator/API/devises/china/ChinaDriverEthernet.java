@@ -104,7 +104,7 @@ public class ChinaDriverEthernet implements DetectorDriver, DetectorDiscoverySup
                 return Collections.emptyList();
             }
         }
-        LOG.debug("Found device");
+
         List<DetectorDevice> devices = new GetDevicesTask(this).getDevices(grabber);
         LOG.debug("Found device {}", devices);
         if (LOG.isDebugEnabled()) {

@@ -17,7 +17,6 @@ import java.net.*;
 import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class EthernetDriver implements Driver {
@@ -83,7 +82,6 @@ public class EthernetDriver implements Driver {
         NetworkInfo selNetworkInterface = params.getSelNetworkInterface();
         this.videoPort = params.getDetPortVideo();
         this.comPort = params.getDetPortCommand();
-        LOG.debug("Создан драйвер");
         this.myIp = selNetworkInterface.getAddress();
         this.broadcastIp = selNetworkInterface.getBroadcast();
         this.comList = new ComListEth(this, myIp, broadcastIp);
@@ -98,7 +96,6 @@ public class EthernetDriver implements Driver {
     @Override
     public FT_STATUS create() {
         FT_STATUS status = FT_STATUS.FT_OK;
-        LOG.debug("Вызван метод креате");
         return status;
     }
 
@@ -106,7 +103,6 @@ public class EthernetDriver implements Driver {
 
     static {
         MP = Runtime.getRuntime().availableProcessors();
-        LOG.debug("Количество ядер: {}", MP);
     }
 
 
@@ -117,11 +113,10 @@ public class EthernetDriver implements Driver {
      */
     @Override
     public FT_STATUS close() {
-        LOG.debug("Вызван метод клосе");
         return FT_STATUS.values()[0];
     }
 
-    private String stend = "ДТ10Э";
+    private int PENDING = 100;// время на прослушивание ответа
 
     private static Dimension size = DetectorResolution.CHINA.getSize();
 
@@ -137,13 +132,13 @@ public class EthernetDriver implements Driver {
     @Override
     public java.util.List<DetectorDevice> getDDevices(List<DetectorDevice> devices) {
 
-        LOG.debug("Поиск устройств");
+        LOG.debug("GetDevices");
         Set<DetectorDevice> detectorDevices = null;
         if (comList != null && !dispoced.get()) {
 
             if (comIS == null || comOS == null) {
                 try {
-                    comIS = new UDPInputStream(myIp, comPort, 100);
+                    comIS = new UDPInputStream(myIp, comPort, PENDING);
                     DatagramSocket dsock = comIS.getDsock();
 
                     comOS = new UDPOutputStream(dsock, broadcastIp, comPort);
@@ -164,7 +159,6 @@ public class EthernetDriver implements Driver {
         return Collections.unmodifiableList(devices);
     }
 
-    private AtomicBoolean onlyOneMSG = new AtomicBoolean(false);
 
     /**
      * Формирование массива изображения из буффера из интов.
@@ -173,7 +167,7 @@ public class EthernetDriver implements Driver {
      */
     @Override
     public ByteBuffer getImage() {
-        LOG.debug("Запрос getImage()");
+
         ByteBuffer bytes = null;
         Bytes frame = nextFrame();
         if (frame == null) {
@@ -209,7 +203,7 @@ public class EthernetDriver implements Driver {
      */
     @Override
     public void stopSession() {
-        LOG.debug("Остановка сессии");
+        LOG.debug("StopSession");
         dispoced.set(true);
         try {
             stop();
@@ -220,7 +214,7 @@ public class EthernetDriver implements Driver {
 
     @Override
     public FT_STATUS startSession() {
-        LOG.debug("Запуск сессии");
+        LOG.debug("StartSession");
         dispoced.set(false);
         try {
             clientIp = InetAddress.getByName(params.getDetIP());
@@ -233,7 +227,7 @@ public class EthernetDriver implements Driver {
             /**
              * Создание видеосервиса.
              */
-            videoIS = new UDPInputStream(myIp, videoPort, 500);
+            videoIS = new UDPInputStream(myIp, videoPort, 20 * PENDING);
 
             /**
              * Создание командного сервиса.
@@ -241,7 +235,7 @@ public class EthernetDriver implements Driver {
             if (comIS != null) {
                 comIS.close();
             }
-            comIS = new UDPInputStream(myIp, comPort, 100);
+            comIS = new UDPInputStream(myIp, comPort, PENDING);
             DatagramSocket dsock = comIS.getDsock();
 
             /**
@@ -250,7 +244,7 @@ public class EthernetDriver implements Driver {
             if (comOS != null) {
                 comOS.close();
             }
-            comOS = new UDPOutputStream(dsock,clientIp, comPort);
+            comOS = new UDPOutputStream(dsock, clientIp, comPort);
 
             isOpened.compareAndSet(false, true);
 
@@ -263,7 +257,7 @@ public class EthernetDriver implements Driver {
         }
 
         validHendler.compareAndSet(true, false);
-        LOG.debug("Сессия стартовала");
+
         return status;
     }
 
@@ -275,7 +269,6 @@ public class EthernetDriver implements Driver {
      */
     @Override
     public FT_STATUS setDimension(boolean set) {
-        LOG.debug("setDimension {}", set);
         return comList.setDimension(set);
     }
 
@@ -288,7 +281,6 @@ public class EthernetDriver implements Driver {
 
     @Override
     public FT_STATUS setCapacity(boolean set) {
-        LOG.debug("setCapacity {}", set);
         return comList.setCapacity(set);
 
     }
@@ -301,13 +293,11 @@ public class EthernetDriver implements Driver {
      */
     @Override
     public FT_STATUS setPower(boolean set) {
-        LOG.debug("setPower {}", set);
         return comList.setPower(set);
     }
 
     @Override
     public FT_STATUS setIntTime(int time) {
-        LOG.debug("setIntTime {}", time);
         return comList.setIntTime(time);
     }
 
@@ -319,7 +309,6 @@ public class EthernetDriver implements Driver {
      */
     @Override
     public FT_STATUS setVR0(int value) {
-        LOG.debug("setVR0 {}", value);
         return comList.setVR0(value);
     }
 
@@ -332,7 +321,6 @@ public class EthernetDriver implements Driver {
      */
     @Override
     public FT_STATUS setVVA(int value) {
-        LOG.debug("setVVA {}", value);
         return comList.setVVA(value);
     }
 
@@ -344,7 +332,6 @@ public class EthernetDriver implements Driver {
      */
     @Override
     public FT_STATUS setREF(int value) {
-        LOG.debug("setREF {}", value);
         return comList.setREF(value);
     }
 
@@ -356,34 +343,43 @@ public class EthernetDriver implements Driver {
      */
     @Override
     public FT_STATUS setID() {
-        LOG.debug("setID");
         return comList.setID();
     }
 
+    private int frameCount = 0;
 
     @Override
     public Bytes nextFrame() {
-        //разовый запрос, почему?
-        LOG.debug("nextFrame()");
+
         Bytes bytes = comList.nextFrame();
         if (bytes == null) {
-            online.compareAndSet(true, false);
+            frameCount++;
+            LOG.debug("Online flag null frame {}", frameCount);
+            if (frameCount > 3) {//В случае пустых кадров - выставить флаг на отсутствие сигнала
+                if (online.compareAndSet(true, false)) {
+                    LOG.debug("Online flag setted in false");
+                }
+                ;
+
+            }
         } else {
-            online.compareAndSet(false, true);
+            frameCount = 0;
+            if (online.compareAndSet(false, true)) {
+                LOG.debug("Online flag setted in true");
+            }
+            ;
         }
         return bytes;
     }
 
     @Override
     public void clearBuffer() {
-        //после запуска сессии
-        LOG.debug("clearBuffer()");
+        //ignore
     }
 
     @Override
     public boolean isOnline() {
-        //главный поток запрашивает постоянно
-        // LOG.debug("isOnline()");
+
         return online.get();
     }
 
@@ -404,28 +400,32 @@ public class EthernetDriver implements Driver {
 
     public byte[] sendMSG(byte[] byteMSG, InetAddress Ip, boolean onlyOneMSG) {
 
-
-        LOG.debug("Старт отправки сообщения {}", Arrays.toString(byteMSG));
         int tick = 0;
         byte[] incomMSG = null;
+
         do {
             try {//отправка сообщения
+                LOG.debug("sendMSG {} /try {}", Arrays.toString(byteMSG), tick);
+
                 comOS.write(byteMSG);
                 comOS.setiAdd(Ip);
                 comOS.flush();
+
                 //Прослушивание ответа
-
-                incomMSG = comList.waitAnsvwer(comIS, byteMSG);
-
-                LOG.debug("Ответ на сообщение {} = {}", byteMSG, incomMSG);
+                incomMSG = comList.waitAnswer(comIS, byteMSG);
+                if (incomMSG != null) {
+                    tick = 3;
+                }
+                LOG.debug("MSG to detector send: {}. ANSWER received: {}", Arrays.toString(byteMSG), Arrays.toString(incomMSG));
 
             } catch (IOException e) {
-                LOG.debug("Cообщение не доставлено, вышло время {}, повтор {}", Arrays.toString(byteMSG), tick);
+
+                LOG.debug("MSG not delivery. MSG {},/try {}, pending {}", Arrays.toString(byteMSG), tick, PENDING);
             }
 
         } while (tick++ < 2 && !onlyOneMSG);
 
-        LOG.debug("Возврат сообщения {}", Arrays.toString(byteMSG));
+        LOG.debug("Exiting from SENDMSG {} /try {}", Arrays.toString(byteMSG), tick);
 
         return incomMSG;
     }
@@ -436,9 +436,7 @@ public class EthernetDriver implements Driver {
      * @throws InterruptedException
      */
     public void stop() throws InterruptedException {
-        LOG.debug("stop()");
-
-        LOG.debug("stop() закончен");
+        //ignore
     }
 
     public UDPInputStream getVideoIS() {

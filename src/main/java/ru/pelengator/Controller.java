@@ -412,6 +412,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
 
 
     private boolean async = false;
+    private boolean fpsLimited = false;
 
     /**
      * Инициализация всего и вся.
@@ -487,7 +488,8 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
                      * Регистрация драйвера детектора для ethernet.
                      */
                     Detector.setDriver(new ChinaDriverEthernet(params));
-                    async = true;
+                    async = false;
+                    fpsLimited=true;
                     btnLookUp.setVisible(true);
                 }
 
@@ -902,6 +904,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         selDetector = Detector.getDetectors().get(detectorIndex);
         viewSize = selDetector.getViewSize();
         detectorPanel = new DetectorPanel(selDetector, viewSize, true, async);
+        detectorPanel.setFPSLimited(fpsLimited);
         detectorPanel.setImageTransformer(imageTransformer);
         detectorPanel.setPause(params.getPAUSE());
         snDetectorCapturedImage.setContent(detectorPanel);

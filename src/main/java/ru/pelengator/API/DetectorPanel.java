@@ -104,11 +104,12 @@ public class DetectorPanel extends JPanel implements DetectorListener {
 
         @Override
         public BufferedImage get() {
+
             try {
                 TimeUnit.MILLISECONDS.sleep(PAUSE);
             } catch (InterruptedException e) {
                 //ignore
-            }
+           }
             BufferedImage tempImage = detector.getImage();
 
             if (tempImage != null) {
@@ -454,7 +455,7 @@ public class DetectorPanel extends JPanel implements DetectorListener {
     /**
      * Максимальная частота кадров в секунду.
      */
-    private static final double MAX_FREQUENCY = 50; // 50 кадров в минуту
+    private static final double MAX_FREQUENCY = 25; // 25 кадров в минуту
 
     /**
      * Фабрика потоков, используемая службой выполнения.

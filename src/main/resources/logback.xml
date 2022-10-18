@@ -1,5 +1,7 @@
 <configuration trace="true">
 
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
+
     <property name="HOME_LOG" value="logs/app.log"/>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
@@ -17,10 +19,10 @@
             <fileNamePattern>logs/archived/app.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <!-- each archived file, size max 10MB -->
             <maxFileSize>10MB</maxFileSize>
-            <!-- total size of all archive files, if total size > 20GB, it will delete old archived file -->
-            <totalSizeCap>20GB</totalSizeCap>
-            <!-- 60 days to keep -->
-            <maxHistory>60</maxHistory>
+            <!-- total size of all archive files, if total size > 1GB, it will delete old archived file -->
+            <totalSizeCap>1GB</totalSizeCap>
+            <!-- 20 days to keep -->
+            <maxHistory>20</maxHistory>
         </rollingPolicy>
 
         <encoder>
@@ -33,15 +35,15 @@
     <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
         <appender-ref ref="FILE-ROLLING" />
         <!-- defaulr 256 -->
-        <queueSize>512</queueSize>
+        <queueSize>256</queueSize>
     </appender>
 
-    <logger name="ru.pelengator" level="TRACE" additivity="false">
+    <logger name="ru.pelengator" level="DEBUG" additivity="false">
         <appender-ref ref="ASYNC"/>
         <appender-ref ref="CONSOLE"/>
     </logger>
 
-    <root level="TRACE">
+    <root level="ERROR">
         <appender-ref ref="trace"/>
     </root>
 

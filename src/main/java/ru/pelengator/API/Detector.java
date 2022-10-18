@@ -637,7 +637,6 @@ public class Detector {
      */
 
     public BufferedImage getImage() {
-
         if (!isReady()) {
             return null;
         }

@@ -297,16 +297,19 @@ public class ComListEth {
             }
 
         } catch (IOException e) {
-            LOG.error("Error in DIS metods: {}. No video data.", e.getMessage());
+            LOG.trace("Error in DIS metods: {}. No video data.", e.getMessage());
             return null;
         } catch (RuntimeException e) {
 
-            LOG.error("Error in DIS metods: {}", e.getMessage());
+            LOG.trace("Error in DIS metods: {}", e.getMessage());
             return null;
         } finally {
 
             try {
-                is.skip(is.available());
+                int available = is.available();
+                if (available > 0) {
+                    is.skip(available);
+                }
             } catch (IOException e) {
                 //ignore
             }
@@ -359,9 +362,7 @@ public class ComListEth {
 
         int tempVideoLen = dataIS.readInt();
 
-        if (videoLen != tempVideoLen) {
-            throw new DetectorException("Video data not for this resolution in second package");
-        }
+
         LOG.debug("Incoming second video part: HEADER/DEV_ID {}, FRAME_ID {}, FRAG_ID {}, " +
                         "WIDTH {}, HEIGTH  {}, RO {}, RESERV {}, DLEN {}.", VIDEO_HEADER, tempFrameID, tempFragID,
                 tempWidth, tempHeigth, tempRo, tempReserv, tempVideoLen);
@@ -453,11 +454,23 @@ public class ComListEth {
         return Bytes.wrap(bytesArray);
     }
 
-    public byte[] waitAnsvwer(UDPInputStream comIS, byte[] msg) throws IOException {
+    private static int tick = 0;
+
+    /**
+     * Чтение ответа
+     *
+     * @param comIS входной поток
+     * @param msg   отправленное сообщение
+     * @return принятое сообщение, null если формат подтверждения не подходит
+     * @throws IOException, если нет ответа
+     */
+    public byte[] waitAnswer(UDPInputStream comIS, byte[] msg) throws IOException {
+        tick = 0;
+        byte[] bAnswer = null;
 
         byte[] bytes = new byte[4];
         Bytes wrapMsg = Bytes.wrap(bytes);
-        int tick = 0;
+
         int availableBytes = -1;
         do {
             int read = 0;
@@ -474,14 +487,16 @@ public class ComListEth {
             }
 
 
-            if (read == 4 && (!comIS.getClientIP().equals(myIp))) {//если подтверждение или ощибка
+            if (read == 4 && (!comIS.getClientIP().equals(myIp))) {//если подтверждение, ошибка, пришли данные
 
                 //Читаем заголовок
                 if (wrapMsg.startsWith(COM_HEADER.array())) {
-                    if (isError(wrapMsg)) {
-                        LOG.debug("Пришла ошибка на тике{},сообщение {}", tick, wrapMsg);
-                        throw new IOException("Ошибка " + wrapMsg);
+
+                    if (isError(wrapMsg, msg)) {// проверяем на наличие ошибки
+                        LOG.debug("Error in answer {} /tick {}", wrapMsg, tick);
+                        throw new IOException("Error MSG: " + wrapMsg);
                     }
+
                     //раскадровка по командам
                     switch (wrapMsg.byteAt(2)) {
 
@@ -492,24 +507,22 @@ public class ComListEth {
 
                             break;
                         case COM_WRITE:
-                            tick = 5;
+
                             LOG.debug("COM_WRITE: {}", availableBytes);
-                            comIS.skip(availableBytes);
+                            bAnswer = parseAnswer(comIS, wrapMsg, msg);
+
                             break;
                         case COM_READ:
-                            tick = 5;
                             LOG.debug("COM_READ: {}", availableBytes);
-                            comIS.skip(availableBytes);
+                            bAnswer = parseAnswer(comIS, wrapMsg, msg);
                             break;
                         case COM_BLK_WRITE:
-                            tick = 5;
                             LOG.debug("COM_BLK_WRITE: {}", availableBytes);
-                            comIS.skip(availableBytes);
+                            bAnswer = parseAnswer(comIS, wrapMsg, msg);
                             break;
                         case COM_BLK_READ:
-                            tick = 5;
                             LOG.debug("COM_BLK_READ: {}", availableBytes);
-                            comIS.skip(availableBytes);
+                            bAnswer = parseAnswer(comIS, wrapMsg, msg);
                             break;
                         default:
                             comIS.skip(availableBytes);
@@ -518,21 +531,127 @@ public class ComListEth {
 
                 } else {
                     //повторно отправить сообщение
-                    LOG.error("AnswerMSG without Header{} try , {}", wrapMsg, tick);
+                    LOG.error("AnswerMSG without Header {} try : {}", wrapMsg, tick);
                     comIS.skip(availableBytes);
                 }
 
             } else {
+                //Неправильное сообщение
                 LOG.debug("No answer, or my IP, MSG / {} / try : {}", wrapMsg, tick);
             }
 
         }
         while (tick++ < 3);
 
-
-        return wrapMsg.array();
+        return bAnswer;
     }
 
+    /**
+     * Распарсивание принятого сообщения.
+     *
+     * @param comIS  входной поток
+     * @param header ШАПКА
+     * @param outMSG отправленное сообщение
+     * @return ответное сообщение
+     */
+    private byte[] parseAnswer(UDPInputStream comIS, Bytes header, byte[] outMSG) throws IOException {
+
+        //////////////////////////////////////////////////////////////////
+        //   |b1       |b0      |b0     |b0     /|b3 b2 b1 b0	|VAR    //
+        //   |HEADER   |DEV_ID	|CMD	|FUNC	/|DLEN          |DATA   //
+        //////////////////////////////////////////////////////////////////
+
+        Bytes wrapOutMSG = Bytes.wrap(outMSG);
+
+        boolean compare = wrapOutMSG.byteAt(2) == header.byteAt(2) &&
+                wrapOutMSG.byteAt(3) == header.byteAt(3);
+
+
+        int available = comIS.available();
+
+        if (available == 0) {
+            //пришло подтверждение сообщения
+
+            if (compare) {
+                //если подтверждение, то возвращаем его
+                tick = 5;
+                return header.array();
+            } else {
+                //если не совпадает, то возвращаем null и идет повтор
+                return null;
+            }
+
+        } else {
+            //пришли данные
+
+            byte[] dlen = new byte[4];//длина данных
+            comIS.read(dlen);
+            Bytes wrapdlen = Bytes.wrap(dlen);
+
+            int valueLength = wrapdlen.toInt();
+
+            byte[] value = new byte[available - 4]; //данные
+            comIS.read(value);
+            Bytes wrapValue = Bytes.wrap(value);
+
+            byte func = header.byteAt(3);
+
+            switch (func) {
+                case (0x01):
+                    LOG.debug("ID setted in: (byte) {}", wrapValue.toByte());
+                    break;
+                case (0x02):
+                    LOG.debug("Power setted in: (byte) {}", wrapValue.toByte());
+                    break;
+                case (0x03):
+                    LOG.debug("Int time setted in: (int) {}", wrapValue.toInt());
+                    break;
+                case (0x04):
+                    LOG.debug("VR0 setted in: (int) {}", wrapValue.toInt());
+                    break;
+                case (0x05):
+                    LOG.debug("REF setted in: (byte) {}", wrapValue.toByte());
+                    break;
+                case (0x06):
+                    LOG.debug("VVA setted in: (int) {}", wrapValue.toInt());
+                    break;
+                case (0x07):
+                    LOG.debug("Cap setted in: (byte) {}", wrapValue.toByte());
+                    break;
+                case (0x08):
+                    LOG.debug("Dim setted in: (byte) {}", wrapValue.toByte());
+                    break;
+                case (0x09):
+                    LOG.debug("Reset setted in: (byte) {}", wrapValue.toByte());
+                    break;
+                case (0x0A):
+                    LOG.debug("Flip mode setted in: (byte) {}", wrapValue.toByte());
+                    break;
+                case (0x0B):
+                    LOG.debug("Spec power setted in: (int[]) {}", Arrays.toString(wrapValue.toIntArray()));
+                    break;
+                case (0x0C):
+                    LOG.debug("Sensor temp setted in: (int) {}", wrapValue.toInt());
+                    break;
+                case (0x0D):
+                    LOG.debug("M_power setted in: (byte) {}", wrapValue.toByte());
+                    break;
+                case (0x0E):
+                    LOG.debug("Property setted in: (byte[]) {}", wrapValue);
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected func value: " + func);
+            }
+            tick = 5;
+            return value;
+        }
+    }
+
+    /**
+     * Добавление устройства в список.
+     *
+     * @param clientIP IP ответившего устройства
+     */
     private void addDevises(UDPInputStream clientIP) {
 
         String stringDetIP = clientIP.getClientIP().getHostAddress();
@@ -542,24 +661,63 @@ public class ComListEth {
         device.setResolution(grabber.getSize());
 
         devices.add(device);
-        LOG.error("Добавлено устройство {}", device);
+        LOG.trace("Added device: {}", device);
 
     }
 
-    private boolean isError(Bytes wrapMsg) {
+    /**
+     * Распарсивание на наличие ошибок
+     *
+     * @param wrapMsg входящее сообщение
+     * @param msg
+     * @return
+     */
+    private boolean isError(Bytes wrapMsg, byte[] msg) {
         byte byteAt = wrapMsg.byteAt(3);
 
         if (byteAt < 0) {
             //обработка ошибки
-            LOG.error("ERROR MSG {}, ANSVER CODE: {}", wrapMsg, byteAt);
+            switch (byteAt) {
+                case (byte) 0x81:
+                    LOG.debug("Error in MSG {} - ILLEGAL COMAND", Arrays.toString(msg));
+                    break;
+                case (byte) 0x82:
+                    LOG.debug("Error in MSG {} - ILLEGAL FUNCTION", Arrays.toString(msg));
+                    break;
+                case (byte) 0x83:
+                    LOG.debug("Error in MSG {} - ILLEGAL DATA VALUE", Arrays.toString(msg));
+                    break;
+                case (byte) 0x84:
+                    LOG.debug("Error in MSG {} - SERVER DEVICE FAILURE", Arrays.toString(msg));
+                    break;
+                case (byte) 0x85:
+                    LOG.debug("Error in MSG {} - ACKNOWLEDGE", Arrays.toString(msg));
+                    break;
+                case (byte) 0x86:
+                    LOG.debug("Error in MSG {} - SERVER DEVICE BUSY", Arrays.toString(msg));
+                    break;
+                case (byte) 0x87:
+                    LOG.debug("Error in MSG {} - MEMORY PARITY ERROR", Arrays.toString(msg));
+                    break;
+                case (byte) 0x88:
+                    LOG.debug("Error in MSG {} - RESERV", Arrays.toString(msg));
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected error value: " + byteAt);
+            }
             return true;
         } else {
             //подтверждение записи
-            LOG.debug("MSG {}, ANSVER function: {}", wrapMsg, byteAt);
         }
         return false;
     }
 
+    /**
+     * Отправка синхронного сообщения на детектор
+     *
+     * @param MSG сообщение
+     * @return ответ от устройства. null если нет ответа
+     */
     private byte[] sendSynhMSG(byte[] MSG) {
 
         DetectorNetTask detectorNetTask = new DetectorNetTask(grabber.getDriver(), null, MSG);
@@ -568,7 +726,12 @@ public class ComListEth {
         return incMSG;
     }
 
-
+    /**
+     * Отправка броадкаст сообщения.
+     *
+     * @param MSG сообщение
+     * @return ответ
+     */
     private byte[] sendSynhBroadcastMSG(byte[] MSG) {
 
         DetectorNetTask detectorNetTask = new DetectorNetTask(grabber.getDriver(), null, MSG, broadcastIp);

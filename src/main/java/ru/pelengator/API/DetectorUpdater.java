@@ -87,7 +87,7 @@ public class DetectorUpdater implements Runnable {
     /**
      * Целевой FPS.
      */
-    private static final int TARGET_FPS = 50;
+    private static final int TARGET_FPS = 25;
     /**
      * Фабрика.
      */
@@ -205,7 +205,6 @@ public class DetectorUpdater implements Runnable {
     }
 
     private void tick() {
-
         if (!detector.isOpen()) {
             return;
         }
@@ -248,7 +247,9 @@ public class DetectorUpdater implements Runnable {
 
         if (detector.isOpen()) {
             try {
+
                 executor.schedule(this, delay, TimeUnit.MILLISECONDS);
+                LOG.trace("Updater dalay {} ", delay);
             } catch (RejectedExecutionException e) {
                 LOG.trace("Detector update has been rejected", e);
             }
@@ -272,7 +273,6 @@ public class DetectorUpdater implements Runnable {
      * @return Изображение, которое хранится в кеше
      */
     public BufferedImage getImage() {
-
         int i = 0;
         while (image.get() == null) {
 
