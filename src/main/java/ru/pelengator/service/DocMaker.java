@@ -11,14 +11,14 @@ import javafx.scene.layout.VBox;
 import org.apache.pdfbox.cos.COSArray;
 import org.apache.pdfbox.cos.COSDictionary;
 import org.apache.pdfbox.cos.COSName;
+import org.apache.pdfbox.cos.COSString;
 import org.apache.pdfbox.multipdf.PDFCloneUtility;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.PDResources;
+import org.apache.pdfbox.pdmodel.*;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDTrueTypeFont;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
 import org.apache.pdfbox.pdmodel.interactive.form.PDField;
@@ -29,8 +29,6 @@ import org.jfree.chart.JFreeChart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.pelengator.API.utils.ImageUtils;
-import ru.pelengator.API.utils.Utils;
-import ru.pelengator.App;
 import ru.pelengator.model.ExpInfo;
 
 import javax.imageio.ImageIO;
@@ -40,11 +38,11 @@ import java.io.*;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static ru.pelengator.API.utils.Utils.bpInCentral;
-import static ru.pelengator.API.utils.Utils.separator;
 import static ru.pelengator.App.loadFilePath;
 
 /**
@@ -293,7 +291,12 @@ public class DocMaker {
             File file = new File(path);
             this.pDDocument = PDDocument.load(file);
             this.pDAcroForm = pDDocument.getDocumentCatalog().getAcroForm();
-            pDResources = pDAcroForm.getDefaultResources();
+            this.pDResources = pDAcroForm.getDefaultResources();
+
+            List<String> fontNames = prepareFont(pDDocument,
+                    Arrays.asList(loadTrueTypeFont(pDDocument, "ARIALUNI.TTF"),
+                            PDType1Font.HELVETICA_BOLD));
+
 
             for (Map.Entry<String, Object> item : map.entrySet()) {
                 String key = item.getKey();
@@ -303,7 +306,7 @@ public class DocMaker {
 
                     if (field instanceof PDTextField) {
                         LOG.debug("(type: " + field.getClass().getSimpleName() + ")");
-                        saveField(key, (String) item.getValue());
+                        saveField(key, (String) item.getValue(), fontNames);
                         LOG.debug("value is set to: '" + item.getValue() + "'");
 
                     } else if (field instanceof PDPushButton) {
@@ -336,10 +339,27 @@ public class DocMaker {
      * @param value Значение.
      * @throws IOException
      */
-    public void saveField(String name, String value) throws IOException {
+    public void saveField(String name, String value, List<String> fontNames) {
+
         PDField field = pDAcroForm.getField(name);
-        pDAcroForm.setNeedAppearances(false);
-        field.setValue(value);
+        COSDictionary dict = field.getCOSObject();
+        COSString defaultAppearance = (COSString) dict
+                .getDictionaryObject(COSName.DA);
+        if (defaultAppearance != null) {
+            String appearanceStringstring = defaultAppearance.getString();
+            String[] splits = appearanceStringstring.split(" ", 2);
+            StringBuilder stringBuilder = new StringBuilder("/");
+            stringBuilder.append(fontNames.get(0)).append(" ").append(splits[1]);
+            dict.setString(COSName.DA,stringBuilder.toString());
+        }
+        pDAcroForm.setNeedAppearances(true);
+
+        try {
+            field.setValue(value);
+        } catch (IOException e) {
+            LOG.error("Error in typing fiels {} value {}", name, value);
+            throw new RuntimeException(e);
+        }
         LOG.debug("saved " + name + ":" + value);
     }
 
@@ -582,4 +602,41 @@ public class DocMaker {
         }
         return true;
     }
+
+    /**
+     * Добавление шрифтов в документ
+     *
+     * @param _pdfDocument документ
+     * @param fonts        список шрифтов
+     * @return перечень шрифтов
+     * @throws IOException
+     */
+    public List<String> prepareFont(PDDocument _pdfDocument, List<PDFont> fonts) throws IOException {
+        PDDocumentCatalog docCatalog = _pdfDocument.getDocumentCatalog();
+        PDAcroForm acroForm = docCatalog.getAcroForm();
+        PDResources res = acroForm.getDefaultResources();
+        if (res == null)
+            res = new PDResources();
+        List<String> fontNames = new ArrayList<String>();
+        for (PDFont font : fonts) {
+            fontNames.add(res.add(font).getName());
+        }
+        acroForm.setDefaultResources(res);
+        return fontNames;
+    }
+
+    /**
+     * Подгрузка шрифта
+     *
+     * @param _pdfDocument документ
+     * @param resourceName наименование шрифта
+     * @return обернутый шрифт
+     * @throws IOException
+     */
+    public PDFont loadTrueTypeFont(PDDocument _pdfDocument, String resourceName) throws IOException {
+        try (InputStream fontStream = getClass().getResourceAsStream(resourceName);) {
+            return PDTrueTypeFont.loadTTF(_pdfDocument, fontStream);
+        }
+    }
+
 }

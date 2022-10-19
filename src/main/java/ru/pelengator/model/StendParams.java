@@ -92,7 +92,7 @@ public class StendParams {
     private int tempREF = 1600; // напряжение референса два
     private int tempVOS = 1600; // напряжение скимминга
     private int tempVR0 = 20; //Напряжение смещения
-    private boolean tempKU = false; //Коэф. усиления
+    private boolean tempKU = false; //Коэф. усиления 1-false, 3 -true
 
     private String dimention = "128*128";
     /////

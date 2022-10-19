@@ -1,5 +1,6 @@
 package ru.pelengator;
 
+import at.favre.lib.bytes.Bytes;
 import javafx.application.Platform;
 import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
@@ -16,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import ru.pelengator.service.PotokService;
 
 import java.net.URL;
+import java.nio.ByteOrder;
 import java.util.*;
 
 import static ru.pelengator.API.utils.Utils.*;
@@ -367,7 +369,11 @@ public class PotokController implements Initializable {
         tfNomer.textProperty().bindBidirectional(controller.getParams().nomerProperty());
         tfCopy.textProperty().bindBidirectional(controller.getParams().copyProperty());
         tfOtk.textProperty().bindBidirectional(controller.getParams().otkProperty());
+
         tfData.textProperty().bindBidirectional(controller.getParams().dataProperty());
+        String dataWord=constructDataWord(controller);
+        tfData.setText(dataWord);
+
         TXT_0_0.textProperty().bindBidirectional(controller.getParams().TXT_0_0Property());
         TXT_0_1.textProperty().bindBidirectional(controller.getParams().TXT_0_1Property());
         TXT_0_2.textProperty().bindBidirectional(controller.getParams().TXT_0_2Property());
@@ -418,6 +424,31 @@ public class PotokController implements Initializable {
 
         str = "Пороговая облученность, Вт\u00B7см\u00AF \u00B2";
         tx6.setText(str);
+    }
+
+    /**
+     * Заполнение командного слова DataWord
+     * @return 2 байта
+     */
+    private String constructDataWord(Controller controller) {
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //|Start  |Mode   |GC   | –  |PW(1-0)|I(2-0) |DE(6-0)     |TS(7-0)          |RO(2-0)    |OM1    | – | – |RST|OE |//
+        //| 1     | 0     |ку   | 0  | 1 1   | 0 0 0 |смещение    | 0 0 0 0 0 0 0 0 | 0 0 0     | 0     | 0 | 0 | 0 | 1 |//
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        byte[]defValue=new byte[]{(byte) 0x8C,0x00,0x00,0x01};
+        Bytes dataWord = Bytes.wrap(defValue, ByteOrder.BIG_ENDIAN);
+        BitSet bitSet = dataWord.toBitSet();
+        //коэфициент смещения
+        if(controller.getParams().isTempKU()){
+           bitSet.set(5,true);//1- если ку 3
+        }
+        defValue = bitSet.toByteArray();
+
+        //VR0
+        byte vR0 =(byte) controller.getParams().getTempVR0();
+        defValue[1]=vR0;
+
+        return "0x"+Bytes.wrap(defValue).encodeHex(true);
     }
 
     public Controller getMainController() {

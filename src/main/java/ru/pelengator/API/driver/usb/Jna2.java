@@ -105,15 +105,18 @@ public class Jna2 implements Driver {
         if (!isOpened.get()) {
             int i = FTD3XX.FTD3XX_INSTANCE.FT_Create("FTDI SuperSpeed-FIFO Bridge", (byte) 0x0A, hendler);
             //тест
-            value = FT_STATUS.values()[i];
-
+            if (comList.isTest()) {
+                value = FT_STATUS.FT_OK;
+            } else {
+                value = FT_STATUS.values()[i];
+            }
             if (value == FT_STATUS.FT_OK) {
                 isOpened.compareAndSet(false, true);
                 validHendler.compareAndSet(false, true);
-                LOG.trace("Detector opened.Create hendler,status {} hendler {}", value, validHendler.get());
+                LOG.debug("Detector opened.Create hendler,status {} hendler {}", value, validHendler.get());
             } else {
                 validHendler.set(false);
-                LOG.trace("Detector not opened. Dont create hendler, status {} hendler {}", value, validHendler.get());
+                LOG.debug("Detector not opened. Dont create hendler, status {} hendler {}", value, validHendler.get());
             }
 
         } else {
@@ -134,6 +137,10 @@ public class Jna2 implements Driver {
         int i = FTD3XX.FTD3XX_INSTANCE.FT_WritePipe(hendler.getPointer(0), (byte) 0x02, pBuff, data.length(), byteTrans, (Structure) null);
         //тест
         FT_STATUS status = FT_STATUS.values()[i];
+        //test
+        if(comList.isTest()){
+            status=FT_STATUS.FT_OK;
+        }
         if (status != FT_STATUS.FT_OK) {
             LOG.error("Writing error {}", status);
             validHendler.set(false);
@@ -152,6 +159,10 @@ public class Jna2 implements Driver {
         Bytes from = Bytes.from(byteArray);
         //тест
         FT_STATUS status = FT_STATUS.values()[i];
+        //test
+        if(comList.isTest()){
+            status=FT_STATUS.FT_OK;
+        }
         if (status != FT_STATUS.FT_OK) {
             LOG.error("Reading error {}", status);
             validHendler.set(false);
@@ -327,6 +338,7 @@ public class Jna2 implements Driver {
                 nextFrame();
                 return ft_status;
             } else if (ft_status1 != FT_STATUS.FT_OK) {
+
                 LOG.error("Hendler not started inpower session");
                 return FT_STATUS.FT_EEPROM_NOT_PRESENT;
             }
@@ -343,7 +355,7 @@ public class Jna2 implements Driver {
             nextFrame();
             needToWaite.set(true);
             ft_status = comList.setPower(set);
-            LOG.info("Setting Power in power session {}", ft_status);
+            LOG.debug("Setting Power in power session {}", ft_status);
         } else {
 
             if (!validHendler.get()) {
@@ -422,7 +434,7 @@ public class Jna2 implements Driver {
      *
      * @return
      */
-        public FT_STATUS setID() {
+    public FT_STATUS setID() {
 
         if (!validHendler.get()) {
             LOG.error("Hendler not valid");

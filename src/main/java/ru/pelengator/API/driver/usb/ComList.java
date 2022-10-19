@@ -32,7 +32,7 @@ public class ComList {
     /**
      * Флаг тестирования.
      */
-    private boolean isTest = false;
+    private boolean isTest = true;
     ///////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////методы управления
     byte DEV_ID = 0x05;
@@ -120,6 +120,7 @@ public class ComList {
 
     /**
      * Установка времени интегрирования.
+     *
      * @param time
      * @return
      */
@@ -207,6 +208,10 @@ public class ComList {
                 .append(SETID[1])    //команда               |
                 .append(DEV_ID);     //данные               _|
         FT_STATUS ft_status = grabber.writePipe(msg);
+        //test
+        if (isTest()) {
+            ft_status = FT_STATUS.FT_OK;
+        }
         LOG.info("ID setted {}", ft_status);
 
         return ft_status;
@@ -229,6 +234,7 @@ public class ComList {
 
     /**
      * Запросполногокадра.
+     *
      * @return
      */
     public Bytes nextFrame() {
@@ -237,11 +243,11 @@ public class ComList {
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //проверка на пустой массив
         if (!grabber.getValidHendler().get()) {
-            LOG.trace("Exitig. Closing detector. Hendler not valid",bytesData);
+            LOG.debug("Exitig. Closing detector. Hendler not valid", bytesData);
             grabber.close();
             return null;
         }
-       // LOG.trace("Parsing frame {}",bytesData);
+        // LOG.trace("Parsing frame {}",bytesData);
         /**
          * Есть заголовок?
          */
@@ -268,10 +274,10 @@ public class ComList {
                         }
                         //повторяем чтение до целого кадра
                         Bytes btData = readData();
-                      //выход при обрыве данных
+                        //выход при обрыве данных
                         if (btData.isEmpty()) {
                             //Выход сюда, когда нет связи.
-                            LOG.trace("Exiting in center of frame!");
+                            LOG.debug("Exiting in center of frame!");
                             grabber.close();
                             clearBuffer();
                             return null;
@@ -281,32 +287,34 @@ public class ComList {
 
                     Bytes bytes = summPartsOfFrame();
                     if (bytes.length() < (2 * grabber.getHeight() * grabber.getWidth())) {
-                        LOG.trace("Dimension not same!");
+                        LOG.debug("Dimension not same!");
                         return null;
                     }
                     return bytes;
                 case 0x00://установка ID
                 case 0x02://установка питания
                 case 0x05://установка какого-либо параметра
-                    LOG.trace("Answer " + bytesData);
+                //    LOG.debug("Answer " + bytesData);
                     grabber.getNeedToWaite().set(false);
                     return null;
 
                 default:
-                    LOG.trace("Answer" + bytesData);
+              //      LOG.debug("Answer" + bytesData);
                     return null;
             }
         } else {
             /**
              * Заголовка нет
              */
-           //0x008000000 подтверждение ID
-            if(bytesData.length()==4){
-                LOG.trace("Answer on Set ID " + bytesData);
+            //0x00 80 00 00  подтверждение ID
+            if (bytesData.length() == 4) {
+                LOG.debug("Answer on Set ID " + bytesData);
                 grabber.getNeedToWaite().set(false);
+            } else if (bytesData.length() == 0) {
+                LOG.debug("Answer is empty " + bytesData);
+            } else {
+                LOG.debug("Answer without header " + bytesData);
             }
-
-            LOG.trace("Answer without header " + bytesData);
             return null;
         }
     }
@@ -375,6 +383,7 @@ public class ComList {
 
     /**
      * Суммирование частей кадра.
+     *
      * @return
      */
     private Bytes summPartsOfFrame() {
@@ -399,6 +408,7 @@ public class ComList {
         bufferVideoParts.clear();
 
     }
+
     /**
      * Тестовые данные.
      *
@@ -409,6 +419,7 @@ public class ComList {
 
     /**
      * Тестовые данные.
+     *
      * @param bytes
      * @return
      */
@@ -436,5 +447,9 @@ public class ComList {
         }
         count++;
         return bytes;
+    }
+
+    public boolean isTest() {
+        return isTest;
     }
 }
