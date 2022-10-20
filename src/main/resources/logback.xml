@@ -40,10 +40,13 @@
 
     <logger name="ru.pelengator" level="DEBUG" additivity="false">
         <appender-ref ref="ASYNC"/>
+    </logger>
+
+    <logger name="ru.pelengator" level="OFF" additivity="false">
         <appender-ref ref="CONSOLE"/>
     </logger>
 
-    <root level="ERROR">
+    <root level="NONE">
         <appender-ref ref="trace"/>
     </root>
 

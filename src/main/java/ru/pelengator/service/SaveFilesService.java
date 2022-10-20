@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.pelengator.ParamsController;
 import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.*;
 
 import static ru.pelengator.API.utils.Utils.*;
@@ -190,8 +191,8 @@ public class SaveFilesService extends Service<Void> {
         public String call() throws Exception {
             boolean b = saveOrder(controller.getController().getSelExp(), controller.getScrlPane(), pdfFile);
             if (!b) {
-                failed();
-                return "PDF файл записан";
+                throw new IOException("PDF файл записан");
+            //    return "PDF файл записан";
             }
             return "PDF файл записан";
         }

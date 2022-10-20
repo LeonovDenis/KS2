@@ -21,7 +21,6 @@ import javafx.concurrent.Worker;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -35,6 +34,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.decimal4j.util.DoubleRounder;
 import org.slf4j.Logger;
@@ -1541,9 +1541,11 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         PotokController potokController = potokFxmlLoader.getController();
         potokController.initController(this);
         Scene scene = new Scene(root);
-        stage.setTitle("Расчет значения потока и ввод параметров стенда");
+        stage.setTitle("Расчет значения потока, ввод параметров стенда");
         stage.setScene(scene);
         stage.centerOnScreen();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setResizable(false);
         stage.show();
     }
 
@@ -1563,6 +1565,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         stage.setTitle("Расчет характеристик детектора");
         stage.setScene(scene);
         stage.centerOnScreen();
+        stage.initModality(Modality.APPLICATION_MODAL);
         stage.show();
     }
 

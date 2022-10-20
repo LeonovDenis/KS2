@@ -1745,8 +1745,9 @@ public class Utils {
                 .toFXImage(bufferedImageTolist, null);
 
         imageView.imageProperty().set(imageToFX2);
-        imageView.fitHeightProperty().bind(pane.heightProperty().multiply(0.95));
-        imageView.fitWidthProperty().bind(pane.heightProperty().multiply(0.95));
+
+        imageView.fitHeightProperty().bind(pane.widthProperty().divide(3.0));
+        imageView.fitWidthProperty().bind(pane.widthProperty().divide(3.0));
 
         imageView.setOnMouseClicked(event -> {
             showBigImage(badImage2, w, h);
@@ -1755,15 +1756,7 @@ public class Utils {
         bufferedImageTolist.flush();
         bufferedImageToOrder.flush();
 
-        StackPane stackPane = new StackPane();
-        stackPane.getChildren().add(imageView);
-
-        pane.setAlignment(Pos.BASELINE_CENTER);
-        HBox hBox1 = new HBox();
-        hBox1.setPadding(new Insets(0, 0, 0, 0));
-        hBox1.getChildren().add(stackPane);
-
-        pane.getChildren().add(hBox1);
+        pane.getChildren().add(imageView);
         return null;
     }
 

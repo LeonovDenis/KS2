@@ -28,7 +28,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<StackPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.pelengator.ParamsController">
+<StackPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.pelengator.ParamsController">
    <children>
       <TabPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" side="BOTTOM" tabMinHeight="30.0">
          <tabs>
@@ -43,41 +43,50 @@
                         </HBox>
                      </left>
                      <top>
-                        <GridPane BorderPane.alignment="CENTER_RIGHT">
+                        <BorderPane BorderPane.alignment="CENTER_RIGHT">
                            <BorderPane.margin>
                               <Insets bottom="5.0" top="5.0" />
                            </BorderPane.margin>
-                           <columnConstraints>
-                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="465.3333435058594" minWidth="10.0" prefWidth="465.3333435058594" />
-                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="288.0" minWidth="10.0" prefWidth="167.66665649414062" />
-                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="209.0" minWidth="10.0" prefWidth="122.3333740234375" />
-                              <ColumnConstraints />
-                              <ColumnConstraints />
-                           </columnConstraints>
-                           <rowConstraints>
-                              <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                           </rowConstraints>
-                           <children>
-                              <CheckBox fx:id="cbPrint" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Перечень брака" GridPane.columnIndex="2" GridPane.columnSpan="3">
-                                 <GridPane.margin>
-                                    <Insets left="5.0" />
-                                 </GridPane.margin>
-                              </CheckBox>
-                              <CheckBox fx:id="cbWithBP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" selected="true" text="Расчет с учетом дефектов" GridPane.columnIndex="1" GridPane.halignment="LEFT">
-                                 <GridPane.margin>
-                                    <Insets />
-                                 </GridPane.margin>
-                              </CheckBox>
-                              <StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                           <right>
+                              <GridPane BorderPane.alignment="CENTER">
+                                 <columnConstraints>
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="288.0" minWidth="10.0" prefWidth="167.66665649414062" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="209.0" minWidth="10.0" prefWidth="122.3333740234375" />
+                                    <ColumnConstraints />
+                                    <ColumnConstraints />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                 </rowConstraints>
                                  <children>
-                                    <ProgressBar fx:id="pb_status" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" progress="0.0" />
+                                    <CheckBox fx:id="cbPrint" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Перечень брака" GridPane.columnIndex="1" GridPane.columnSpan="3">
+                                       <GridPane.margin>
+                                          <Insets left="5.0" />
+                                       </GridPane.margin>
+                                    </CheckBox>
+                                    <CheckBox fx:id="cbWithBP" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" selected="true" text="Расчет с учетом дефектов" GridPane.halignment="LEFT">
+                                       <GridPane.margin>
+                                          <Insets />
+                                       </GridPane.margin>
+                                    </CheckBox>
                                  </children>
-                                 <GridPane.margin>
-                                    <Insets left="5.0" right="5.0" />
-                                 </GridPane.margin>
+                                 <BorderPane.margin>
+                                    <Insets right="5.0" />
+                                 </BorderPane.margin>
+                              </GridPane>
+                           </right>
+                           <center>
+                              <StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
+                                 <children>
+                                    <ProgressBar fx:id="pb_status" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" progress="0.0">
+                                       <StackPane.margin>
+                                          <Insets left="5.0" right="5.0" />
+                                       </StackPane.margin>
+                                    </ProgressBar>
+                                 </children>
                               </StackPane>
-                           </children>
-                        </GridPane>
+                           </center>
+                        </BorderPane>
                      </top>
                      <center>
                         <ScrollPane fx:id="myPane" fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="438.0" stylesheets="@cp.css" BorderPane.alignment="CENTER">
@@ -86,7 +95,7 @@
                                  <children>
                                     <VBox layoutX="-1.0" layoutY="-1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
-                                          <TitledPane text="Расчет" underline="true">
+                                          <TitledPane expanded="false" text="Расчет" underline="true">
                                             <content>
                                               <AnchorPane minHeight="0.0" minWidth="0.0">
                                                    <children>
@@ -444,77 +453,73 @@
                                                 </AnchorPane>
                                             </content>
                                           </TitledPane>
-                                          <TitledPane expanded="false" layoutX="10.0" layoutY="253.0" text="Перечень забракованных элементов" underline="true">
+                                          <TitledPane layoutX="10.0" layoutY="253.0" text="Перечень забракованных элементов" underline="true">
                                              <content>
-                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="370.0" prefWidth="321.0">
+                                                <AnchorPane minHeight="0.0" minWidth="0.0">
                                                    <children>
-                                                      <VBox alignment="TOP_RIGHT" layoutX="9.600000381469727" layoutY="9.600000381469727" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                      <StackPane alignment="CENTER_RIGHT" layoutX="9.600000381469727" layoutY="9.600000381469727" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                          <children>
-                                                            <HBox alignment="TOP_RIGHT">
+                                                            <VBox fx:id="scrlPane1" alignment="CENTER" prefHeight="300.0" />
+                                                            <GridPane alignment="TOP_RIGHT" maxWidth="-Infinity" prefHeight="121.0">
+                                                               <columnConstraints>
+                                                                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="5.0" minWidth="5.0" prefWidth="5.0" />
+                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="5.0" minWidth="5.0" prefWidth="5.0" />
+                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="5.0" minWidth="0.0" prefWidth="0.0" />
+                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="40.0" prefWidth="40.0" />
+                                                                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="5.0" minWidth="5.0" prefWidth="5.0" />
+                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" />
+                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" />
+                                                                  <ColumnConstraints />
+                                                                  <ColumnConstraints />
+                                                                  <ColumnConstraints />
+                                                                  <ColumnConstraints />
+                                                                  <ColumnConstraints />
+                                                                  <ColumnConstraints />
+                                                                  <ColumnConstraints />
+                                                               </columnConstraints>
+                                                               <rowConstraints>
+                                                                  <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
+                                                                  <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
+                                                                  <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
+                                                                  <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints maxHeight="30.0" minHeight="16.0" prefHeight="29.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints />
+                                                                  <RowConstraints />
+                                                                  <RowConstraints />
+                                                               </rowConstraints>
                                                                <children>
-                                                                  <VBox fx:id="scrlPane1" alignment="CENTER" fillWidth="false" focusTraversable="true" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="550.0" />
-                                                                  <GridPane alignment="TOP_RIGHT" maxWidth="-Infinity" prefHeight="121.0">
-                                                                     <columnConstraints>
-                                                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="5.0" minWidth="5.0" prefWidth="5.0" />
-                                                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="5.0" minWidth="5.0" prefWidth="5.0" />
-                                                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="5.0" minWidth="0.0" prefWidth="0.0" />
-                                                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="40.0" prefWidth="40.0" />
-                                                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="5.0" minWidth="5.0" prefWidth="5.0" />
-                                                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" />
-                                                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" />
-                                                                        <ColumnConstraints />
-                                                                        <ColumnConstraints />
-                                                                        <ColumnConstraints />
-                                                                        <ColumnConstraints />
-                                                                        <ColumnConstraints />
-                                                                        <ColumnConstraints />
-                                                                        <ColumnConstraints />
-                                                                     </columnConstraints>
-                                                                     <rowConstraints>
-                                                                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
-                                                                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
-                                                                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
-                                                                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints maxHeight="30.0" minHeight="16.0" prefHeight="29.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints />
-                                                                        <RowConstraints />
-                                                                        <RowConstraints />
-                                                                     </rowConstraints>
-                                                                     <children>
-                                                                        <Label fx:id="lbFullWindow1" alignment="CENTER" layoutX="235.0" layoutY="15.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="128*128" textAlignment="CENTER" GridPane.columnIndex="6" GridPane.rowIndex="4" />
-                                                                        <ColorPicker fx:id="cpItog" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="button" stylesheets="@cp.css" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER">
-                                                                           <GridPane.margin>
-                                                                              <Insets bottom="2.0" left="5.0" right="2.0" top="2.0" />
-                                                                           </GridPane.margin>
-                                                                           <value>
-                                                                              <Color red="0.6973684430122375" green="0.555311918258667" blue="0.555311918258667" />
-                                                                           </value>
-                                                                        </ColorPicker>
-                                                                        <Label fx:id="lbItog" alignment="CENTER" layoutX="236.0" layoutY="15.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="--" textAlignment="CENTER" GridPane.columnIndex="6" GridPane.rowIndex="6" />
-                                                                        <Label alignment="CENTER" layoutX="450.0" layoutY="13.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Количество выбракованных элементов" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="3" GridPane.columnSpan="4" GridPane.halignment="CENTER">
-                                                                           <GridPane.margin>
-                                                                              <Insets left="5.0" />
-                                                                           </GridPane.margin>
-                                                                        </Label>
-                                                                        <Label alignment="CENTER" layoutX="505.0" layoutY="14.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="32*32" textAlignment="CENTER" GridPane.columnIndex="5" GridPane.rowIndex="4" />
-                                                                        <Label fx:id="lbItog1" alignment="CENTER" layoutX="505.0" layoutY="38.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="--" textAlignment="CENTER" GridPane.columnIndex="5" GridPane.rowIndex="6" />
-                                                                        <Separator prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="5" GridPane.rowIndex="1" />
-                                                                        <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="2" GridPane.rowSpan="7" />
-                                                                        <Label alignment="CENTER" layoutX="928.0" layoutY="17.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="35.0" prefWidth="5.0" text="Цвет" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="3" GridPane.rowIndex="2" GridPane.rowSpan="3" />
-                                                                        <Label alignment="CENTER" layoutX="1063.0" layoutY="77.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Окно" textAlignment="CENTER" GridPane.columnIndex="5" GridPane.columnSpan="2" GridPane.rowIndex="2" />
-                                                                        <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="4" GridPane.rowIndex="2" GridPane.rowSpan="5" />
-                                                                        <Separator prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="5" GridPane.rowIndex="5" />
-                                                                        <Separator prefWidth="200.0" GridPane.columnIndex="4" GridPane.columnSpan="3" GridPane.rowIndex="3" />
-                                                                        <Separator prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="5" GridPane.rowIndex="7" />
-                                                                     </children>
-                                                                  </GridPane>
+                                                                  <Label fx:id="lbFullWindow1" alignment="CENTER" layoutX="235.0" layoutY="15.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="128*128" textAlignment="CENTER" GridPane.columnIndex="6" GridPane.rowIndex="4" />
+                                                                  <ColorPicker fx:id="cpItog" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="button" stylesheets="@cp.css" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER">
+                                                                     <GridPane.margin>
+                                                                        <Insets bottom="2.0" left="5.0" right="2.0" top="2.0" />
+                                                                     </GridPane.margin>
+                                                                     <value>
+                                                                        <Color red="0.6973684430122375" green="0.555311918258667" blue="0.555311918258667" />
+                                                                     </value>
+                                                                  </ColorPicker>
+                                                                  <Label fx:id="lbItog" alignment="CENTER" layoutX="236.0" layoutY="15.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="--" textAlignment="CENTER" GridPane.columnIndex="6" GridPane.rowIndex="6" />
+                                                                  <Label alignment="CENTER" layoutX="450.0" layoutY="13.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Количество выбракованных элементов" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="3" GridPane.columnSpan="4" GridPane.halignment="CENTER">
+                                                                     <GridPane.margin>
+                                                                        <Insets left="5.0" />
+                                                                     </GridPane.margin>
+                                                                  </Label>
+                                                                  <Label alignment="CENTER" layoutX="505.0" layoutY="14.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="32*32" textAlignment="CENTER" GridPane.columnIndex="5" GridPane.rowIndex="4" />
+                                                                  <Label fx:id="lbItog1" alignment="CENTER" layoutX="505.0" layoutY="38.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="--" textAlignment="CENTER" GridPane.columnIndex="5" GridPane.rowIndex="6" />
+                                                                  <Separator prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="5" GridPane.rowIndex="1" />
+                                                                  <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="2" GridPane.rowSpan="7" />
+                                                                  <Label alignment="CENTER" layoutX="928.0" layoutY="17.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="35.0" prefWidth="5.0" text="Цвет" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="3" GridPane.rowIndex="2" GridPane.rowSpan="3" />
+                                                                  <Label alignment="CENTER" layoutX="1063.0" layoutY="77.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Окно" textAlignment="CENTER" GridPane.columnIndex="5" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+                                                                  <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="4" GridPane.rowIndex="2" GridPane.rowSpan="5" />
+                                                                  <Separator prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="5" GridPane.rowIndex="5" />
+                                                                  <Separator prefWidth="200.0" GridPane.columnIndex="4" GridPane.columnSpan="3" GridPane.rowIndex="3" />
+                                                                  <Separator prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="5" GridPane.rowIndex="7" />
                                                                </children>
-                                                            </HBox>
+                                                            </GridPane>
                                                          </children>
-                                                      </VBox>
+                                                      </StackPane>
                                                    </children>
                                                 </AnchorPane>
                                              </content>

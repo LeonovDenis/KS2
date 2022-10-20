@@ -631,10 +631,12 @@ public class DocMaker {
 
         } finally {
             try {
+
                 if (pDDocument != null) {
                     pDDocument.save(pdfFile);
                     pDDocument.close();
                 }
+
             } catch (Exception e) {
                 LOG.error("Exeption in saveFile {}", e.getMessage());
                 return false;
