@@ -366,8 +366,8 @@ public class ParamsService extends Service<Void> {
         DEF_TYPE type = DEF_TYPE.TYPE_SKO;
 
         if (!selected) {
-            return addBpToList(null, SKOValue, noCorrection,
-                    persent, color, type);
+            return -1;
+            //  return addBpToList(null, SKOValue, noCorrection,persent, color, type);
         }
 
         return addBpToList(frList.get(2).getBpList(), SKOValue, noCorrection,
@@ -387,8 +387,8 @@ public class ParamsService extends Service<Void> {
         DEF_TYPE type = DEF_TYPE.TYPE_QUADRATIC;
 
         if (!selected) {
-            return addBpToList(null, quadraticMeanValue_delta, noCorrection,
-                    persent, color, type);
+            return -1;
+            // return addBpToList(null, quadraticMeanValue_delta, noCorrection, persent, color, type);
         }
 
         return addBpToList(frList.get(1).getBpList(), quadraticMeanValue_delta, noCorrection,
@@ -409,8 +409,8 @@ public class ParamsService extends Service<Void> {
         DEF_TYPE type = DEF_TYPE.TYPE_ARIFMETIC;
 
         if (!selected) {
-            return addBpToList(null, arifmeticMeanValue_delta, noCorrection,
-                    persent, color, type);
+            return -1;
+            //   return addBpToList(null, arifmeticMeanValue_delta, noCorrection,persent, color, type);
         }
 
         return addBpToList(frList.get(0).getBpList(), arifmeticMeanValue_delta, noCorrection,
@@ -573,7 +573,7 @@ public class ParamsService extends Service<Void> {
     private void showGistAndImage(VBox pane) {
 
 
-        if (controller.getCbArifmeticMean().isSelected()) {
+        if (controller.getCbArifmeticMean().isSelected() && params.getArifmeticMeanPersent() != 0) {
 
             RaspredData raspred = makeRaspred(arifmeticMeanValue_delta, "0.000E00", noCorrection, params.getArifmeticMeanPersent());
 
@@ -581,63 +581,63 @@ public class ParamsService extends Service<Void> {
                     "Число диодов", raspred, tempImage, frList.get(0).getBpList(), scList, controller);
         }
 
-        if (controller.getCbQuadraticMean().isSelected()) {
+        if (controller.getCbQuadraticMean().isSelected() && params.getQuadraticMeanPersent() != 0) {
 
             RaspredData raspred = makeRaspred(quadraticMeanValue_delta, "0.000E00", noCorrection, params.getQuadraticMeanPersent());
 
             showGistAndImageBox(pane, "Среднее квадратичное сигнала, В",
                     "Число диодов", raspred, tempImage, frList.get(1).getBpList(), scList, controller);
         }
-        if (controller.getCbSKO().isSelected()) {
+        if (controller.getCbSKO().isSelected() && params.getSKOPersent() != 0) {
 
             RaspredData raspred = makeRaspred(SKOValue, "0.000E00", noCorrection, params.getSKOPersent());
 
             showGistAndImageBox(pane, "СКО сигнала (шум), В",
                     "Число диодов", raspred, tempImage, frList.get(2).getBpList(), scList, controller);
         }
-        if (controller.getCbVw().isSelected()) {
+        if (controller.getCbVw().isSelected() && params.getVwPersent() != 0) {
 
             RaspredData raspred = makeRaspred(voltWatka, "0.000E00", noCorrection, params.getVwPersent());
 
             showGistAndImageBox(pane, "Вольтовая чувствительность, В\u00B7Вт\u00AF \u00B9",
                     "Число диодов", raspred, tempImage, frList.get(3).getBpList(), scList, controller);
         }
-        if (controller.getCbPorog().isSelected()) {
+        if (controller.getCbPorog().isSelected() && params.getPorogPersent() != 0) {
 
             RaspredData raspred = makeRaspred(porogSensivity, "0.000E00", noCorrection, params.getPorogPersent());
 
             showGistAndImageBox(pane, "Порог чувствительности, Вт\u00B7Гц-\u00BD",
                     "Число диодов", raspred, tempImage, frList.get(4).getBpList(), scList, controller);
         }
-        if (controller.getCbPorogStar().isSelected()) {
+        if (controller.getCbPorogStar().isSelected() && params.getPorogStarPersent() != 0) {
 
             RaspredData raspred = makeRaspred(porogSensivityStar, "0.000E00", noCorrection, params.getPorogStarPersent());
 
             showGistAndImageBox(pane, "Удельный порог чувствительности, Вт\u00B7Гц-\u00BD\u00B7см\u00AF \u00B9",
                     "Число диодов", raspred, tempImage, frList.get(5).getBpList(), scList, controller);
         }
-        if (controller.getCbDetectivity().isSelected()) {
+        if (controller.getCbDetectivity().isSelected() && params.getDetectivityPersent() != 0) {
 
             RaspredData raspred = makeRaspred(dDetectivity, "0.000E00", noCorrection, params.getDetectivityPersent());
 
             showGistAndImageBox(pane, "Обнаружительная способность, Вт\u00AF \u00B9\u00B7Гц\u00BD",
                     "Число диодов", raspred, tempImage, frList.get(6).getBpList(), scList, controller);
         }
-        if (controller.getCbDetectivityStar().isSelected()) {
+        if (controller.getCbDetectivityStar().isSelected() && params.getDetectivityStarPersent() != 0) {
 
             RaspredData raspred = makeRaspred(dDetectivityStar, "0.000E00", noCorrection, params.getDetectivityStarPersent());
 
             showGistAndImageBox(pane, "Удельная обнаруж. способность, Вт\u00AF \u00B9\u00B7Гц\u00BD\u00B7см",
                     "Число диодов", raspred, tempImage, frList.get(7).getBpList(), scList, controller);
         }
-        if (controller.getCbNETD().isSelected()) {
+        if (controller.getCbNETD().isSelected() && params.getNETDPersent() != 0) {
 
             RaspredData raspred = makeRaspred(netd, "0.000E00", noCorrection, params.getNETDPersent());
 
             showGistAndImageBox(pane, "NETD, К",
                     "Число диодов", raspred, tempImage, frList.get(8).getBpList(), scList, controller);
         }
-        if (controller.getCbExposure().isSelected()) {
+        if (controller.getCbExposure().isSelected() && params.getExposurePersent() != 0) {
 
             RaspredData raspred = makeRaspred(eExposure, "0.000E00", noCorrection, params.getExposurePersent());
 
@@ -777,15 +777,19 @@ public class ParamsService extends Service<Void> {
      */
     private void fillTextFields() {
 
-        controller.getTfArifmeticMean().setText(
-                String.format(Locale.CANADA, "%.3e", arifmeticMean).toUpperCase());
-        controller.getTfQuadraticMean().setText(
-                String.format(Locale.CANADA, "%.3e", quadraticMean).toUpperCase());
-        controller.getTfSKO().setText(
-                String.format(Locale.CANADA, "%.3e", SKO).toUpperCase());
-
+        if (controller.getCbArifmeticMean().isSelected()) {
+            controller.getTfArifmeticMean().setText(arifmeticMean == -1 ? "--" :
+                    String.format(Locale.CANADA, "%.3e", arifmeticMean).toUpperCase());
+        }
+        if (controller.getCbQuadraticMean().isSelected()) {
+            controller.getTfQuadraticMean().setText(quadraticMean == -1 ? "--" :
+                    String.format(Locale.CANADA, "%.3e", quadraticMean).toUpperCase());
+        }
+        if (controller.getCbSKO().isSelected()) {
+            controller.getTfSKO().setText(SKO == -1 ? "--" :
+                    String.format(Locale.CANADA, "%.3e", SKO).toUpperCase());
+        }
         if (controller.getCbVw().isSelected()) {
-
             controller.getTfVw().setText(vw == -1 ? "--" :
                     String.format(Locale.CANADA, "%.3e", vw).toUpperCase());
             controller.getLbVw_raspr().setText(vw == -1 ? "--" :

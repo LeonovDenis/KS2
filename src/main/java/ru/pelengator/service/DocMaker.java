@@ -8,31 +8,24 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.Chart;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import org.apache.pdfbox.cos.COSArray;
 import org.apache.pdfbox.cos.COSDictionary;
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.cos.COSString;
 import org.apache.pdfbox.multipdf.PDFCloneUtility;
 import org.apache.pdfbox.pdmodel.*;
-import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
-import org.apache.pdfbox.pdmodel.font.PDTrueTypeFont;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
 import org.apache.pdfbox.pdmodel.interactive.form.PDField;
-import org.apache.pdfbox.pdmodel.interactive.form.PDPushButton;
 import org.apache.pdfbox.pdmodel.interactive.form.PDTextField;
-import org.jfree.chart.ChartUtils;
-import org.jfree.chart.JFreeChart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.pelengator.API.utils.ImageUtils;
 import ru.pelengator.model.ExpInfo;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.sql.Timestamp;
@@ -53,21 +46,40 @@ public class DocMaker {
      * Логгер.
      */
     private static final Logger LOG = LoggerFactory.getLogger(DocMaker.class);
-    Map<String, Object> map;
-    PDDocument pDDocument;
-    PDAcroForm pDAcroForm;
-    PDResources pDResources;
-    String fileName = "protokol.pdf";
-    File pdfFile;
-    Node src;
-    ExpInfo exp;
+    private static Map<String, Object> map;
+    private static PDDocument pDDocument;
+    private static PDAcroForm pDAcroForm;
+    private static PDResources pDResources;
+    private static String fileName = "protokol.pdf";
+    private static File pdfFile;
+    private static Node src;
+    private static ExpInfo exp;
+    private static List<String> fontNames;
+    private static PDFont myFont;
+
+    static {
+        String path = loadFilePath(fileName);
+        File file = new File(path);
+        try {
+            pDDocument = PDDocument.load(file);
+            pDAcroForm = pDDocument.getDocumentCatalog().getAcroForm();
+            pDResources = pDAcroForm.getDefaultResources();
+
+        } catch (IOException e) {
+            LOG.error("PDF file not loaded {}", e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
 
     public DocMaker(ExpInfo exp, Node src, File pdfFile) {
 
-        map = createList(exp);
+        this.map = createList(exp);
         this.pdfFile = pdfFile;
         this.src = src;
         this.exp = exp;
+        this.myFont = loadTrueTypeFont(pDDocument, "ARIALUNI.TTF");
+        this.fontNames = prepareFont(pDDocument, Arrays.asList(myFont,
+                PDType1Font.HELVETICA_BOLD));
     }
 
 
@@ -127,8 +139,9 @@ public class DocMaker {
         ///////
 
         //1
-
-        if (exp.getArifmeticMean() < 0) {
+        double persent = -1;
+        double value = exp.getArifmeticMean();
+        if (value < 0 || Double.isNaN(value)) {
             hashMap.put("TXT_0_0", "---");
             hashMap.put("TXT_1_0", "---");
             hashMap.put("TXT_2_0", "---");
@@ -136,13 +149,22 @@ public class DocMaker {
             hashMap.put("TXT_4_0", "---");
         } else {
             hashMap.put("TXT_0_0", exp.getParams().getTXT_0_0());
-            hashMap.put("TXT_1_0", String.format(Locale.CANADA, "%.2e", exp.getArifmeticMean()).toUpperCase());
-            hashMap.put("TXT_2_0", String.format(Locale.CANADA, "%.2f", exp.getParams().getArifmeticMeanPersent()));
-            hashMap.put("TXT_3_0", String.valueOf(bpInCentral(exp.getFrList(), 0, 32)));
-            hashMap.put("TXT_4_0", String.valueOf(exp.getFrList().get(0).getBpList().size()));
+            hashMap.put("TXT_1_0", String.format(Locale.CANADA, "%.2e", value).toUpperCase());
+
+            persent = exp.getParams().getArifmeticMeanPersent();
+            if (persent != 0) {
+                hashMap.put("TXT_2_0", String.format(Locale.CANADA, "%.2f", persent));
+                hashMap.put("TXT_3_0", String.valueOf(bpInCentral(exp.getFrList(), 0, 32)));
+                hashMap.put("TXT_4_0", String.valueOf(exp.getFrList().get(0).getBpList().size()));
+            } else {
+                hashMap.put("TXT_2_0", "---");
+                hashMap.put("TXT_3_0", "---");
+                hashMap.put("TXT_4_0", "---");
+            }
         }
         //2
-        if (exp.getQuadraticMean() < 0) {
+        value = exp.getQuadraticMean();
+        if (value < 0 || Double.isNaN(value)) {
             hashMap.put("TXT_0_1", "---");
             hashMap.put("TXT_1_1", "---");
             hashMap.put("TXT_2_1", "---");
@@ -150,13 +172,22 @@ public class DocMaker {
             hashMap.put("TXT_4_1", "---");
         } else {
             hashMap.put("TXT_0_1", exp.getParams().getTXT_0_1());
-            hashMap.put("TXT_1_1", String.format(Locale.CANADA, "%.2e", exp.getQuadraticMean()).toUpperCase());
-            hashMap.put("TXT_2_1", String.format(Locale.CANADA, "%.2f", exp.getParams().getQuadraticMeanPersent()));
-            hashMap.put("TXT_3_1", String.valueOf(bpInCentral(exp.getFrList(), 1, 32)));
-            hashMap.put("TXT_4_1", String.valueOf(exp.getFrList().get(1).getBpList().size()));
+            hashMap.put("TXT_1_1", String.format(Locale.CANADA, "%.2e", value).toUpperCase());
+
+            persent = exp.getParams().getQuadraticMeanPersent();
+            if (persent != 0) {
+                hashMap.put("TXT_2_1", String.format(Locale.CANADA, "%.2f", persent));
+                hashMap.put("TXT_3_1", String.valueOf(bpInCentral(exp.getFrList(), 1, 32)));
+                hashMap.put("TXT_4_1", String.valueOf(exp.getFrList().get(1).getBpList().size()));
+            } else {
+                hashMap.put("TXT_2_1", "---");
+                hashMap.put("TXT_3_1", "---");
+                hashMap.put("TXT_4_1", "---");
+            }
         }
         //3
-        if (exp.getSKO() < 0) {
+        value = exp.getSKO();
+        if (value < 0 || Double.isNaN(value)) {
             hashMap.put("TXT_0_2", "---");
             hashMap.put("TXT_1_2", "---");
             hashMap.put("TXT_2_2", "---");
@@ -164,14 +195,23 @@ public class DocMaker {
             hashMap.put("TXT_4_2", "---");
         } else {
             hashMap.put("TXT_0_2", exp.getParams().getTXT_0_2());
-            hashMap.put("TXT_1_2", String.format(Locale.CANADA, "%.2e", exp.getSKO()).toUpperCase());
-            hashMap.put("TXT_2_2", String.format(Locale.CANADA, "%.2f", exp.getParams().getSKOPersent()));
-            hashMap.put("TXT_3_2", String.valueOf(bpInCentral(exp.getFrList(), 2, 32)));
-            hashMap.put("TXT_4_2", String.valueOf(exp.getFrList().get(2).getBpList().size()));
+            hashMap.put("TXT_1_2", String.format(Locale.CANADA, "%.2e", value).toUpperCase());
+
+            persent = exp.getParams().getSKOPersent();
+            if (persent != 0) {
+                hashMap.put("TXT_2_2", String.format(Locale.CANADA, "%.2f", persent));
+                hashMap.put("TXT_3_2", String.valueOf(bpInCentral(exp.getFrList(), 2, 32)));
+                hashMap.put("TXT_4_2", String.valueOf(exp.getFrList().get(2).getBpList().size()));
+            } else {
+                hashMap.put("TXT_2_2", "---");
+                hashMap.put("TXT_3_2", "---");
+                hashMap.put("TXT_4_2", "---");
+            }
         }
 
         //4
-        if (exp.getVw() < 0) {
+        value = exp.getVw();
+        if (value < 0 || Double.isNaN(value)) {
             hashMap.put("TXT_0_3", "---");
             hashMap.put("TXT_1_3", "---");
             hashMap.put("TXT_2_3", "---");
@@ -179,13 +219,22 @@ public class DocMaker {
             hashMap.put("TXT_4_3", "---");
         } else {
             hashMap.put("TXT_0_3", exp.getParams().getTXT_0_3());
-            hashMap.put("TXT_1_3", String.format(Locale.CANADA, "%.2e", exp.getVw()).toUpperCase());
-            hashMap.put("TXT_2_3", String.format(Locale.CANADA, "%.2f", exp.getParams().getVwPersent()));
-            hashMap.put("TXT_3_3", String.valueOf(bpInCentral(exp.getFrList(), 3, 32)));
-            hashMap.put("TXT_4_3", String.valueOf(exp.getFrList().get(3).getBpList().size()));
+            hashMap.put("TXT_1_3", String.format(Locale.CANADA, "%.2e", value).toUpperCase());
+
+            persent = exp.getParams().getVwPersent();
+            if (persent != 0) {
+                hashMap.put("TXT_2_3", String.format(Locale.CANADA, "%.2f", persent));
+                hashMap.put("TXT_3_3", String.valueOf(bpInCentral(exp.getFrList(), 3, 32)));
+                hashMap.put("TXT_4_3", String.valueOf(exp.getFrList().get(3).getBpList().size()));
+            } else {
+                hashMap.put("TXT_2_3", "---");
+                hashMap.put("TXT_3_3", "---");
+                hashMap.put("TXT_4_3", "---");
+            }
         }
         //5
-        if (exp.getPorog() < 0) {
+        value = exp.getPorog();
+        if (value < 0 || Double.isNaN(value)) {
             hashMap.put("TXT_0_4", "---");
             hashMap.put("TXT_1_4", "---");
             hashMap.put("TXT_2_4", "---");
@@ -193,13 +242,22 @@ public class DocMaker {
             hashMap.put("TXT_4_4", "---");
         } else {
             hashMap.put("TXT_0_4", exp.getParams().getTXT_0_4());
-            hashMap.put("TXT_1_4", String.format(Locale.CANADA, "%.2e", exp.getPorog()).toUpperCase());
-            hashMap.put("TXT_2_4", String.format(Locale.CANADA, "%.2f", exp.getParams().getPorogPersent()));
-            hashMap.put("TXT_3_4", String.valueOf(bpInCentral(exp.getFrList(), 4, 32)));
-            hashMap.put("TXT_4_4", String.valueOf(exp.getFrList().get(4).getBpList().size()));
+            hashMap.put("TXT_1_4", String.format(Locale.CANADA, "%.2e", value).toUpperCase());
+
+            persent = exp.getParams().getPorogPersent();
+            if (persent != 0) {
+                hashMap.put("TXT_2_4", String.format(Locale.CANADA, "%.2f", persent));
+                hashMap.put("TXT_3_4", String.valueOf(bpInCentral(exp.getFrList(), 4, 32)));
+                hashMap.put("TXT_4_4", String.valueOf(exp.getFrList().get(4).getBpList().size()));
+            } else {
+                hashMap.put("TXT_2_4", "---");
+                hashMap.put("TXT_3_4", "---");
+                hashMap.put("TXT_4_4", "---");
+            }
         }
         //6
-        if (exp.getPorogStar() < 0) {
+        value = exp.getPorogStar();
+        if (value < 0 || Double.isNaN(value)) {
             hashMap.put("TXT_0_5", "---");
             hashMap.put("TXT_1_5", "---");
             hashMap.put("TXT_2_5", "---");
@@ -207,13 +265,22 @@ public class DocMaker {
             hashMap.put("TXT_4_5", "---");
         } else {
             hashMap.put("TXT_0_5", exp.getParams().getTXT_0_5());
-            hashMap.put("TXT_1_5", String.format(Locale.CANADA, "%.2e", exp.getPorogStar()).toUpperCase());
-            hashMap.put("TXT_2_5", String.format(Locale.CANADA, "%.2f", exp.getParams().getPorogStarPersent()));
-            hashMap.put("TXT_3_5", String.valueOf(bpInCentral(exp.getFrList(), 5, 32)));
-            hashMap.put("TXT_4_5", String.valueOf(exp.getFrList().get(5).getBpList().size()));
+            hashMap.put("TXT_1_5", String.format(Locale.CANADA, "%.2e", value).toUpperCase());
+
+            persent = exp.getParams().getNETDPersent();
+            if (persent != 0) {
+                hashMap.put("TXT_2_5", String.format(Locale.CANADA, "%.2f", persent));
+                hashMap.put("TXT_3_5", String.valueOf(bpInCentral(exp.getFrList(), 5, 32)));
+                hashMap.put("TXT_4_5", String.valueOf(exp.getFrList().get(5).getBpList().size()));
+            } else {
+                hashMap.put("TXT_2_5", "---");
+                hashMap.put("TXT_3_5", "---");
+                hashMap.put("TXT_4_5", "---");
+            }
         }
         //7
-        if (exp.getDetectivity() < 0) {
+        value = exp.getDetectivity();
+        if (value < 0 || Double.isNaN(value)) {
             hashMap.put("TXT_0_6", "---");
             hashMap.put("TXT_1_6", "---");
             hashMap.put("TXT_2_6", "---");
@@ -221,13 +288,22 @@ public class DocMaker {
             hashMap.put("TXT_4_6", "---");
         } else {
             hashMap.put("TXT_0_6", exp.getParams().getTXT_0_6());
-            hashMap.put("TXT_1_6", String.format(Locale.CANADA, "%.2e", exp.getDetectivity()).toUpperCase());
-            hashMap.put("TXT_2_6", String.format(Locale.CANADA, "%.2f", exp.getParams().getDetectivityPersent()));
-            hashMap.put("TXT_3_6", String.valueOf(bpInCentral(exp.getFrList(), 6, 32)));
-            hashMap.put("TXT_4_6", String.valueOf(exp.getFrList().get(6).getBpList().size()));
+            hashMap.put("TXT_1_6", String.format(Locale.CANADA, "%.2e", value).toUpperCase());
+
+            persent = exp.getParams().getDetectivityPersent();
+            if (persent != 0) {
+                hashMap.put("TXT_2_6", String.format(Locale.CANADA, "%.2f", persent));
+                hashMap.put("TXT_3_6", String.valueOf(bpInCentral(exp.getFrList(), 6, 32)));
+                hashMap.put("TXT_4_6", String.valueOf(exp.getFrList().get(6).getBpList().size()));
+            } else {
+                hashMap.put("TXT_2_6", "---");
+                hashMap.put("TXT_3_6", "---");
+                hashMap.put("TXT_4_6", "---");
+            }
         }
         //8
-        if (exp.getDetectivityStar() < 0) {
+        value = exp.getDetectivityStar();
+        if (value < 0 || Double.isNaN(value)) {
             hashMap.put("TXT_0_7", "---");
             hashMap.put("TXT_1_7", "---");
             hashMap.put("TXT_2_7", "---");
@@ -235,13 +311,22 @@ public class DocMaker {
             hashMap.put("TXT_4_7", "---");
         } else {
             hashMap.put("TXT_0_7", exp.getParams().getTXT_0_7());
-            hashMap.put("TXT_1_7", String.format(Locale.CANADA, "%.2e", exp.getDetectivityStar()).toUpperCase());
-            hashMap.put("TXT_2_7", String.format(Locale.CANADA, "%.2f", exp.getParams().getDetectivityStarPersent()));
-            hashMap.put("TXT_3_7", String.valueOf(bpInCentral(exp.getFrList(), 7, 32)));
-            hashMap.put("TXT_4_7", String.valueOf(exp.getFrList().get(7).getBpList().size()));
+            hashMap.put("TXT_1_7", String.format(Locale.CANADA, "%.2e", value).toUpperCase());
+
+            persent = exp.getParams().getDetectivityStarPersent();
+            if (persent != 0) {
+                hashMap.put("TXT_2_7", String.format(Locale.CANADA, "%.2f", persent));
+                hashMap.put("TXT_3_7", String.valueOf(bpInCentral(exp.getFrList(), 7, 32)));
+                hashMap.put("TXT_4_7", String.valueOf(exp.getFrList().get(7).getBpList().size()));
+            } else {
+                hashMap.put("TXT_2_7", "---");
+                hashMap.put("TXT_3_7", "---");
+                hashMap.put("TXT_4_7", "---");
+            }
         }
         //9
-        if (exp.getNETD() < 0) {
+        value = exp.getNETD();
+        if (value < 0 || Double.isNaN(value)) {
             hashMap.put("TXT_0_8", "---");
             hashMap.put("TXT_1_8", "---");
             hashMap.put("TXT_2_8", "---");
@@ -249,13 +334,22 @@ public class DocMaker {
             hashMap.put("TXT_4_8", "---");
         } else {
             hashMap.put("TXT_0_8", exp.getParams().getTXT_0_8());
-            hashMap.put("TXT_1_8", String.format(Locale.CANADA, "%.2e", exp.getNETD()).toUpperCase());
-            hashMap.put("TXT_2_8", String.format(Locale.CANADA, "%.2f", exp.getParams().getNETDPersent()));
-            hashMap.put("TXT_3_8", String.valueOf(bpInCentral(exp.getFrList(), 8, 32)));
-            hashMap.put("TXT_4_8", String.valueOf(exp.getFrList().get(8).getBpList().size()));
+            hashMap.put("TXT_1_8", String.format(Locale.CANADA, "%.2e", value).toUpperCase());
+
+            persent = exp.getParams().getNETDPersent();
+            if (persent != 0) {
+                hashMap.put("TXT_2_8", String.format(Locale.CANADA, "%.2f", persent));
+                hashMap.put("TXT_3_8", String.valueOf(bpInCentral(exp.getFrList(), 8, 32)));
+                hashMap.put("TXT_4_8", String.valueOf(exp.getFrList().get(8).getBpList().size()));
+            } else {
+                hashMap.put("TXT_2_8", "---");
+                hashMap.put("TXT_3_8", "---");
+                hashMap.put("TXT_4_8", "---");
+            }
         }
         //10
-        if (exp.getExposure() < 0) {
+        value = exp.getExposure();
+        if (value < 0 || Double.isNaN(value)) {
             hashMap.put("TXT_0_9", "---");
             hashMap.put("TXT_1_9", "---");
             hashMap.put("TXT_2_9", "---");
@@ -263,10 +357,18 @@ public class DocMaker {
             hashMap.put("TXT_4_9", "---");
         } else {
             hashMap.put("TXT_0_9", exp.getParams().getTXT_0_9());
-            hashMap.put("TXT_1_9", String.format(Locale.CANADA, "%.2e", exp.getExposure()).toUpperCase());
-            hashMap.put("TXT_2_9", String.format(Locale.CANADA, "%.2f", exp.getParams().getExposurePersent()));
-            hashMap.put("TXT_3_9", String.valueOf(bpInCentral(exp.getFrList(), 9, 32)));
-            hashMap.put("TXT_4_9", String.valueOf(exp.getFrList().get(9).getBpList().size()));
+            hashMap.put("TXT_1_9", String.format(Locale.CANADA, "%.2e", value).toUpperCase());
+
+            persent = exp.getParams().getExposurePersent();
+            if (persent != 0) {
+                hashMap.put("TXT_2_9", String.format(Locale.CANADA, "%.2f", persent));
+                hashMap.put("TXT_3_9", String.valueOf(bpInCentral(exp.getFrList(), 9, 32)));
+                hashMap.put("TXT_4_9", String.valueOf(exp.getFrList().get(9).getBpList().size()));
+            } else {
+                hashMap.put("TXT_2_9", "---");
+                hashMap.put("TXT_3_9", "---");
+                hashMap.put("TXT_4_9", "---");
+            }
         }
 
         hashMap.put("WITHBP", exp.isWithDefPx() ? "Примечание - Результаты приведены с учетом дефектных элементов." :
@@ -287,17 +389,6 @@ public class DocMaker {
      */
     public boolean savePDF() {
         try {
-            String path = loadFilePath(fileName);
-            File file = new File(path);
-            this.pDDocument = PDDocument.load(file);
-            this.pDAcroForm = pDDocument.getDocumentCatalog().getAcroForm();
-            this.pDResources = pDAcroForm.getDefaultResources();
-
-            List<String> fontNames = prepareFont(pDDocument,
-                    Arrays.asList(loadTrueTypeFont(pDDocument, "ARIALUNI.TTF"),
-                            PDType1Font.HELVETICA_BOLD));
-
-
             for (Map.Entry<String, Object> item : map.entrySet()) {
                 String key = item.getKey();
                 PDField field = pDAcroForm.getField(key);
@@ -309,10 +400,6 @@ public class DocMaker {
                         saveField(key, (String) item.getValue(), fontNames);
                         LOG.debug("value is set to: '" + item.getValue() + "'");
 
-                    } else if (field instanceof PDPushButton) {
-                        System.out.println("(type: " + field.getClass().getSimpleName() + ")");
-                        PDPushButton pdPushButton = (PDPushButton) field;
-                        convertChartToImage(key, 4 + Integer.parseInt(String.valueOf(key.charAt(key.length() - 1))), (JFreeChart) item.getValue());
                     } else {
                         LOG.error("Unexpected form field type found with placeholder name: '" + key + "'");
                     }
@@ -323,8 +410,6 @@ public class DocMaker {
             if (cleadForms) {
                 pDAcroForm.flatten();// если нужно убрать отсатки форм
             }
-            pDDocument.save(pdfFile);
-            pDDocument.close();
         } catch (IOException e) {
             LOG.error("Error while saving {}", e);
             return false;
@@ -350,7 +435,7 @@ public class DocMaker {
             String[] splits = appearanceStringstring.split(" ", 2);
             StringBuilder stringBuilder = new StringBuilder("/");
             stringBuilder.append(fontNames.get(0)).append(" ").append(splits[1]);
-            dict.setString(COSName.DA,stringBuilder.toString());
+            dict.setString(COSName.DA, stringBuilder.toString());
         }
         pDAcroForm.setNeedAppearances(true);
 
@@ -363,62 +448,10 @@ public class DocMaker {
         LOG.debug("saved " + name + ":" + value);
     }
 
-    public void convertChartToImage(String name, int pageNumb, JFreeChart chart) throws IOException {
-
-        chart.getPlot().setBackgroundPaint(Color.lightGray);
-        ByteArrayOutputStream image = new ByteArrayOutputStream();
-        ChartUtils.writeChartAsPNG(image, chart, 1600,
-                800);
-        PDImageXObject pdImage = PDImageXObject.createFromByteArray(pDDocument, image.toByteArray(),
-                "myImage.jpg");
-        setField(pDDocument, name, pageNumb, pdImage);
-        LOG.debug("Image inserted Successfully.");
-    }
-
-    /**
-     * Вставка картинки в форму.
-     *
-     * @param document документ.
-     * @param name     имя формы.
-     * @param page     номер страницы с 0.
-     * @param image    картинка.
-     * @throws IOException
-     */
-    public void setField(PDDocument document, String name, int page, PDImageXObject image)
-            throws IOException {
-        PDAcroForm acroForm = document.getDocumentCatalog().getAcroForm();
-        PDField field = acroForm.getField(name);
-        if (field != null) {
-            PDRectangle rectangle = getFieldArea(field);
-            float height = rectangle.getHeight();
-            float width = rectangle.getWidth();
-            float x = rectangle.getLowerLeftX();
-            float y = rectangle.getLowerLeftY();
-            try (PDPageContentStream contentStream = new PDPageContentStream(document,
-                    document.getPage(page), PDPageContentStream.AppendMode.APPEND, true)) {
-                contentStream.drawImage(image, x, y, width, height);
-            }
-        }
-    }
-
-    /**
-     * Получение габаритов поля.
-     *
-     * @param field имя поля.
-     * @return
-     */
-    private PDRectangle getFieldArea(PDField field) {
-        COSDictionary fieldDict = field.getCOSObject();
-        COSArray fieldAreaArray = (COSArray) fieldDict.getDictionaryObject(COSName.RECT);
-        return new PDRectangle(fieldAreaArray);
-    }
 
     public boolean saveImages() {
-        PDDocument pDDocument = null;
         LOG.trace("Startsaving parse images to PDF file");
         try {
-            pDDocument = PDDocument.load(pdfFile);
-            PDDocument finalPDDocument = pDDocument;
             ArrayList<PDImageXObject> list = new ArrayList<>();
             AtomicBoolean flag = new AtomicBoolean(false);
             Platform.runLater(() -> {
@@ -448,10 +481,10 @@ public class DocMaker {
                             ImageIO.write(bufImage, ImageUtils.FORMAT_PNG, bos);
                             bos.flush();
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            LOG.error("Error in parse chart images", e.getMessage());
                         }
                         PDImageXObject pdImage = null;
-                        pdImage = PDImageXObject.createFromByteArray(finalPDDocument, bos.toByteArray(),
+                        pdImage = PDImageXObject.createFromByteArray(pDDocument, bos.toByteArray(),
                                 nodes[i].getId());
                         list.add(pdImage);
                         bos.close();
@@ -476,7 +509,7 @@ public class DocMaker {
                     e.printStackTrace();
                 }
                 PDImageXObject pdImage = null;
-                pdImage = PDImageXObject.createFromByteArray(finalPDDocument, bos.toByteArray(),
+                pdImage = PDImageXObject.createFromByteArray(pDDocument, bos.toByteArray(),
                         "");
                 list.add(pdImage);
                 bos.close();
@@ -531,15 +564,13 @@ public class DocMaker {
                         PDPageContentStream.AppendMode.APPEND, true)) {
                     contentStream.beginText();
 
-                    PDFont font = PDType0Font.load(pDDocument,
-                            this.getClass().getResourceAsStream("ARIALUNI.TTF"));
-                    contentStream.setFont(font, 12);
+                    contentStream.setFont(myFont, 12);
                     contentStream.setLeading(14.5f);
                     contentStream.newLineAtOffset(150, 680);
                     String text1 = "Дефектные элементы по всем выбранным параметрам";
                     contentStream.showText(text1);
                     contentStream.newLineAtOffset(20, -15);
-                    contentStream.setFont(font, 10);
+                    contentStream.setFont(myFont, 10);
                     String text2 = "Всего дефектных элементов в центральной зоне 32*32 px: " + exp.getBpInCenter();
                     contentStream.showText(text2);
                     contentStream.newLine();
@@ -554,7 +585,7 @@ public class DocMaker {
                         float h = 10.5f;
                         contentStream.setLeading(h);
 
-                        contentStream.setFont(font, 8);
+                        contentStream.setFont(myFont, 8);
                         contentStream.newLineAtOffset(-90, -350);
                         String line;
                         int count = 0;
@@ -591,16 +622,25 @@ public class DocMaker {
 
                 pDDocument.removePage(3);
             }
-            pDDocument.save(pdfFile);
-            pDDocument.close();
+
 
         } catch (
                 Exception e) {
             LOG.error("Exeption in images {}", e.getMessage());
-            e.printStackTrace();
             return false;
+
+        } finally {
+            try {
+                if (pDDocument != null) {
+                    pDDocument.save(pdfFile);
+                    pDDocument.close();
+                }
+            } catch (Exception e) {
+                LOG.error("Exeption in saveFile {}", e.getMessage());
+                return false;
+            }
+            return true;
         }
-        return true;
     }
 
     /**
@@ -611,13 +651,13 @@ public class DocMaker {
      * @return перечень шрифтов
      * @throws IOException
      */
-    public List<String> prepareFont(PDDocument _pdfDocument, List<PDFont> fonts) throws IOException {
+    private static List<String> prepareFont(PDDocument _pdfDocument, List<PDFont> fonts) {
         PDDocumentCatalog docCatalog = _pdfDocument.getDocumentCatalog();
         PDAcroForm acroForm = docCatalog.getAcroForm();
         PDResources res = acroForm.getDefaultResources();
         if (res == null)
             res = new PDResources();
-        List<String> fontNames = new ArrayList<String>();
+        List<String> fontNames = new ArrayList<>();
         for (PDFont font : fonts) {
             fontNames.add(res.add(font).getName());
         }
@@ -633,10 +673,30 @@ public class DocMaker {
      * @return обернутый шрифт
      * @throws IOException
      */
-    public PDFont loadTrueTypeFont(PDDocument _pdfDocument, String resourceName) throws IOException {
-        try (InputStream fontStream = getClass().getResourceAsStream(resourceName);) {
-            return PDTrueTypeFont.loadTTF(_pdfDocument, fontStream);
+    private PDFont loadTrueTypeFont(PDDocument _pdfDocument, String resourceName) {
+        InputStream fontStream = getClass().getResourceAsStream(resourceName);
+
+        try {
+            return PDType0Font.load(_pdfDocument, fontStream);
+        } catch (IOException e) {
+            LOG.error("Font {} not loaded. Error {}", resourceName, e.getMessage());
+            throw new RuntimeException(e);
         }
+
     }
 
+    /**
+     * Заполнение pdf файла
+     *
+     * @return
+     */
+    public boolean save() {
+        if (!savePDF()) {
+            return false;
+        }
+        if (!saveImages()) {
+            return false;
+        }
+        return true;
+    }
 }

@@ -1546,12 +1546,12 @@ public class Utils {
     /**
      * Добавка элементов в список.
      *
-     * @param bpList
-     * @param data
-     * @param noCorrection
-     * @param persent
-     * @param color
-     * @param type
+     * @param bpList       лист дефектов
+     * @param data         данные
+     * @param noCorrection true -если с учетом дефектов, false - если без учета
+     * @param persent      процент отклонения от среднего
+     * @param color        цет дефектного пикселя
+     * @param type         тип дефекта
      * @return
      */
     public static double addBpToList(ArrayList<BadPoint> bpList, double[][] data,
@@ -1561,26 +1561,28 @@ public class Utils {
 
         double[] lines = makeMaxMeanMin(data, true, FALSE);
         double mean = lines[1];
-        int sizeY = data.length;
-        int sizeX = data[0].length;
+        if (persent != 0) {
+            int sizeY = data.length;
+            int sizeX = data[0].length;
 
-        for (int h = 0; h < sizeY; h++) {
-            for (int w = 0; w < sizeX; w++) {
-                if (
-                        Math.abs(mean - data[h][w]) >= Math.abs(mean * (persent * 0.01))
-                ) {
-                    if (bpList != null) {
-                        Color awtColor = convertcolor(color);
-                        BadPoint badPoint = new BadPoint(w, h, type,
-                                awtColor, data[h][w], sizeY);
-                        bpList.add(badPoint);
+            for (int h = 0; h < sizeY; h++) {
+                for (int w = 0; w < sizeX; w++) {
+                    if (
+                            Math.abs(mean - data[h][w]) >= Math.abs(mean * (persent * 0.01))
+                    ) {
+                        if (bpList != null) {
+                            Color awtColor = convertcolor(color);
+                            BadPoint badPoint = new BadPoint(w, h, type,
+                                    awtColor, data[h][w], sizeY);
+                            bpList.add(badPoint);
+                        }
                     }
                 }
             }
         }
 
         if (noCorrection) {
-
+            //ignore
         } else {
             double[][] tempData = zamenaData(data, persent, mean);
             mean = makeMaxMeanMin(tempData, false, FALSE)[1];
@@ -1939,6 +1941,7 @@ public class Utils {
         g2.dispose();
         return bi;
     }
+
     /**
      * Сохранение отчета
      *
@@ -1949,16 +1952,11 @@ public class Utils {
      */
     public static boolean saveOrder(ExpInfo exp, Node src, File pdfFile) {
         LOG.trace("Startsaving PDF file");
-        DocMaker docMaker = new DocMaker(exp,src, pdfFile);
-        boolean b = docMaker.savePDF();
+        DocMaker docMaker = new DocMaker(exp, src, pdfFile);
+        boolean b = docMaker.save();
         if (!b) {
             return false;
         }
-        b = docMaker.saveImages();
-        if (!b) {
-            return false;
-        }
-
         return true;
     }
 

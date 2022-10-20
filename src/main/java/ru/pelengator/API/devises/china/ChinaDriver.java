@@ -147,7 +147,7 @@ public class ChinaDriver implements DetectorDriver, DetectorDiscoverySupport {
 
     @Override
     public boolean isScanPossible() {
-        return true;
+        return false;
     }
 
     @Override
