@@ -273,8 +273,8 @@ public class StendParams {
 
 
         ////// сеть
-        detPortVideo = Integer.parseInt(properties.getProperty("detPortVideo", "53"));
-        detPortCommand = Integer.parseInt(properties.getProperty("detPortCommand", "54"));
+        detPortVideo = Integer.parseInt(properties.getProperty("detPortVideo", "55555"));
+        detPortCommand = Integer.parseInt(properties.getProperty("detPortCommand", "55556"));
         detIP = properties.getProperty("detIP", "127.0.0.1");
 
         serverVideoBuff = Integer.parseInt(properties.getProperty("serverVideoBuff", "1024"));

@@ -282,6 +282,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     @FXML
     private Button btnLookUp;
 
+    private boolean isEthrnetWorking;
 
     /**
      * Пакет ресурсов.
@@ -482,6 +483,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
                      */
                     Detector.setDriver(new ChinaDriver(params));
                     async = false;
+                    isEthrnetWorking = false;
 
                 } else {
                     /**
@@ -489,8 +491,9 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
                      */
                     Detector.setDriver(new ChinaDriverEthernet(params));
                     async = false;
-                    fpsLimited=true;
+                    fpsLimited = true;
                     btnLookUp.setVisible(true);
+                    isEthrnetWorking = true;
                 }
 
                 /**
@@ -621,12 +624,18 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
 
             if (newValue) {
                 if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
-                    ((DetectorDevice.ChinaSource) selDetector.getDevice()).setPower(true);
+
                     params.setTempPower(true);
                     /**
                      *Установка стартовых параметров
                      */
-                    extStartSession();
+                    if (isEthrnetWorking) {
+                        ((DetectorDevice.ChinaSource) selDetector.getDevice()).setPower(false);
+                    } else {
+                        ((DetectorDevice.ChinaSource) selDetector.getDevice()).setPower(true);
+
+                    }
+                    extStartSession();//поток на установку выбранных параметров
                 }
             } else {
                 if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
@@ -773,19 +782,28 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
      * Небольшая пауза.
      */
     private void waitNewImage() {
-        try {
-            TimeUnit.MILLISECONDS.sleep(100);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        if (isEthrnetWorking) {
+
+        } else {
+            try {
+                TimeUnit.MILLISECONDS.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
-
 
     /**
      * Инициализация работы детектора.
      */
     private void extStartSession() {
         Thread thread = new Thread(() -> {
+
+            if (isEthrnetWorking) {//для сети
+                ((DetectorDevice.ChinaSource) selDetector.getDevice()).setID();
+                waitNewImage();
+            }
+
             boolean selectedFullScr = cbDimOptions.getSelectionModel().isSelected(0);
             waitNewImage();
             if (FT_STATUS.FT_OK != ((DetectorDevice.ChinaSource) selDetector.getDevice()).setDim(selectedFullScr)) {
@@ -813,6 +831,12 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
                 return;
             }
             waitNewImage();
+
+            if (isEthrnetWorking) {//для сети
+                ((DetectorDevice.ChinaSource) selDetector.getDevice()).setPower(true);
+                waitNewImage();
+            }
+
         });
         thread.setDaemon(true);
         thread.start();

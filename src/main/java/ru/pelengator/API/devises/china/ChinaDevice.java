@@ -85,6 +85,28 @@ public class ChinaDevice implements DetectorDevice, DetectorDevice.ChinaSource {
             result.set(grabber.setPower(value.get()));
         }
     }
+    private class SetIDTask extends DetectorTask {
+
+        private final AtomicReference<FT_STATUS> result = new AtomicReference<FT_STATUS>();
+
+        public SetIDTask(DetectorDevice device) {
+            super(device);
+        }
+
+        public FT_STATUS setID() {
+            try {
+                process();
+            } catch (InterruptedException e) {
+                LOG.error("ID not setted", e);
+            }
+            return result.get();
+        }
+
+        @Override
+        protected void handle() {
+            result.set(grabber.setID());
+        }
+    }
 
     /**
      * Задание на получение картинки.
@@ -793,6 +815,16 @@ public class ChinaDevice implements DetectorDevice, DetectorDevice.ChinaSource {
         result = new SetPowerTask(this).setPower(value);
         if (result != FT_STATUS.FT_OK) {
             LOG.error("Error while setPower[{}]: {}", value, result);
+        }
+        return result;
+    }
+
+    @Override
+    public FT_STATUS setID() {
+        FT_STATUS result = null;
+        result = new SetIDTask(this).setID();
+        if (result != FT_STATUS.FT_OK) {
+            LOG.error("Error while setID: {}", result);
         }
         return result;
     }

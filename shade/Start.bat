@@ -1,0 +1,1 @@
+java -jar KS.jar

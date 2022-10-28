@@ -66,6 +66,8 @@ public interface DetectorDevice {
 
         FT_STATUS setPower(boolean value);
 
+        FT_STATUS setID();
+
         int[][] getFrame();
 
         boolean isOnline();

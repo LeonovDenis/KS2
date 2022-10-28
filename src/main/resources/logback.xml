@@ -38,11 +38,11 @@
         <queueSize>256</queueSize>
     </appender>
 
-    <logger name="ru.pelengator" level="DEBUG" additivity="false">
+    <logger name="ru.pelengator" level="INFO" additivity="false">
         <appender-ref ref="ASYNC"/>
     </logger>
 
-    <logger name="ru.pelengator" level="OFF" additivity="false">
+    <logger name="ru.pelengator" level="DEBUG" additivity="false">
         <appender-ref ref="CONSOLE"/>
     </logger>
 

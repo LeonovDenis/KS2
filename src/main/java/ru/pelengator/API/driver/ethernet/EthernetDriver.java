@@ -73,6 +73,7 @@ public class EthernetDriver implements Driver {
     private AtomicBoolean online = new AtomicBoolean(false);
 
     private DetectorDriver driver = null;
+    private DatagramSocket dsock;
 
     /**
      * Конструктор
@@ -138,8 +139,10 @@ public class EthernetDriver implements Driver {
 
             if (comIS == null || comOS == null) {
                 try {
-                    comIS = new UDPInputStream(myIp, comPort, PENDING);
-                    DatagramSocket dsock = comIS.getDsock();
+                    comIS = new UDPInputStream(myIp, comPort + 1, PENDING);
+                    // DatagramSocket dsock = comIS.getDsock();
+
+                    dsock = new DatagramSocket(comPort, myIp);
 
                     comOS = new UDPOutputStream(dsock, broadcastIp, comPort);
 
@@ -230,20 +233,23 @@ public class EthernetDriver implements Driver {
             videoIS = new UDPInputStream(myIp, videoPort, 20 * PENDING);
 
             /**
-             * Создание командного сервиса.
+             * Создание командного входящего сервиса.
              */
             if (comIS != null) {
                 comIS.close();
             }
-            comIS = new UDPInputStream(myIp, comPort, PENDING);
-            DatagramSocket dsock = comIS.getDsock();
+            comIS = new UDPInputStream(myIp, comPort + 1, PENDING);
+            //  DatagramSocket dsock = comIS.getDsock();
 
             /**
-             * Создание видеосервиса.
+             * Создание командного исходящего сервиса.
              */
-            if (comOS != null) {
+            if (comOS != null || dsock.isClosed()) {
                 comOS.close();
+                dsock.close();
+                dsock = new DatagramSocket(comPort, myIp);
             }
+
             comOS = new UDPOutputStream(dsock, clientIp, comPort);
 
             isOpened.compareAndSet(false, true);
@@ -293,6 +299,12 @@ public class EthernetDriver implements Driver {
      */
     @Override
     public FT_STATUS setPower(boolean set) {
+
+        // if (set) {
+        //     FT_STATUS ft_status = setID();
+        //     LOG.debug("Set ID in SetPower metod. Status: ",ft_status);
+        // }
+
         return comList.setPower(set);
     }
 

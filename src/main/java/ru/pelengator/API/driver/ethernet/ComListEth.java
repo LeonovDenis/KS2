@@ -270,38 +270,46 @@ public class ComListEth {
 
             //Пороверяем оставшиеся количество байт
             bytesAvaible = is.available();
-
+            LOG.debug("VIDEO_DATA_SIZE {}",bytesAvaible);
             assert videoLen > 0;
 
             if (videoBuff != null && videoBuff.length == videoLen) {
                 //continue
             } else {
                 videoBuff = new byte[videoLen];
+                LOG.debug("CREATE BUFFER {}",bytesAvaible);
             }
 
             lastVideoSize = is.read(videoBuff, 0, bytesAvaible);//пишем первую часть видео из первого пакета
 
+            LOG.debug("WRITED in BUFFER {} bytes",lastVideoSize);
+
             if ((videoLen = videoLen - lastVideoSize) > 0) {//если есть еще фрагменты
                 //продолжаем читать пакеты
-
+                LOG.debug("NEED MORE DATA {} bytes",videoLen);
                 do {
+                    LOG.debug("READ NEXT PART");
                     //читаем следующую часть
                     readHeader();
                     parseSecondHeaders(headerBuff);
 
                     bytesAvaible = is.available();
+                    LOG.debug("VIDEO_DATA_SIZE {}",bytesAvaible);
                     lastVideoSize = is.read(videoBuff, lastVideoSize, bytesAvaible);//пишем следующую часть видео из пакета
-
+                    LOG.debug("WRITED in BUFFER {} bytes",lastVideoSize);
                 } while ((videoLen = videoLen - lastVideoSize) > 0);
 
+                LOG.debug("PARTS ENDED. NEED to read {} bytes",videoLen);
+            }else{
+                LOG.debug("NO SECOND PART");
             }
 
         } catch (IOException e) {
-            LOG.trace("Error in DIS metods: {}. No video data.", e.getMessage());
+            LOG.debug("Error in DIS metods: {}. No video data.", e.getMessage());
             return null;
         } catch (RuntimeException e) {
 
-            LOG.trace("Error in DIS metods: {}", e.getMessage());
+            LOG.debug("Error in DIS metods: {}", e.getMessage());
             return null;
         } finally {
 
@@ -321,6 +329,7 @@ public class ComListEth {
             return null;
         }
 
+        LOG.debug("FRAME READY: FRAME {}, PATS {}",currentFrameID,fragID);
         return Bytes.wrap(videoBuff);
     }
 
@@ -331,25 +340,31 @@ public class ComListEth {
         dataIS.read(tempHeader);
         //Если заголовок не совпадает, тогда кидаем исключение
         if (!VIDEO_HEADER.startsWith(tempHeader)) {
+            LOG.debug("Packege without valid Header");
             throw new DetectorException("Packege without valid Header");
         }
 
         int tempFrameID = dataIS.readUnsignedShort();
         if (currentFrameID != tempFrameID) {
+            LOG.debug("FrameID first and second part not valid");
             throw new DetectorException("FrameID first and second part not valid");
         }
 
         int tempFragID = dataIS.readUnsignedShort();
         if (fragID != tempFragID - 1) {
+            LOG.debug("FragID second part not valid");
             throw new DetectorException("FragID second part not valid");
         } else {
+            LOG.debug("FragID second part valid");
             fragID = tempFragID;
+
         }
 
         int tempWidth = dataIS.readUnsignedShort();
         int tempHeigth = dataIS.readUnsignedShort();
 
         if (width != tempWidth && heigth != tempHeigth) {
+            LOG.debug("Resolution second part not valid");
             throw new DetectorException("Resolution second part not valid");
         }
 
@@ -357,6 +372,7 @@ public class ComListEth {
         int tempReserv = dataIS.readUnsignedByte();
 
         if (ro != tempRo && reserv != tempReserv) {
+            LOG.debug("Ro and Reserv second part not valid");
             throw new DetectorException("Ro and Reserv second part not valid");
         }
 
@@ -403,7 +419,9 @@ public class ComListEth {
         dataIS.read(tempHeader);
         //Если заголовок не совпадает, тогда кидаем исключение
         if (!VIDEO_HEADER.startsWith(tempHeader)) {
+            LOG.debug("Packege without valid Header");
             throw new DetectorException("Packege without valid Header");
+
         }
 
         currentFrameID = dataIS.readUnsignedShort();
@@ -411,6 +429,7 @@ public class ComListEth {
 
         fragID = dataIS.readUnsignedShort();
         if (fragID != 0) {
+            LOG.debug("Not first fragment not null in Video data package");
             throw new DetectorException("Not first fragment not null in Video data package");
         }
 
@@ -422,6 +441,7 @@ public class ComListEth {
 
         videoLen = dataIS.readInt();
         if (videoLen != width * heigth * 2) {
+            LOG.debug("Video data not for this resolution");
             throw new DetectorException("Video data not for this resolution");
         }
 
@@ -581,7 +601,7 @@ public class ComListEth {
                 return null;
             }
 
-        } else {
+        } else if (available >= 4) {
             //пришли данные
 
             byte[] dlen = new byte[4];//длина данных
@@ -645,6 +665,7 @@ public class ComListEth {
             tick = 5;
             return value;
         }
+        return null;
     }
 
     /**
@@ -655,8 +676,9 @@ public class ComListEth {
     private void addDevises(UDPInputStream clientIP) {
 
         String stringDetIP = clientIP.getClientIP().getHostAddress();
-        int detPort = clientIP.getClientPort();
-        String stringID = String.format("Ports C/V [%d/%d]", detPort, detPort + 1);
+     //   int detPort = clientIP.getClientPort();
+      //  String stringID = String.format("Ports C/V [%d/%d]", detPort, detPort + 1);
+        String stringID="[ДТ10Э]";
         ChinaDevice device = new ChinaDevice(stringDetIP, stringID, grabber);
         device.setResolution(grabber.getSize());
 
