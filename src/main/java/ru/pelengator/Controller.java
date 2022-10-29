@@ -1495,7 +1495,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
             g2.setColor(new Color(68, 133, 3));
         }
         int visota = height - value;
-        g2.fillRect(300 - 22 - shaG * i, visota, shaG, value);
+        g2.fillRect(width - 24 - shaG * i, visota, shaG, value);
     }
 
     /**
@@ -1516,14 +1516,15 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         FontMetrics metrics = g2.getFontMetrics(font);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         int shaG = width / size;
-        for (int i = 0; i < size + 1; i = i + 32) {
+        double pats=size/4.0;
+        for (int i = 4; i >=0; i = i-1) {
             String s;
             if (i == 0) {
                 s = (i) + "";
             } else {
-                s = (i - 1) + "";
+                s = (int)(i*pats-1) + "";
             }
-            int w = 22 + shaG * i - metrics.stringWidth(s) / 2;
+            int w = width -24- shaG * (size-1-(int)(i*pats)) - (metrics.stringWidth(s)-shaG )/ 2;
             int h = height - 5;
             int sw = w;
             int sh = h;

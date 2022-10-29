@@ -2,14 +2,11 @@ package ru.pelengator.API.driver.ethernet;
 
 
 import at.favre.lib.bytes.Bytes;
-import at.favre.lib.bytes.BytesTransformer;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
 import java.net.InetAddress;
 
 public class TestInputStream extends UDPInputStream {
-    private static int count = 0;
     private static short frameID = 0;
     private static short fragID = 0;
 

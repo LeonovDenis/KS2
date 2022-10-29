@@ -32,7 +32,7 @@ public class ComListEth {
 
     }
 
-    private boolean isTest = !false;
+    private boolean isTest = false;
     ///////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////методы управления
     private final byte DEV_ID = 0x05;
