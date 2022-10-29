@@ -12,19 +12,19 @@ import java.net.UnknownHostException;
 
 public class UDPInputStream extends InputStream {
 
-    private static final int PACKET_BUFFER_SIZE = 64000;
-    private int SO_TIME_OUT = 0;
+    public static final int PACKET_BUFFER_SIZE = 64000;
+    public int SO_TIME_OUT = 0;
 
-    private InetAddress clientIP;
-    private int clientPort;
-    DatagramSocket dsock = null;
-    DatagramPacket dpack = null;
+    public InetAddress clientIP;
+    public int clientPort;
+    public DatagramSocket dsock = null;
+    public DatagramPacket dpack = null;
 
-    byte[] ddata = new byte[PACKET_BUFFER_SIZE];
-    int packSize = 0;
-    int packIdx = 0;
+    public  byte[] ddata = new byte[PACKET_BUFFER_SIZE];
+    public int packSize = 0;
+    public  int packIdx = 0;
 
-    int value;
+    public int value;
 
     /********************** constructors ********************/
 
@@ -152,7 +152,7 @@ public class UDPInputStream extends InputStream {
      ***   socket.                                                 ***
      *****************************************************************
      */
-    private void receive() throws IOException {
+    public void receive() throws IOException {
         dpack = new DatagramPacket(ddata, PACKET_BUFFER_SIZE);
         if (SO_TIME_OUT > 0) {
             dsock.setSoTimeout(SO_TIME_OUT);

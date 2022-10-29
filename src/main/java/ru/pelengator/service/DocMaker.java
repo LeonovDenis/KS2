@@ -57,29 +57,17 @@ public class DocMaker {
     private static List<String> fontNames;
     private static PDFont myFont;
 
-    static {
-        String path = loadFilePath(fileName);
-        File file = new File(path);
-        try {
-            pDDocument = PDDocument.load(file);
-            pDAcroForm = pDDocument.getDocumentCatalog().getAcroForm();
-            pDResources = pDAcroForm.getDefaultResources();
-
-        } catch (IOException e) {
-            LOG.error("PDF file not loaded {}", e.getMessage());
-            throw new RuntimeException(e);
-        }
-    }
-
     public DocMaker(ExpInfo exp, Node src, File pdfFile) {
 
         this.map = createList(exp);
         this.pdfFile = pdfFile;
         this.src = src;
         this.exp = exp;
+        loadPrepareFile();
         this.myFont = loadTrueTypeFont(pDDocument, "ARIALUNI.TTF");
         this.fontNames = prepareFont(pDDocument, Arrays.asList(myFont,
-                PDType1Font.HELVETICA_BOLD));
+                PDType1Font.COURIER));
+
     }
 
 
@@ -434,7 +422,7 @@ public class DocMaker {
             String appearanceStringstring = defaultAppearance.getString();
             String[] splits = appearanceStringstring.split(" ", 2);
             StringBuilder stringBuilder = new StringBuilder("/");
-            stringBuilder.append(fontNames.get(0)).append(" ").append(splits[1]);
+            stringBuilder.append(fontNames.get(1)).append(" ").append(splits[1]);
             dict.setString(COSName.DA, stringBuilder.toString());
         }
         pDAcroForm.setNeedAppearances(true);
@@ -676,11 +664,10 @@ public class DocMaker {
      * @throws IOException
      */
     private PDFont loadTrueTypeFont(PDDocument _pdfDocument, String resourceName) {
-        InputStream fontStream = getClass().getResourceAsStream(resourceName);
-
         try {
+            InputStream fontStream = getClass().getResourceAsStream(resourceName);
             return PDType0Font.load(_pdfDocument, fontStream);
-        } catch (IOException e) {
+        } catch (Exception e) {
             LOG.error("Font {} not loaded. Error {}", resourceName, e.getMessage());
             throw new RuntimeException(e);
         }
@@ -693,6 +680,7 @@ public class DocMaker {
      * @return
      */
     public boolean save() {
+
         if (!savePDF()) {
             return false;
         }
@@ -700,5 +688,19 @@ public class DocMaker {
             return false;
         }
         return true;
+    }
+
+    private void loadPrepareFile() {
+        String path = loadFilePath(fileName);
+        File file = new File(path);
+        try {
+            pDDocument = PDDocument.load(file);
+            pDAcroForm = pDDocument.getDocumentCatalog().getAcroForm();
+            pDResources = pDAcroForm.getDefaultResources();
+
+        } catch (IOException e) {
+            LOG.error("PDF file not loaded {}", e.getMessage());
+            throw new RuntimeException(e);
+        }
     }
 }

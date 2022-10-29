@@ -12,6 +12,7 @@ import ru.pelengator.API.tasks.DetectorNetTask;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetAddress;
 import java.util.*;
 
@@ -31,6 +32,7 @@ public class ComListEth {
 
     }
 
+    private boolean isTest = !false;
     ///////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////методы управления
     private final byte DEV_ID = 0x05;
@@ -255,7 +257,12 @@ public class ComListEth {
      * @return
      */
     public Bytes nextFrame() {
+        //test
+        if (isTest) {
 
+            is = new TestInputStream();
+        }
+        //test
         //Получаем поток
         if (is == null) {
             is = grabber.getVideoIS();
@@ -270,23 +277,23 @@ public class ComListEth {
 
             //Пороверяем оставшиеся количество байт
             bytesAvaible = is.available();
-            LOG.debug("VIDEO_DATA_SIZE {}",bytesAvaible);
+            LOG.debug("VIDEO_DATA_SIZE {}", bytesAvaible);
             assert videoLen > 0;
 
             if (videoBuff != null && videoBuff.length == videoLen) {
                 //continue
             } else {
                 videoBuff = new byte[videoLen];
-                LOG.debug("CREATE BUFFER {}",bytesAvaible);
+                LOG.debug("CREATE BUFFER {}", bytesAvaible);
             }
 
             lastVideoSize = is.read(videoBuff, 0, bytesAvaible);//пишем первую часть видео из первого пакета
 
-            LOG.debug("WRITED in BUFFER {} bytes",lastVideoSize);
+            LOG.debug("WRITED in BUFFER {} bytes", lastVideoSize);
 
-            if ((videoLen = videoLen - lastVideoSize) > 0) {//если есть еще фрагменты
+            if ((videoLen - lastVideoSize) > 0) {//если есть еще фрагменты
                 //продолжаем читать пакеты
-                LOG.debug("NEED MORE DATA {} bytes",videoLen);
+                LOG.debug("NEED MORE DATA {} bytes", videoLen - lastVideoSize);
                 do {
                     LOG.debug("READ NEXT PART");
                     //читаем следующую часть
@@ -294,13 +301,19 @@ public class ComListEth {
                     parseSecondHeaders(headerBuff);
 
                     bytesAvaible = is.available();
-                    LOG.debug("VIDEO_DATA_SIZE {}",bytesAvaible);
-                    lastVideoSize = is.read(videoBuff, lastVideoSize, bytesAvaible);//пишем следующую часть видео из пакета
-                    LOG.debug("WRITED in BUFFER {} bytes",lastVideoSize);
-                } while ((videoLen = videoLen - lastVideoSize) > 0);
 
-                LOG.debug("PARTS ENDED. NEED to read {} bytes",videoLen);
-            }else{
+                    LOG.debug("VIDEO_DATA_SIZE {}", bytesAvaible);
+
+                    int readedBytes = is.read(videoBuff, lastVideoSize, bytesAvaible);//пишем следующую часть видео из пакета
+
+                    lastVideoSize = lastVideoSize + readedBytes;
+
+                    LOG.debug("WRITED in BUFFER {} bytes, offset {}", readedBytes, lastVideoSize);
+
+                } while ((videoLen - lastVideoSize) > 0);
+
+                LOG.debug("PARTS ENDED. NEED to read {} bytes", videoLen - lastVideoSize);
+            } else {
                 LOG.debug("NO SECOND PART");
             }
 
@@ -329,7 +342,7 @@ public class ComListEth {
             return null;
         }
 
-        LOG.debug("FRAME READY: FRAME {}, PATS {}",currentFrameID,fragID);
+        LOG.debug("FRAME READY: FRAME {}, PATS {}", currentFrameID, fragID + 1);
         return Bytes.wrap(videoBuff);
     }
 
@@ -355,7 +368,7 @@ public class ComListEth {
             LOG.debug("FragID second part not valid");
             throw new DetectorException("FragID second part not valid");
         } else {
-            LOG.debug("FragID second part valid");
+            LOG.debug("FragID second part is valid");
             fragID = tempFragID;
 
         }
@@ -485,6 +498,20 @@ public class ComListEth {
      * @throws IOException, если нет ответа
      */
     public byte[] waitAnswer(UDPInputStream comIS, byte[] msg) throws IOException {
+//test
+        if (isTest) {
+            if (msg.length == 4) {
+                String stringDetIP = myIp.getHostAddress();
+                String stringID = "[Test]";
+                ChinaDevice device = new ChinaDevice(stringDetIP, stringID, grabber);
+                device.setResolution(grabber.getSize());
+                devices.add(device);
+                return msg;
+            } else {
+                return Arrays.copyOf(msg, 4);
+            }
+        }
+//test
         tick = 0;
         byte[] bAnswer = null;
 
@@ -676,9 +703,9 @@ public class ComListEth {
     private void addDevises(UDPInputStream clientIP) {
 
         String stringDetIP = clientIP.getClientIP().getHostAddress();
-     //   int detPort = clientIP.getClientPort();
-      //  String stringID = String.format("Ports C/V [%d/%d]", detPort, detPort + 1);
-        String stringID="[ДТ10Э]";
+        //   int detPort = clientIP.getClientPort();
+        //  String stringID = String.format("Ports C/V [%d/%d]", detPort, detPort + 1);
+        String stringID = "[ДТ10Э]";
         ChinaDevice device = new ChinaDevice(stringDetIP, stringID, grabber);
         device.setResolution(grabber.getSize());
 
@@ -761,5 +788,4 @@ public class ComListEth {
 
         return incMSG;
     }
-
 }
