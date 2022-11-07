@@ -445,6 +445,16 @@ public class Jna2 implements Driver {
     }
 
     /**
+     * Игнорим
+     * @param data
+     * @return
+     */
+    @Override
+    public FT_STATUS setID(byte[] data) {
+        return null;
+    }
+
+    /**
      * На случай неподтверждения факта получения сообщения.
      */
     private int countFR = 0;

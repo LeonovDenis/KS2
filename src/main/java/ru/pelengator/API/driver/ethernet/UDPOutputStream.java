@@ -12,8 +12,8 @@ import java.net.UnknownHostException;
 
 public class UDPOutputStream extends OutputStream {
 
-    public static final int DEFAULT_BUFFER_SIZE = 1024;
-    public static final int DEFAULT_MAX_BUFFER_SIZE = 8192;
+    public static final int DEFAULT_BUFFER_SIZE = 64000;
+    public static final int DEFAULT_MAX_BUFFER_SIZE = 64010;
 
     protected DatagramSocket dsock = null;
     DatagramPacket dpack = null;

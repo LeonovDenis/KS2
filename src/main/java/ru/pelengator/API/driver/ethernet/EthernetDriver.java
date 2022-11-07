@@ -358,6 +358,18 @@ public class EthernetDriver implements Driver {
         return comList.setID();
     }
 
+    /**
+     * Загрузка прошивки в плату
+     * @param data массив данных
+     * @return
+     */
+    @Override
+    public FT_STATUS setID(byte[] data) {
+        return comList.setID(data);
+    }
+
+
+
     private int frameCount = 0;
 
     @Override
@@ -461,5 +473,9 @@ public class EthernetDriver implements Driver {
 
     public DetectorDriver getDriver() {
         return driver;
+    }
+
+    public InetAddress getClientIp() {
+        return clientIp;
     }
 }

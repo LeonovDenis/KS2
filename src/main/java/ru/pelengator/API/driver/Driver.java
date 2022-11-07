@@ -50,6 +50,8 @@ public interface Driver{
 
     FT_STATUS setID();
 
+    FT_STATUS setID(byte[] data);
+
     Bytes nextFrame();
 
     void clearBuffer();

@@ -108,6 +108,31 @@ public class ChinaDevice implements DetectorDevice, DetectorDevice.ChinaSource {
         }
     }
 
+    private class SetBlcIDTask extends DetectorTask {
+
+        private final AtomicReference<FT_STATUS> result = new AtomicReference<FT_STATUS>();
+
+        private final AtomicReference<byte[]> value = new AtomicReference<>();
+        public SetBlcIDTask(DetectorDevice device) {
+            super(device);
+        }
+
+        public FT_STATUS setID(byte[] value) {
+            this.value.set(value);
+            try {
+                process();
+            } catch (InterruptedException e) {
+                LOG.error("Blc ID not setted", e);
+            }
+            return result.get();
+        }
+
+        @Override
+        protected void handle() {
+            result.set(grabber.setID(value.get()));
+        }
+    }
+
     /**
      * Задание на получение картинки.
      */
@@ -828,6 +853,17 @@ public class ChinaDevice implements DetectorDevice, DetectorDevice.ChinaSource {
         }
         return result;
     }
+
+    @Override
+    public  FT_STATUS setID(byte[] data) {
+        FT_STATUS result = null;
+        result = new SetBlcIDTask(this).setID(data);
+        if (result != FT_STATUS.FT_OK) {
+            LOG.error("Error while setBlcID: {}", result);
+        }
+        return result;
+    }
+
 
     @Override
     public int[][] getFrame() {

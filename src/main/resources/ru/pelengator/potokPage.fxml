@@ -258,7 +258,16 @@
                   <Separator GridPane.columnSpan="7" GridPane.rowIndex="18" />
                   <FlowPane alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="6" GridPane.halignment="RIGHT" GridPane.rowIndex="19">
                      <children>
-                        <Button fx:id="btnStart" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" text="Рассчитать">
+                        <TextField fx:id="lb_partSize" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="60.0" promptText="Размер" text="1024" />
+                        <Button fx:id="btnLoad" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" text="Загрузить прошивку">
+                           <font>
+                              <Font name="Segoe UI" size="14.0" fx:id="x12" />
+                           </font>
+                           <FlowPane.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </FlowPane.margin>
+                        </Button>
+                        <Button fx:id="btnStart" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="113.0" text="Рассчитать">
                            <font>
                               <Font name="Segoe UI" size="14.0" fx:id="x1" />
                            </font>
@@ -271,7 +280,7 @@
                               <Font name="Segoe UI" size="14.0" fx:id="x11" />
                            </font>
                            <FlowPane.margin>
-                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                              <Insets bottom="5.0" top="5.0" />
                            </FlowPane.margin>
                         </Button>
                         <Button fx:id="btnReset" layoutX="98.0" layoutY="10.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" text="Сброс">

@@ -21,14 +21,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import org.apache.pdfbox.cos.COSDictionary;
-import org.apache.pdfbox.multipdf.PDFCloneUtility;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.font.PDFont;
-import org.apache.pdfbox.pdmodel.font.PDType0Font;
-import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.decimal4j.util.DoubleRounder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +32,6 @@ import ru.pelengator.service.DocMaker;
 import ru.pelengator.service.ImagePanel;
 import ru.pelengator.service.ParamsService;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -53,8 +44,6 @@ import java.text.NumberFormat;
 import java.util.*;
 import java.util.List;
 import java.util.Timer;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.awt.RenderingHints.*;
 
@@ -213,6 +202,25 @@ public class Utils {
         lock.release();
         stream.close();
         channel.close();
+    }
+
+    /**
+     * Запись файла в байтовый массив
+     * @param fileName имя файла (путь)
+     * @throws IOException
+     */
+    public static byte[] loadFileFromDisk(String fileName) throws IOException {
+
+        FileInputStream stream = new FileInputStream(fileName);
+        FileChannel channel = stream.getChannel();
+        long size = channel.size();
+        byte[] data= new byte[(int) size];
+
+        stream.read(data);
+        stream.close();
+        channel.close();
+
+        return data;
     }
 
 

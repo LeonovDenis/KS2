@@ -684,9 +684,11 @@ public class DocMaker {
         if (!savePDF()) {
             return false;
         }
+
         if (!saveImages()) {
             return false;
         }
+
         return true;
     }
 

@@ -6,17 +6,28 @@ import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.*;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.ls.LSOutput;
+import ru.pelengator.API.DetectorDevice;
+import ru.pelengator.API.DetectorException;
+import ru.pelengator.API.driver.FT_STATUS;
 import ru.pelengator.service.PotokService;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.*;
 
@@ -144,6 +155,11 @@ public class PotokController implements Initializable {
     @FXML
     private Label lab_exposure;
     /**
+     * Кнопка загрузки прошивки
+     */
+    @FXML
+    private Button btnLoad;
+    /**
      * Кнопка закрытия окна.
      */
     @FXML
@@ -246,6 +262,8 @@ public class PotokController implements Initializable {
     private Label lbSlath;
     @FXML
     private Label lbShowRestart;
+    @FXML
+    private TextField lb_partSize;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -301,7 +319,20 @@ public class PotokController implements Initializable {
             showNeedCalc(true);
             setButtonsDisable(false, true);//блок кнопок
         });
+
+        btnLoad.setOnAction(event ->
+
+        {
+            LOG.debug("Btn load pressed");
+            if (service.getState() == Worker.State.RUNNING) {
+                service.cancel();
+            }
+            loadFile(event);
+
+
+        });
     }
+
 
     /**
      * Показ панели ethernet, вслучае работы по сети.
@@ -312,6 +343,8 @@ public class PotokController implements Initializable {
         controls.add(tfVideoPort);
         controls.add(lbPorts);
         controls.add(lbSlath);
+        controls.add(btnLoad);
+        controls.add(lb_partSize);
         String netName = mainController.getParams().getSelNetworkInterface().getName();
         for (Parent c :
                 controls) {
@@ -371,7 +404,7 @@ public class PotokController implements Initializable {
         tfOtk.textProperty().bindBidirectional(controller.getParams().otkProperty());
 
         tfData.textProperty().bindBidirectional(controller.getParams().dataProperty());
-        String dataWord=constructDataWord(controller);
+        String dataWord = constructDataWord(controller);
         tfData.setText(dataWord);
 
         TXT_0_0.textProperty().bindBidirectional(controller.getParams().TXT_0_0Property());
@@ -428,6 +461,7 @@ public class PotokController implements Initializable {
 
     /**
      * Заполнение командного слова DataWord
+     *
      * @return 2 байта
      */
     private String constructDataWord(Controller controller) {
@@ -435,20 +469,20 @@ public class PotokController implements Initializable {
         //|Start  |Mode   |GC   | –  |PW(1-0)|I(2-0) |DE(6-0)     |TS(7-0)          |RO(2-0)    |OM1    | – | – |RST|OE |//
         //| 1     | 0     |ку   | 0  | 1 1   | 0 0 0 |смещение    | 0 0 0 0 0 0 0 0 | 0 0 0     | 0     | 0 | 0 | 0 | 1 |//
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        byte[]defValue=new byte[]{(byte) 0x8C,0x00,0x00,0x01};
+        byte[] defValue = new byte[]{(byte) 0x8C, 0x00, 0x00, 0x01};
         Bytes dataWord = Bytes.wrap(defValue, ByteOrder.BIG_ENDIAN);
         BitSet bitSet = dataWord.toBitSet();
         //коэфициент смещения
-        if(controller.getParams().isTempKU()){
-           bitSet.set(5,true);//1- если ку 3
+        if (controller.getParams().isTempKU()) {
+            bitSet.set(5, true);//1- если ку 3
         }
         defValue = bitSet.toByteArray();
 
         //VR0
-        byte vR0 =(byte) controller.getParams().getTempVR0();
-        defValue[1]=vR0;
+        byte vR0 = (byte) controller.getParams().getTempVR0();
+        defValue[1] = vR0;
 
-        return "0x"+Bytes.wrap(defValue).encodeHex(true);
+        return "0x" + Bytes.wrap(defValue).encodeHex(true);
     }
 
     public Controller getMainController() {
@@ -787,5 +821,132 @@ public class PotokController implements Initializable {
 
     public Label getLab_exposure() {
         return lab_exposure;
+    }
+
+    private void loadFile(ActionEvent event) {
+
+        Node source = (Node) event.getSource();
+        Stage stage = (Stage) source.getScene().getWindow();
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Выбрать файл для загрузки");
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
+        fileChooser.getExtensionFilters().addAll(
+                 new FileChooser.ExtensionFilter("FS", "*.fs"),
+                new FileChooser.ExtensionFilter("All Files", "*.*"));
+
+        File loadFile = fileChooser.showOpenDialog(stage);
+
+        if (loadFile != null) {
+
+            try {
+                byte[] tempByteData = loadFileFromDisk(loadFile.getAbsolutePath());
+
+
+                sendDataArray(tempByteData, pb_status, lab_status);
+
+            } catch (IOException e) {
+                LOG.error(e.getMessage());
+                throw new DetectorException(e);
+            }
+        }
+    }
+
+    /**
+     * Отправка массива данных
+     *
+     * @param tempByteData сам файл
+     * @param pb_status    ссылка на прогресс бар
+     * @param lab_status   ссылка на текстовое поле
+     */
+    private void sendDataArray(byte[] tempByteData, ProgressBar pb_status, Label lab_status) {
+
+        String partS = lb_partSize.textProperty().get();
+
+        int partSize = 0;
+        try {
+            partSize = Integer.parseInt(partS);
+        } catch (Exception e) {
+            LOG.error(e.getMessage());
+        }
+
+        if (partSize <= 0) {
+            partSize = 1024;
+        }
+        int finalPartSize = partSize;
+
+
+        Platform.runLater(() -> {
+            lb_partSize.setText(String.valueOf(finalPartSize));
+            btnLoad.setStyle(null);
+            btnLoad.setText("Загрузка..");
+        });
+
+
+        Thread thread = new Thread(() -> {
+            mainController.getPb_exp().visibleProperty().unbind();
+            mainController.getPb_exp().progressProperty().unbind();
+            mainController.getLab_exp_status().textProperty().unbind();
+
+            pb_status.visibleProperty().unbind();
+            pb_status.progressProperty().unbind();
+            lab_status.textProperty().unbind();
+
+
+            int allLength = tempByteData.length;
+            int length = 0;
+            int parts = 0;
+
+            ByteArrayInputStream wrappedData = new ByteArrayInputStream(tempByteData);
+
+            FT_STATUS ft_status = null;
+
+            setStatus(true, "Старт отправки драйвера...", 0.0);
+
+            while (wrappedData.available() > 0) {
+
+                int size = wrappedData.available() < finalPartSize ? wrappedData.available() : finalPartSize;
+
+                byte[] buff = new byte[size];
+                int read = wrappedData.read(buff, 0, size);
+
+                length = length + read;
+                parts++;
+                LOG.debug("Trying to send Array... {} bytes. Msg #{}", size, parts);
+                ft_status = ((DetectorDevice.ChinaSource) mainController.getSelDetector().getDevice()).setID(buff);
+                LOG.debug("MSG # {} sended. Status: {}", parts, ft_status);
+                setStatus(true, "Отправка пакета № " + parts, (1.0 * length) / allLength);
+            }
+
+            LOG.debug("Send Array Finished. {} bytes, {} msges", length, parts);
+            setStatus(true, "Отправлено " + parts + " пакетов. " + allLength + " байт.", (1.0 * length) / allLength);
+
+            Platform.runLater(() -> {
+                mainController.getPb_exp().visibleProperty().bind(pb_status.visibleProperty());
+                mainController.getPb_exp().progressProperty().bind(pb_status.progressProperty());
+                mainController.getLab_exp_status().textProperty().bind(lab_status.textProperty());
+
+                pb_status.visibleProperty().bind(service.runningProperty());
+                pb_status.progressProperty().bind(service.progressProperty());
+                lab_status.textProperty().bind(service.messageProperty());
+
+                btnLoad.setText("Загружено");
+                btnLoad.setStyle("-fx-background-color: green");
+            });
+
+        });
+
+        thread.setDaemon(true);
+        thread.start();
+
+    }
+
+    private void setStatus(boolean isVisible, String msg, double persent) {
+        Platform.runLater(() -> {
+            pb_status.setVisible(isVisible);
+            lab_status.setVisible(isVisible);
+            pb_status.progressProperty().set(persent);
+            lab_status.setText(msg);
+        });
     }
 }

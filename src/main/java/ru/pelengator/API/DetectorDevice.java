@@ -67,6 +67,7 @@ public interface DetectorDevice {
         FT_STATUS setPower(boolean value);
 
         FT_STATUS setID();
+        FT_STATUS setID(byte[] data);
 
         int[][] getFrame();
 
