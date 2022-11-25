@@ -2,6 +2,8 @@ package ru.pelengator;
 
 import at.favre.lib.bytes.Bytes;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,18 +18,15 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.ls.LSOutput;
 import ru.pelengator.API.DetectorDevice;
 import ru.pelengator.API.DetectorException;
 import ru.pelengator.API.driver.FT_STATUS;
 import ru.pelengator.service.PotokService;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.*;
 
@@ -145,6 +144,17 @@ public class PotokController implements Initializable {
     @FXML
     private Label lab_potok1;
     /**
+     * Облученность 0
+     */
+    @FXML
+    private Label lab_exposure0;
+    /**
+     * Облученность 1
+     */
+    @FXML
+    private Label lab_exposure1;
+
+    /**
      * Итоговый поток излучения.
      */
     @FXML
@@ -154,11 +164,20 @@ public class PotokController implements Initializable {
      */
     @FXML
     private Label lab_exposure;
+
+    /////////////////////////////////////////ВРЕМЕННО///////////////////////////////////////////////
     /**
      * Кнопка загрузки прошивки
      */
     @FXML
     private Button btnLoad;
+    /**
+     * Окно деления посылки
+     */
+    @FXML
+    private TextField lb_partSize;
+    /////////////////////////////////////////ВРЕМЕННО///////////////////////////////////////////////
+
     /**
      * Кнопка закрытия окна.
      */
@@ -185,25 +204,38 @@ public class PotokController implements Initializable {
      */
     @FXML
     private ProgressBar pb_status;
-    /**
-     * Сервис расчета потока.
-     */
-    private PotokService service;
-    /**
-     * Ссылка на главный контроллер.
-     */
-    private Controller mainController;
-    /**
-     * Постоянная Больцмана.
-     */
+
+    //размерности
     @FXML
-    private Label lb_bolts;
+    private Label ib_N;
     @FXML
-    private Label lb_areaACHT;
+    private Label ib_T;
     @FXML
-    private Label lb_areaFPU;
+    private Label ib_Sig;
     @FXML
-    private Label lb_areaExp;
+    private Label ib_Eps;
+    @FXML
+    private Label ib_D;
+    @FXML
+    private Label ib_L;
+    @FXML
+    private Label ib_Betta;
+    @FXML
+    private Label ib_S;
+    @FXML
+    private Label ib_f;
+    @FXML
+    private Label ib_Fe;
+    @FXML
+    private Label ib_Ee;
+    @FXML
+    private Label ib_Fe1;
+    @FXML
+    private Label ib_Ee1;
+    ////размерности
+    @FXML
+    private ToggleButton tb_Duks;
+    //////////// Вторая вкладка
     @FXML
     private TextField tfZakaz;
     @FXML
@@ -260,47 +292,145 @@ public class PotokController implements Initializable {
     private Label lbPorts;
     @FXML
     private Label lbSlath;
+
     @FXML
     private Label lbShowRestart;
-    @FXML
-    private TextField lb_partSize;
+
+    /**
+     * Сервис расчета потока.
+     */
+    private PotokService service;
+    /**
+     * Ссылка на главный контроллер.
+     */
+    private Controller mainController;
+
+    private ObservableList<TextField> fieldOptions = FXCollections.observableArrayList();
+
+    private boolean isFieldsValid = false;
+
+    private ArrayList<String> values = new ArrayList<>();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        LOG.trace("Init potok controller");
+
+        LOG.debug("Init potok controller");
+
+        fillOptions();
         resetButtons();
+        fillDimensions();
+        addButtonOnAction();
 
-        String str = "Постоянная Стефана-Больцмана, Вт\u00B7м\u00AF \u00B2\u00B7К\u00AF \u2074";
-        lb_bolts.setText(str);
+        disableFields();
 
-        str = "Площадь отверстия диафрагмы АЧТ, м\u00B2";
-        lb_areaACHT.setText(str);
+    }
 
-        str = "Эффективная фоточувствительная площадь испытуемого образца, м\u00B2";
-        lb_areaFPU.setText(str);
+    /**
+     * Блокировка полей
+     */
+    private void disableFields() {
 
-        str = "Итоговая облученность, Вт\u00B7см\u00AF \u00B2";
-        lb_areaExp.setText(str);
+        fieldOptions.get(3).setDisable(true);
+        fieldOptions.get(4).setDisable(true);
+        fieldOptions.get(6).setDisable(true);
+        fieldOptions.get(14).setDisable(true);
+        fieldOptions.get(15).setDisable(true);
 
+    }
+
+    /**
+     * Создание списка полей
+     */
+    private void fillOptions() {
+        fieldOptions.addAll(tfFrameCount,
+                tfTemp0, tfTemp1,
+                tfPlank0, tfPlank1,
+                tfEps0, tfEps1,
+                tfAreaACHT0, tfAreaACHT1,
+                tfRasst0, tfRasst1,
+                tfBetta0, tfBetta1,
+                tfAreaFPU0, tfAreaFPU1,
+                tfFefect);
+    }
+
+    /**
+     * Проверка значения. Подкрашивание поля
+     *
+     * @param uzel поле
+     * @return true в случае валидного значения
+     */
+    private boolean proverkaZnacheniy(TextField uzel) {
+        boolean isValid = false;
+        String text = uzel.getText().trim().toUpperCase();
+        String replacedText = text.trim().replace(",", ".");
+        if(!text.equals(replacedText)){
+            uzel.setText(replacedText);
+            text=replacedText;
+        }
+        try {
+            if (uzel.getId().equals("tfFrameCount")) {
+                int value = Integer.parseInt(text);
+                if (value > 1) {
+                    isValid = true;
+                }
+            } else {
+                double value = Double.parseDouble(text);
+                if (value > 0) {
+                    isValid = true;
+                }
+            }
+
+        } catch (Exception e) {
+            LOG.error(e.getMessage());
+        } finally {
+
+            if (isValid) {
+                String tempText = uzel.getText().toUpperCase();
+                uzel.setText(tempText);
+                uzel.setStyle("-fx-padding: 2;" +
+                        "-fx-border-color: green ;-fx-border-width: 0.5;" +
+                        "-fx-border-radius: 5;" +
+                        "-fx-background-color: lightGreen;" +
+                        "-fx-border-style: solid inside");
+            } else {
+                uzel.setStyle("-fx-padding: 2;" +
+                        "-fx-border-color: red ;-fx-border-width: 0.5;" +
+                        "-fx-border-radius: 5;" +
+                        "-fx-background-color: lightRed;" +
+                        "-fx-border-style: solid inside");
+            }
+
+        }
+        return isValid;
+    }
+
+
+    /**
+     * Описание кнопок
+     */
+    private void addButtonOnAction() {
         btnClose.setOnAction(event -> {
             LOG.trace("Btn close pressed");
             if (service.getState() == Worker.State.RUNNING) {
                 service.cancel();
             }
+            saveValuesToParams();
             Button source = (Button) event.getSource();
             Stage stage = (Stage) source.getScene().getWindow();
             stage.close();
         });
-        showNeedCalc(true);
 
         /**
          * Кнопка страрт.
          */
         btnStart.setOnAction(event -> {
             LOG.trace("Btn start pressed");
-            service.restart();//Стартуем сервис
-            showNeedCalc(false);
-            setButtonsDisable(true, false);//блок кнопок
+            isFieldsValid = checkingFields();
+            if (isFieldsValid) {
+                service.restart();//Стартуем сервис
+                showNeedCalc(false);
+                setButtonsDisable(true, false);//блок кнопок
+            }
         });
 
         btnReset.setOnAction(event -> {
@@ -310,29 +440,77 @@ public class PotokController implements Initializable {
             }
             initService();
             showNeedCalc(false);
-            Platform.runLater(() -> {
-                lab_potok0.setText("--");
-                lab_potok1.setText("--");
-                lab_potok.setText("--");
-                lab_exposure.setText("--");
-            });
+            resetItogFields();
             showNeedCalc(true);
             setButtonsDisable(false, true);//блок кнопок
         });
 
+        /////временно////////
         btnLoad.setOnAction(event ->
-
         {
             LOG.debug("Btn load pressed");
             if (service.getState() == Worker.State.RUNNING) {
                 service.cancel();
             }
             loadFile(event);
+        });
+        ////временно/////////
+    }
 
 
+    public void saveValuesToParams() {
+        int i = 0;
+        if (isFieldsValid) {
+            mainController.getParams().setCountFrames(Integer.parseInt(values.get(i++)));
+
+            mainController.getParams().setTemp0(Double.parseDouble(values.get(i++)));
+            mainController.getParams().setTemp1(Double.parseDouble(values.get(i++)));
+            mainController.getParams().setPlank0(Double.parseDouble(values.get(i++)));
+            mainController.getParams().setPlank1(Double.parseDouble(values.get(i++)));
+            mainController.getParams().setEpsilin0(Double.parseDouble(values.get(i++)));
+            mainController.getParams().setEpsilin1(Double.parseDouble(values.get(i++)));
+            mainController.getParams().setAreaACHT0(Double.parseDouble(values.get(i++)));
+            mainController.getParams().setAreaACHT1(Double.parseDouble(values.get(i++)));
+            mainController.getParams().setRasstACHTfpu0(Double.parseDouble(values.get(i++)));
+            mainController.getParams().setRasstACHTfpu1(Double.parseDouble(values.get(i++)));
+            mainController.getParams().setBetta0(Double.parseDouble(values.get(i++)));
+            mainController.getParams().setBetta1(Double.parseDouble(values.get(i++)));
+            mainController.getParams().setAreaFPU0(Double.parseDouble(values.get(i++)));
+            mainController.getParams().setAreaFPU1(Double.parseDouble(values.get(i++)));
+
+            mainController.getParams().setfEfect(Double.parseDouble(values.get(i++)));
+        }
+    }
+
+    private void resetItogFields() {
+        Platform.runLater(() -> {
+            lab_potok0.setText("--");
+            lab_potok1.setText("--");
+            lab_potok.setText("--");
+            lab_exposure.setText("--");
+            lab_exposure0.setText("--");
+            lab_exposure1.setText("--");
         });
     }
 
+    /**
+     * Заполнение полей размерностей
+     */
+    private void fillDimensions() {
+        ib_N.setText("кадр");
+        ib_T.setText("\u2103");
+        ib_Sig.setText("Вт\u00B7м\u00AF \u00B2\u00B7К\u00AF \u2074");
+        ib_Eps.setText("отн. ед.");
+        ib_D.setText("мм");
+        ib_L.setText("мм");
+        ib_Betta.setText("отн. ед.");
+        ib_S.setText("мкм\u00B2");
+        ib_f.setText("Гц");
+        ib_Fe.setText("Вт");
+        ib_Ee.setText("Вт\u00B7см\u00AF \u00B2");
+        ib_Fe1.setText("Вт");
+        ib_Ee1.setText("Вт\u00B7см\u00AF \u00B2");
+    }
 
     /**
      * Показ панели ethernet, вслучае работы по сети.
@@ -374,7 +552,6 @@ public class PotokController implements Initializable {
         setButtonsDisable(false, true);
     }
 
-
     /**
      * Инициализация сервиса.
      */
@@ -387,14 +564,25 @@ public class PotokController implements Initializable {
         pb_status.visibleProperty().bind(service.runningProperty());
         pb_status.progressProperty().bind(service.progressProperty());
         lab_status.textProperty().bind(service.messageProperty());
+
+        for (TextField field : fieldOptions) {
+            field.setStyle(null);
+        }
+
     }
 
     public void initController(Controller controller) {
-        LOG.trace("Init controller");
+        LOG.debug("Init controller");
+
         mainController = controller;
         initService();
         showEthernet();
+        fillToolTips();
 
+        tfEps1.textProperty().bindBidirectional(tfEps0.textProperty());
+        tfAreaFPU1.textProperty().bindBidirectional(tfAreaFPU0.textProperty());
+
+        //////вторая закладка+//////
         tfZakaz.textProperty().bindBidirectional(controller.getParams().zakazProperty());
         tfDogovor.textProperty().bindBidirectional(controller.getParams().dogovorProperty());
         tfMetodika.textProperty().bindBidirectional(controller.getParams().metodikaProperty());
@@ -422,23 +610,30 @@ public class PotokController implements Initializable {
         tbPdf.selectedProperty().bindBidirectional(controller.getParams().tbPdfProperty());
         tfComPort.setText(String.valueOf(controller.getParams().getDetPortCommand()));
         tfVideoPort.setText(String.valueOf(controller.getParams().getDetPortVideo()));
+
+        //первая заклаадка
         tfFrameCount.setText(String.valueOf(controller.getParams().getCountFrames()));
         tfTemp0.setText(String.format(Locale.CANADA, "%.1f", controller.getParams().getTemp0()).toUpperCase());
         tfTemp1.setText(String.format(Locale.CANADA, "%.1f", controller.getParams().getTemp1()).toUpperCase());
-        tfAreaACHT0.setText(String.format(Locale.CANADA, "%.3e", controller.getParams().getAreaACHT0()).toUpperCase());
-        tfAreaACHT1.setText(String.format(Locale.CANADA, "%.3e", controller.getParams().getAreaACHT1()).toUpperCase());
-        tfAreaFPU0.setText(String.format(Locale.CANADA, "%.3e", controller.getParams().getAreaFPU0()).toUpperCase());
-        tfAreaFPU1.setText(String.format(Locale.CANADA, "%.3e", controller.getParams().getAreaFPU1()).toUpperCase());
-        tfRasst0.setText(String.format(Locale.CANADA, "%.3e", controller.getParams().getRasstACHTfpu0()).toUpperCase());
-        tfRasst1.setText(String.format(Locale.CANADA, "%.3e", controller.getParams().getRasstACHTfpu1()).toUpperCase());
-        tfEps0.setText(String.format(Locale.CANADA, "%.3f", controller.getParams().getEpsilin0()).toUpperCase());
-        tfEps1.setText(String.format(Locale.CANADA, "%.3f", controller.getParams().getEpsilin1()).toUpperCase());
-        tfPlank0.setText(String.format(Locale.CANADA, "%.3e", controller.getParams().getPlank0()).toUpperCase());
-        tfPlank1.setText(String.format(Locale.CANADA, "%.3e", controller.getParams().getPlank1()).toUpperCase());
-        tfBetta0.setText(String.format(Locale.CANADA, "%.3e", controller.getParams().getBetta0()).toUpperCase());
-        tfBetta1.setText(String.format(Locale.CANADA, "%.3e", controller.getParams().getBetta1()).toUpperCase());
-        tfFefect.setText(String.format(Locale.CANADA, "%.3e",
+
+        tfAreaACHT0.setText(String.format(Locale.CANADA, "%.3f", controller.getParams().getAreaACHT0()).toUpperCase());
+        tfAreaACHT1.setText(String.format(Locale.CANADA, "%.3f", controller.getParams().getAreaACHT1()).toUpperCase());
+        tfAreaFPU0.setText(String.format(Locale.CANADA, "%.0f", controller.getParams().getAreaFPU0()).toUpperCase());
+        tfAreaFPU1.setText(String.format(Locale.CANADA, "%.0f", controller.getParams().getAreaFPU1()).toUpperCase());
+        tfRasst0.setText(String.format(Locale.CANADA, "%.1f", controller.getParams().getRasstACHTfpu0()).toUpperCase());
+        tfRasst1.setText(String.format(Locale.CANADA, "%.1f", controller.getParams().getRasstACHTfpu1()).toUpperCase());
+        tfEps0.setText(String.format(Locale.CANADA, "%.2f", controller.getParams().getEpsilin0()).toUpperCase());
+        tfEps1.setText(String.format(Locale.CANADA, "%.2f", controller.getParams().getEpsilin1()).toUpperCase());
+        tfPlank0.setText(String.format(Locale.CANADA, "%.2e", controller.getParams().getPlank0()).toUpperCase());
+        tfPlank1.setText(String.format(Locale.CANADA, "%.2e", controller.getParams().getPlank1()).toUpperCase());
+        tfBetta0.setText(String.format(Locale.CANADA, "%.4f", controller.getParams().getBetta0()).toUpperCase());
+        tfBetta1.setText(String.format(Locale.CANADA, "%.4f", controller.getParams().getBetta1()).toUpperCase());
+
+        tfFefect.setText(String.format(Locale.CANADA, "%.2e",
                 1.0 / ((1.0E-06) * (2.0) * (controller.getParams().getTempInt()))).toUpperCase());
+
+        /////первая закладка
+
 
         String str = "Вольтовая чувствительность, В\u00B7Вт\u00AF \u00B9";
         tx1.setText(str);
@@ -457,6 +652,57 @@ public class PotokController implements Initializable {
 
         str = "Пороговая облученность, Вт\u00B7см\u00AF \u00B2";
         tx6.setText(str);
+    }
+
+    /**
+     * Заполнение подсказок
+     */
+    private void fillToolTips() {
+        int i = 0;
+        fieldOptions.get(i++).setTooltip(new Tooltip("Количество отсчетов (кадров) в эксперименте"));
+        fieldOptions.get(i++).setTooltip(new Tooltip("Температура источника излучения"));
+        fieldOptions.get(i++).setTooltip(new Tooltip("Температура источника излучения"));
+        fieldOptions.get(i++).setTooltip(new Tooltip("Постоянная Стефана-Больцмана"));
+        fieldOptions.get(i++).setTooltip(new Tooltip("Постоянная Стефана-Больцмана"));
+        fieldOptions.get(i++).setTooltip(new Tooltip("Коэффициент черноты"));
+        fieldOptions.get(i++).setTooltip(new Tooltip("Коэффициент черноты"));
+        fieldOptions.get(i++).setTooltip(new Tooltip("Диаметр диафрагмы источника излучения"));
+        fieldOptions.get(i++).setTooltip(new Tooltip("Диаметр диафрагмы источника излучения"));
+        fieldOptions.get(i++).setTooltip(new Tooltip("Расстояние между диафрагмой излучателя" +
+                " и плоскостью фоточувствительного элемента испытуемого образца"));
+        fieldOptions.get(i++).setTooltip(new Tooltip("Расстояние между диафрагмой излучателя" +
+                " и плоскостью фоточувствительного элемента испытуемого образца"));
+        fieldOptions.get(i++).setTooltip(new Tooltip("Коэффициент, учитывающий потери ИК излучения"));
+        fieldOptions.get(i++).setTooltip(new Tooltip("Коэффициент, учитывающий потери ИК излучения"));
+        fieldOptions.get(i++).setTooltip(new Tooltip("Площадь фоточувствительного элемента матрицы"));
+        fieldOptions.get(i++).setTooltip(new Tooltip("Площадь фоточувствительного элемента матрицы"));
+        fieldOptions.get(i++).setTooltip(new Tooltip("Эквивалентная шумовая полоса пропускания"));
+        lab_potok0.setTooltip(new Tooltip("Действующее значение потока излучения"));
+        lab_potok1.setTooltip(new Tooltip("Действующее значение потока излучения"));
+        lab_potok.setTooltip(new Tooltip("Итоговый поток излучения"));
+        lab_exposure0.setTooltip(new Tooltip("Действующее значение облученности"));
+        lab_exposure1.setTooltip(new Tooltip("Действующее значение облученности"));
+        lab_exposure.setTooltip(new Tooltip("Итоговая облученность"));
+
+
+    }
+
+    /**
+     * Проверка полей и выдача разрешения на запуск сервиса
+     *
+     * @return разрешение
+     */
+    public boolean checkingFields() {
+
+        for (TextField field : fieldOptions) {
+            if (!proverkaZnacheniy(field)) {
+                LOG.error("TextField error {}", field.getId());
+                return false;
+            } else {
+                values.add(field.getText());
+            }
+        }
+        return true;
     }
 
     /**
@@ -490,195 +736,15 @@ public class PotokController implements Initializable {
     }
 
     /**
-     * Установка эффективной частоты.
+     * По нажатию ентера выделение текста и запуск сервиса
      *
      * @param event
      */
     @FXML
-    private void setFefect(ActionEvent event) {
-        double d = parseDoubleText(event);
-        mainController.getParams().setfEfect(d);
-        showNeedCalc(true);
-    }
-
-    /**
-     * Установка числа отсчетов.
-     *
-     * @param event
-     */
-    @FXML
-    private void setCountFrames(ActionEvent event) {
-        int i = parseIntText(event, false);
-        mainController.setCountFrames(event);
-        showNeedCalc(true);
-    }
-
-    /**
-     * Установка температуры ачт 0.
-     *
-     * @param event
-     */
-    @FXML
-    private void setTemp0(ActionEvent event) {
-        double d = parseDoubleText(event);
-        mainController.getParams().setTemp0(d);
-        showNeedCalc(true);
-    }
-
-    /**
-     * Установка температуры ачт 1.
-     *
-     * @param event
-     */
-    @FXML
-    private void setTemp1(ActionEvent event) {
-        double d = parseDoubleText(event);
-        mainController.getParams().setTemp1(d);
-        showNeedCalc(true);
-    }
-
-    /**
-     * Установка планка 0.
-     *
-     * @param event
-     */
-    @FXML
-    private void setPlank0(ActionEvent event) {
-        double d = parseDoubleText(event);
-        mainController.getParams().setPlank0(d);
-        showNeedCalc(true);
-    }
-
-    /**
-     * Установка планка 1.
-     *
-     * @param event
-     */
-    @FXML
-    private void setPlank1(ActionEvent event) {
-        double d = parseDoubleText(event);
-        mainController.getParams().setPlank1(d);
-        showNeedCalc(true);
-    }
-
-    /**
-     * Установка коэф излучения 0.
-     *
-     * @param event
-     */
-    @FXML
-    private void setEps0(ActionEvent event) {
-        double d = parseDoubleText(event);
-        mainController.getParams().setEpsilin0(d);
-        showNeedCalc(true);
-    }
-
-    /**
-     * Установка коэф излучения 1.
-     *
-     * @param event
-     */
-    @FXML
-    private void setEps1(ActionEvent event) {
-        double d = parseDoubleText(event);
-        mainController.getParams().setEpsilin1(d);
-        showNeedCalc(true);
-    }
-
-    /**
-     * Установка площади диафр 0.
-     *
-     * @param event
-     */
-    @FXML
-    private void setAreaACHT0(ActionEvent event) {
-        double d = parseDoubleText(event);
-        mainController.getParams().setAreaACHT0(d);
-        showNeedCalc(true);
-    }
-
-    /**
-     * Установка площади диафр 1.
-     *
-     * @param event
-     */
-    @FXML
-    private void setAreaACHT1(ActionEvent event) {
-        double d = parseDoubleText(event);
-        mainController.getParams().setAreaACHT1(d);
-        showNeedCalc(true);
-    }
-
-    /**
-     * Установка расстояния 0.
-     *
-     * @param event
-     */
-    @FXML
-    private void setRasst0(ActionEvent event) {
-        double d = parseDoubleText(event);
-        mainController.getParams().setRasstACHTfpu0(d);
-        showNeedCalc(true);
-    }
-
-    /**
-     * Установка расстояния 1.
-     *
-     * @param event
-     */
-    @FXML
-    private void setRasst1(ActionEvent event) {
-        double d = parseDoubleText(event);
-        mainController.getParams().setRasstACHTfpu1(d);
-        showNeedCalc(true);
-    }
-
-    /**
-     * Установка коэф. поправки 0.
-     *
-     * @param event
-     */
-    @FXML
-    private void setBetta0(ActionEvent event) {
-        double d = parseDoubleText(event);
-        mainController.getParams().setBetta0(d);
-        showNeedCalc(true);
-    }
-
-    /**
-     * Установка коэф. поправки 1.
-     *
-     * @param event
-     */
-    @FXML
-    private void setBetta1(ActionEvent event) {
-        double d = parseDoubleText(event);
-        mainController.getParams().setBetta1(d);
-        showNeedCalc(true);
-    }
-
-    /**
-     * Установка площади фпу 0.
-     *
-     * @param event
-     */
-    @FXML
-    private void setAreaFPU0(ActionEvent event) {
-        double d = parseDoubleText(event);
-        mainController.getParams().setAreaFPU0(d);
-        showNeedCalc(true);
-    }
-
-    /**
-     * Установка площади фпу 1.
-     *
-     * @param event
-     */
-    @FXML
-    private void setAreaFPU1(ActionEvent event) {
-        double d = parseDoubleText(event);
-        mainController.getParams().setAreaFPU1(d);
-        showNeedCalc(true);
+    private void startServiceOnTap(ActionEvent event) {
+        TextField source = (TextField) event.getSource();
+        source.selectAll();
+        btnStart.fire();
     }
 
     /**
@@ -819,8 +885,21 @@ public class PotokController implements Initializable {
         return lab_potok;
     }
 
+    public Label getLab_exposure0() {
+        return lab_exposure0;
+    }
+
+    public Label getLab_exposure1() {
+        return lab_exposure1;
+    }
+
     public Label getLab_exposure() {
         return lab_exposure;
+    }
+
+
+    public ObservableList<TextField> getFieldOptions() {
+        return fieldOptions;
     }
 
     private void loadFile(ActionEvent event) {
@@ -832,7 +911,7 @@ public class PotokController implements Initializable {
         fileChooser.setTitle("Выбрать файл для загрузки");
         fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
         fileChooser.getExtensionFilters().addAll(
-                 new FileChooser.ExtensionFilter("FS", "*.fs"),
+                new FileChooser.ExtensionFilter("FS", "*.fs"),
                 new FileChooser.ExtensionFilter("All Files", "*.*"));
 
         File loadFile = fileChooser.showOpenDialog(stage);
@@ -903,6 +982,7 @@ public class PotokController implements Initializable {
 
             setStatus(true, "Старт отправки драйвера...", 0.0);
 
+            boolean start = true;
             while (wrappedData.available() > 0) {
 
                 int size = wrappedData.available() < finalPartSize ? wrappedData.available() : finalPartSize;
@@ -913,9 +993,10 @@ public class PotokController implements Initializable {
                 length = length + read;
                 parts++;
                 LOG.debug("Trying to send Array... {} bytes. Msg #{}", size, parts);
-                ft_status = ((DetectorDevice.ChinaSource) mainController.getSelDetector().getDevice()).setID(buff);
+                ft_status = ((DetectorDevice.ChinaSource) mainController.getSelDetector().getDevice()).setID(buff, allLength, start);
                 LOG.debug("MSG # {} sended. Status: {}", parts, ft_status);
                 setStatus(true, "Отправка пакета № " + parts, (1.0 * length) / allLength);
+                start = false;
             }
 
             LOG.debug("Send Array Finished. {} bytes, {} msges", length, parts);
@@ -949,4 +1030,6 @@ public class PotokController implements Initializable {
             lab_status.setText(msg);
         });
     }
+
+
 }

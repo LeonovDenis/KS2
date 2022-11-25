@@ -67,11 +67,13 @@ public interface DetectorDevice {
         FT_STATUS setPower(boolean value);
 
         FT_STATUS setID();
-        FT_STATUS setID(byte[] data);
+        FT_STATUS setID(byte[] data,int size,boolean startPKG);
 
         int[][] getFrame();
 
         boolean isOnline();
+
+        FT_STATUS setSpecPower(int tempVR0, int tempREF, int tempREF1, int tempVOS);
     }
 
 

@@ -833,6 +833,12 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
             waitNewImage();
 
             if (isEthrnetWorking) {//для сети
+                ((DetectorDevice.ChinaSource) selDetector.getDevice()).setSpecPower(params.getTempVR0(),
+                        params.getTempREF(), params.getTempREF(),params.getTempVOS());
+                waitNewImage();
+            }
+
+            if (isEthrnetWorking) {//для сети
                 ((DetectorDevice.ChinaSource) selDetector.getDevice()).setPower(true);
                 waitNewImage();
             }
@@ -1561,17 +1567,20 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     @FXML
     private void startPotok(ActionEvent event) throws IOException {
         Stage stage = new Stage();
+
         potokFxmlLoader = new FXMLLoader(getClass().getResource("potokPage.fxml"));
         Parent root = potokFxmlLoader.load();
         PotokController potokController = potokFxmlLoader.getController();
         potokController.initController(this);
+        stage.setOnCloseRequest(t -> potokController.saveValuesToParams());
         Scene scene = new Scene(root);
-        stage.setTitle("Расчет значения потока, ввод параметров стенда");
+        stage.setTitle("Расчет значения потока. Ввод параметров стенда");
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setResizable(false);
         stage.show();
+
     }
 
     /**

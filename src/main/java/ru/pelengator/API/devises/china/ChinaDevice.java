@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import ru.pelengator.API.*;
 import ru.pelengator.API.driver.Driver;
 import ru.pelengator.API.driver.FT_STATUS;
-import ru.pelengator.API.driver.usb.Jna2;
 
 import java.awt.*;
 import java.awt.color.ColorSpace;
@@ -108,17 +107,26 @@ public class ChinaDevice implements DetectorDevice, DetectorDevice.ChinaSource {
         }
     }
 
+    /**
+     * Задание на загрузку данных
+     */
     private class SetBlcIDTask extends DetectorTask {
 
         private final AtomicReference<FT_STATUS> result = new AtomicReference<FT_STATUS>();
 
         private final AtomicReference<byte[]> value = new AtomicReference<>();
+        private final AtomicInteger size = new AtomicInteger();
+        private final AtomicBoolean start = new AtomicBoolean();
+
         public SetBlcIDTask(DetectorDevice device) {
             super(device);
         }
 
-        public FT_STATUS setID(byte[] value) {
+        public FT_STATUS setID(byte[] value,int size,boolean startPKG) {
             this.value.set(value);
+            this.size.set(size);
+            this.start.set(startPKG);
+
             try {
                 process();
             } catch (InterruptedException e) {
@@ -129,7 +137,7 @@ public class ChinaDevice implements DetectorDevice, DetectorDevice.ChinaSource {
 
         @Override
         protected void handle() {
-            result.set(grabber.setID(value.get()));
+            result.set(grabber.setID(value.get(),size.get(),start.get()));
         }
     }
 
@@ -349,6 +357,39 @@ public class ChinaDevice implements DetectorDevice, DetectorDevice.ChinaSource {
             result.set(grabber.setDimension(value.get()));
         }
     }
+
+    private class SetSpecPowerTask extends DetectorTask {
+
+        private final AtomicReference<FT_STATUS> result = new AtomicReference<FT_STATUS>();
+        private final AtomicInteger vR0 = new AtomicInteger();
+        private final AtomicInteger rEF = new AtomicInteger();
+        private final AtomicInteger rEF1 = new AtomicInteger();
+        private final AtomicInteger vOS = new AtomicInteger();
+
+        public SetSpecPowerTask(DetectorDevice device) {
+            super(device);
+        }
+
+        public FT_STATUS setID(int tempVR0,int tempREF,int tempREF1,int tempVOS) {
+            this.vR0.set(tempVR0);
+            this.rEF.set(tempREF);
+            this.rEF1.set(tempREF1);
+            this.vOS.set(tempVOS);
+            try {
+                process();
+            } catch (InterruptedException e) {
+                LOG.error("Error while setting SpecPower", e);
+            }
+            return result.get();
+        }
+
+        @Override
+        protected void handle() {
+            result.set(grabber.setSpecPower(vR0.get(),rEF.get(),rEF1.get(),vOS.get()));
+        }
+    }
+
+
 
     /**
      * Задача на смену ёмкостей.
@@ -855,9 +896,9 @@ public class ChinaDevice implements DetectorDevice, DetectorDevice.ChinaSource {
     }
 
     @Override
-    public  FT_STATUS setID(byte[] data) {
+    public  FT_STATUS setID(byte[] data,int size,boolean startPKG) {
         FT_STATUS result = null;
-        result = new SetBlcIDTask(this).setID(data);
+        result = new SetBlcIDTask(this).setID(data,size,startPKG);
         if (result != FT_STATUS.FT_OK) {
             LOG.error("Error while setBlcID: {}", result);
         }
@@ -876,6 +917,16 @@ public class ChinaDevice implements DetectorDevice, DetectorDevice.ChinaSource {
     @Override
     public boolean isOnline() {
         return grabber.isOnline();
+    }
+
+    @Override
+    public FT_STATUS setSpecPower(int tempVR0, int tempREF, int tempREF1, int tempVOS) {
+        FT_STATUS result = null;
+        result = new SetSpecPowerTask(this).setID(tempVR0,tempREF,tempREF1,tempVOS);
+        if (result != FT_STATUS.FT_OK) {
+            LOG.error("Error while setSpecPowerTask: {}", result);
+        }
+        return result;
     }
 
     @Override

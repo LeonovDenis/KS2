@@ -335,9 +335,9 @@ public class StendParams {
         text = String.format(Locale.CANADA, "%.3e", areaFPU1);
         properties.setProperty("areaFPU1", text);
 
-        text = String.format(Locale.CANADA, "%.3e", rasstACHTfpu0);
+        text = String.format(Locale.CANADA, "%.3f", rasstACHTfpu0);
         properties.setProperty("rasstACHTfpu0", text);
-        text = String.format(Locale.CANADA, "%.3e", rasstACHTfpu1);
+        text = String.format(Locale.CANADA, "%.3f", rasstACHTfpu1);
         properties.setProperty("rasstACHTfpu1", text);
 
         text = String.format(Locale.CANADA, "%.3e", exposure);
@@ -360,9 +360,9 @@ public class StendParams {
         text = String.format(Locale.CANADA, "%.3e", plank1);
         properties.setProperty("plank1", text);
 
-        text = String.format(Locale.CANADA, "%.3e", betta0);
+        text = String.format(Locale.CANADA, "%.4e", betta0);
         properties.setProperty("betta0", text);
-        text = String.format(Locale.CANADA, "%.3e", betta1);
+        text = String.format(Locale.CANADA, "%.4e", betta1);
         properties.setProperty("betta1", text);
 
         text = String.format(Locale.CANADA, "%.3e", fEfect);

@@ -450,7 +450,20 @@ public class Jna2 implements Driver {
      * @return
      */
     @Override
-    public FT_STATUS setID(byte[] data) {
+    public  FT_STATUS setID(byte[] data,int size,boolean startPKG){
+        return null;
+    }
+
+    /**
+     * Игнорим
+     * @param vR0
+     * @param rEF
+     * @param rEF1
+     * @param vOS
+     * @return
+     */
+    @Override
+    public FT_STATUS setSpecPower(int vR0, int rEF, int rEF1, int vOS) {
         return null;
     }
 

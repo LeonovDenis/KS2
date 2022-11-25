@@ -37,6 +37,9 @@ public class ComListEth {
     private final byte DEV_ID = 0x05;
     private final Bytes COM_HEADER = Bytes.from((byte) 0xA1, DEV_ID);
     private final Bytes VIDEO_HEADER = Bytes.from((byte) 0xA2, DEV_ID);
+    private final Bytes DATA_HEADER_ST = Bytes.from((byte) 0xA3, DEV_ID);
+    private final Bytes DATA_HEADER_EN = Bytes.from((byte) 0xA4, DEV_ID);
+
 
     //команды
     private final byte COM_WHO_IS_THERE = (byte) 0x00;
@@ -56,6 +59,8 @@ public class ComListEth {
     private final byte FUNC_CCC = (byte) 0x07;
     private final byte FUNC_DIM = (byte) 0x08;
 
+    private final byte FUNC_SPEC_POWER = (byte) 0x0B;
+
 
     /**
      * Установка разрешения.
@@ -71,8 +76,8 @@ public class ComListEth {
             data = (byte) 0x00;//92*90
         }
         Bytes msg = COM_HEADER          //маска+ID
-                .append(COM_WRITE)          //команда
-                .append(FUNC_DIM)            //функция
+                .append(COM_WRITE)      //команда
+                .append(FUNC_DIM)       //функция
                 .append(1)              //размер данных
                 .append(data);          //данные
         sendSynhMSG(msg.array());
@@ -94,8 +99,8 @@ public class ComListEth {
             data = (byte) 0x00;//1
         }
         Bytes msg = COM_HEADER          //маска+ID
-                .append(COM_WRITE)          //команда
-                .append(FUNC_CCC)            //функция
+                .append(COM_WRITE)      //команда
+                .append(FUNC_CCC)       //функция
                 .append(1)              //размер данных
                 .append(data);          //данные
         sendSynhMSG(msg.array());
@@ -117,8 +122,8 @@ public class ComListEth {
             data = (byte) 0x00;//off
         }
         Bytes msg = COM_HEADER          //маска+ID
-                .append(COM_WRITE)          //команда
-                .append(FUNC_POWER)          //функция
+                .append(COM_WRITE)      //команда
+                .append(FUNC_POWER)     //функция
                 .append(1)              //размер данных
                 .append(data);          //данные
         sendSynhMSG(msg.array());
@@ -168,8 +173,8 @@ public class ComListEth {
     public FT_STATUS setVVA(int value) {
 
         Bytes msg = COM_HEADER          //маска+ID
-                .append(COM_WRITE)          //команда
-                .append(FUNC_VOS)            //функция
+                .append(COM_WRITE)      //команда
+                .append(FUNC_VOS)       //функция
                 .append(4)              //размер данных
                 .append(value);         //данные
         sendSynhMSG(msg.array());
@@ -209,14 +214,39 @@ public class ComListEth {
         return FT_STATUS.FT_OK;
     }
 
-    public FT_STATUS setID(byte[] data) {
+    public FT_STATUS setID(byte[] data,int size,boolean startPKG) {
 
-        Bytes msg = COM_HEADER               //маска+ID
+        Bytes headers = startPKG ? DATA_HEADER_ST : DATA_HEADER_EN;
+
+        Bytes msg = headers                  //маска+ID
                 .append(COM_BLK_WRITE)       //команда
                 .append(FUNC_ID)             //функция
-                .append(data.length)         //размер данных
+                .append(size)                //размер данных
                 .append(data);               //данные
         sendSynhMSGOneTry(msg.array());
+        return FT_STATUS.FT_OK;
+    }
+
+    public FT_STATUS setSpecPower(int vR0, int rEF, int rEF1, int vOS) {
+
+        float fVR0 = vR0 / 1000f;
+        fVR0=0f;
+        float fREF = rEF / 1000f;
+        float fREF1 = rEF1 / 1000f;
+        float fVOS = vOS / 1000f;
+
+        byte[] dVR0 = Bytes.from(fVR0).reverse().array();
+        byte[] dREF = Bytes.from(fREF).reverse().array();
+        byte[] dREF1 = Bytes.from(fREF1).reverse().array();
+        byte[] dVOS = Bytes.from(fVOS).reverse().array();
+
+        Bytes msg = COM_HEADER                                       //маска+ID
+                .append(COM_BLK_WRITE)                               //команда
+                .append(FUNC_SPEC_POWER)                             //функция
+                .append(4*4)                                         //размер данных
+                .append(dVR0).append(dREF).append(dREF1).append(dVOS); //данные
+        sendSynhMSGOneTry(msg.array());
+
         return FT_STATUS.FT_OK;
     }
 

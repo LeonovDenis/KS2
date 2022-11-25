@@ -364,10 +364,15 @@ public class EthernetDriver implements Driver {
      * @return
      */
     @Override
-    public FT_STATUS setID(byte[] data) {
-        return comList.setID(data);
+    public FT_STATUS setID(byte[] data,int size,boolean startPKG) {
+        return comList.setID(data,size,startPKG);
     }
 
+    @Override
+    public FT_STATUS setSpecPower(int vR0, int rEF, int rEF1, int vOS) {
+
+        return comList.setSpecPower(vR0,rEF,rEF1,vOS);
+    }
 
 
     private int frameCount = 0;

@@ -1149,6 +1149,22 @@ public class Utils {
         return F;
     }
 
+    /**
+     * Подсчет облученности
+     * @param T
+     * @param plank
+     * @param epsilin
+     * @param areaACHT
+     * @param L
+     * @param betta
+     * @return Вт/см2
+     */
+    public static double obluch(double T, double plank, double epsilin, double areaACHT, double L, double betta) {
+
+        double F =1.0E-04 * betta * ((plank * epsilin * Math.pow(T, 4) * areaACHT) / (Math.PI * Math.pow(L, 2)));
+        return F;
+    }
+
 
     /**
      * Расчет вольт-ваттной характеристики.
@@ -1407,6 +1423,18 @@ public class Utils {
         return dataArrayexposure;
     }
 
+    /**
+     * Площадь круга через диаметр
+     * @param diametr мм
+     *
+     * @return м2
+     */
+    public static double sCircle(double diametr) {
+
+        double sArea =(1.0E-06*(Math.PI * Math.pow(diametr, 2)) )/ 4.0;
+
+        return sArea;
+    }
 
     /**
      * Проверка и распарсивание целого числа.

@@ -1,8 +1,10 @@
 package ru.pelengator.service;
 
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import javafx.scene.control.TextField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.pelengator.Controller;
@@ -23,6 +25,7 @@ public class PotokService extends Service<Void> {
 
     private PotokController controller;
     private Controller mainController;
+    private ObservableList<TextField> fieldOptions;
 
     private double plank0;
     private double plank1;
@@ -41,6 +44,8 @@ public class PotokService extends Service<Void> {
     private double potok0;
     private double potok1;
     private double potok;
+    private double exposure0;
+    private double exposure1;
     private double exposure;
 
 
@@ -81,32 +86,46 @@ public class PotokService extends Service<Void> {
      */
     private void initParams() {
         LOG.trace("Init");
-        plank0 = mainController.getParams().getPlank0();
-        plank1 = mainController.getParams().getPlank1();
-        T0 = mainController.getParams().getTemp0();
-        T1 = mainController.getParams().getTemp1();
-        epsilin0 = mainController.getParams().getEpsilin0();
-        epsilin1 = mainController.getParams().getEpsilin1();
-        areaACHT0 = mainController.getParams().getAreaACHT0();
-        areaACHT1 = mainController.getParams().getAreaACHT1();
-        L0 = mainController.getParams().getRasstACHTfpu0();
-        L1 = mainController.getParams().getRasstACHTfpu1();
-        betta0 = mainController.getParams().getBetta0();
-        betta1 = mainController.getParams().getBetta1();
-        areaFPU0 = mainController.getParams().getAreaFPU0();
-        areaFPU1 = mainController.getParams().getAreaFPU1();
-        exposure = mainController.getParams().getExposure();
+
+        fieldOptions = controller.getFieldOptions();
+        if (fieldOptions == null || fieldOptions.isEmpty()) {
+            failed();
+        }
+
+        T0 = getValueFromField(1)+273; //приведение в кельвины
+        T1 = getValueFromField(2)+273;
+
+        plank0 = getValueFromField(3);
+        plank1 = getValueFromField(4);
+
+        epsilin0 = getValueFromField(5);
+        epsilin1 = getValueFromField(6);
+
+        areaACHT0 = sCircle(getValueFromField(7)); //приведение в площадь
+        areaACHT1 = sCircle(getValueFromField(8));
+
+        L0 = getValueFromField(9)/1000d;//приведение в метры
+        L1 = getValueFromField(10)/1000d;//приведение в метры
+
+        betta0 = getValueFromField(11);
+        betta1 = getValueFromField(12);
+
+        areaFPU0 = getValueFromField(13) * 1.0E-12;// приведение в метры
+        areaFPU1 = getValueFromField(14) * 1.0E-12;
+
     }
 
     /**
      * Расчетная функция.
      */
     private void math() {
+
         potok0 = potok(T0, plank0, epsilin0, areaACHT0, L0, betta0, areaFPU0);
         potok1 = potok(T1, plank1, epsilin1, areaACHT1, L1, betta1, areaFPU1);
+        exposure0 = obluch(T0, plank0, epsilin0,areaACHT0,L0, betta0);
+        exposure1 = obluch(T1, plank1, epsilin1, areaACHT1,L1, betta1);
         potok = potok1 - potok0;
-        exposure = exposure(potok,areaFPU0);
-        printPotok(controller, potok0, potok1, potok, exposure);
+        exposure = exposure1 - exposure0;
 
     }
 
@@ -119,15 +138,24 @@ public class PotokService extends Service<Void> {
      * @param potok      итоговый поток.
      * @param exposure   итоговая одлученность.
      */
-    private void printPotok(PotokController controller, double potok0, double potok1, double potok, double exposure) {
-        String fpotok0 = String.format(Locale.CANADA, "%.3e", potok0).toUpperCase();
-        String fpotok1 = String.format(Locale.CANADA, "%.3e", potok1).toUpperCase();
-        String fpotok = String.format(Locale.CANADA, "%.3e", potok).toUpperCase();
-        String fexposure = String.format(Locale.CANADA, "%.3e", exposure).toUpperCase();
+    private void printPotok(PotokController controller, double potok0, double potok1, double potok,
+                            double exposure0, double exposure1, double exposure) {
+
+        String fpotok0 = String.format(Locale.CANADA, "%.2e", potok0).toUpperCase();
+        String fpotok1 = String.format(Locale.CANADA, "%.2e", potok1).toUpperCase();
+        String fpotok = String.format(Locale.CANADA, "%.2e", potok).toUpperCase();
+
+        String fexposure0 = String.format(Locale.CANADA, "%.2e", exposure0).toUpperCase();
+        String fexposure1 = String.format(Locale.CANADA, "%.2e", exposure1).toUpperCase();
+        String fexposure = String.format(Locale.CANADA, "%.2e", exposure).toUpperCase();
+
         Platform.runLater(() -> {
             controller.getLab_potok0().setText(fpotok0);
             controller.getLab_potok1().setText(fpotok1);
             controller.getLab_potok().setText(fpotok);
+
+            controller.getLab_exposure0().setText(fexposure0);
+            controller.getLab_exposure1().setText(fexposure1);
             controller.getLab_exposure().setText(fexposure);
         });
 
@@ -137,13 +165,17 @@ public class PotokService extends Service<Void> {
      * Сохраняем полученные данные
      */
     private void saveData() {
+        LOG.trace("Printing");
+        printPotok(controller, potok0, potok1, potok, exposure0, exposure1, exposure);
+
         LOG.trace("Saving");
         mainController.getParams().setPotok(potok);
         mainController.getParams().setPotok0(potok0);
         mainController.getParams().setPotok1(potok1);
         mainController.getParams().setExposure(exposure);
         mainController.getSelExp().setParams(mainController.getParams());
-        mainController.save();
+        controller.saveValuesToParams();
+
     }
 
 
@@ -162,7 +194,19 @@ public class PotokService extends Service<Void> {
     protected void cancelled() {
         super.cancelled();
         Platform.runLater(() -> {
-        controller.getMainController().getBtnPotok().setStyle("-fx-background-color: red");
+            controller.getMainController().getBtnPotok().setStyle("-fx-background-color: red");
         });
+    }
+
+    /**
+     * Получение значения из текстового поля
+     *
+     * @param position позиуия поля в списке
+     * @return double значение
+     */
+    private double getValueFromField(int position) {
+        String text = fieldOptions.get(position).getText().strip().toUpperCase();
+        double value = Double.parseDouble(text);
+        return value;
     }
 }

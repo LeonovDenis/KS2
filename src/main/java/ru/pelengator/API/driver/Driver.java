@@ -10,7 +10,7 @@ import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public interface Driver{
+public interface Driver {
 
     AtomicBoolean validHendler = new AtomicBoolean(false);
     AtomicBoolean isOpened = new AtomicBoolean(false);
@@ -50,7 +50,9 @@ public interface Driver{
 
     FT_STATUS setID();
 
-    FT_STATUS setID(byte[] data);
+    FT_STATUS setID(byte[] data, int size, boolean startPKG);
+
+    FT_STATUS setSpecPower(int vR0,int rEF,int rEF1,int vOS);
 
     Bytes nextFrame();
 

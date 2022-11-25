@@ -28,12 +28,14 @@
          <content>
             <GridPane alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                <columnConstraints>
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="70.0" />
-                  <ColumnConstraints hgrow="NEVER" maxWidth="24.0" minWidth="0.0" prefWidth="24.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="100.0" prefWidth="100.0" />
-                  <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="100.0" prefWidth="200.0" />
-                  <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="0.0" minWidth="0.0" prefWidth="0.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="80.0" minWidth="80.0" prefWidth="80.0" />
+                  <ColumnConstraints hgrow="NEVER" maxWidth="2.0" minWidth="0.0" prefWidth="2.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="80.0" minWidth="80.0" prefWidth="80.0" />
+                  <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="5.0" minWidth="5.0" prefWidth="5.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="80.0" minWidth="80.0" prefWidth="80.0" />
+                  <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="80.0" minWidth="80.0" prefWidth="80.0" />
+                  <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" />
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
                </columnConstraints>
                <rowConstraints>
@@ -53,13 +55,14 @@
                   <RowConstraints minHeight="20.0" vgrow="SOMETIMES" />
                   <RowConstraints vgrow="SOMETIMES" />
                   <RowConstraints minHeight="33.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="33.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="33.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="33.0" vgrow="SOMETIMES" />
                   <RowConstraints vgrow="SOMETIMES" />
                   <RowConstraints minHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="6" GridPane.rowIndex="1" GridPane.rowSpan="3">
+                  <StackPane alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="410.0" GridPane.columnIndex="7" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="3">
                      <children>
                         <ProgressBar fx:id="pb_status" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" progress="0.0">
                            <StackPane.margin>
@@ -76,169 +79,153 @@
                         </Label>
                      </children>
                   </StackPane>
-                  <TextField fx:id="tfPlank0" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#setPlank0" text="5.67E-8" GridPane.columnIndex="2" GridPane.rowIndex="7">
+                  <TextField fx:id="tfPlank0" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#startServiceOnTap" promptText="5.67E-08" text="5.67E-8" GridPane.columnIndex="3" GridPane.rowIndex="7">
                      <GridPane.margin>
                         <Insets bottom="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </TextField>
-                  <TextField fx:id="tfEps0" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#setEps0" text="0.95" GridPane.columnIndex="2" GridPane.rowIndex="8">
+                  <TextField fx:id="tfEps0" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#startServiceOnTap" promptText="1.0" text="1.0" GridPane.columnIndex="3" GridPane.rowIndex="8">
                      <GridPane.margin>
                         <Insets bottom="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </TextField>
-                  <TextField fx:id="tfAreaACHT0" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#setAreaACHT0" GridPane.columnIndex="2" GridPane.rowIndex="9">
+                  <TextField fx:id="tfAreaACHT0" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#startServiceOnTap" promptText="2.240E-01" text="2.240E-01" GridPane.columnIndex="3" GridPane.rowIndex="9">
                      <GridPane.margin>
                         <Insets bottom="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </TextField>
-                  <TextField fx:id="tfRasst0" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#setRasst0" GridPane.columnIndex="2" GridPane.rowIndex="10">
+                  <TextField fx:id="tfRasst0" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#startServiceOnTap" promptText="1.857E+03" text="1.857E+03" GridPane.columnIndex="3" GridPane.rowIndex="10">
                      <GridPane.margin>
                         <Insets bottom="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </TextField>
-                  <TextField fx:id="tfBetta0" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#setBetta0" text="0.325" GridPane.columnIndex="2" GridPane.rowIndex="11">
+                  <TextField fx:id="tfBetta0" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#startServiceOnTap" promptText="0.1125" text="0.1125" GridPane.columnIndex="3" GridPane.rowIndex="11">
                      <GridPane.margin>
                         <Insets bottom="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </TextField>
-                  <ImageView fitHeight="30.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="7">
+                  <ImageView fitHeight="30.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="7">
                      <image>
                         <Image url="@API/icons/forms/rdy/sigm.png" />
                      </image>
                   </ImageView>
-                  <ImageView fitHeight="30.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="8">
+                  <ImageView fitHeight="30.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="8">
                      <image>
                         <Image url="@API/icons/forms/rdy/eps.png" />
                      </image>
                   </ImageView>
-                  <ImageView fitHeight="30.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="9">
+                  <ImageView fitHeight="30.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="9">
                      <image>
                         <Image url="@API/icons/forms/rdy/Aach.png" />
                      </image>
                   </ImageView>
-                  <ImageView fitHeight="30.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="10">
+                  <ImageView fitHeight="30.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="10">
                      <image>
                         <Image url="@API/icons/forms/rdy/l.png" />
                      </image>
                   </ImageView>
-                  <ImageView fitHeight="30.0" fitWidth="70.0" layoutX="10.0" layoutY="100.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="11">
+                  <ImageView fitHeight="30.0" fitWidth="70.0" layoutX="10.0" layoutY="100.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="11">
                      <image>
                         <Image url="@API/icons/forms/rdy/betta.png" />
                      </image>
                   </ImageView>
-                  <ImageView fitHeight="30.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="15">
+                  <ImageView fitHeight="30.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="15">
                      <image>
                         <Image url="@API/icons/forms/rdy/Fe.png" />
                      </image>
                   </ImageView>
-                  <Label fx:id="lab_potok0" alignment="CENTER" layoutX="141.0" layoutY="130.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="--" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="15">
+                  <Label fx:id="lab_potok0" alignment="CENTER" layoutX="141.0" layoutY="130.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="--" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="15">
                      <GridPane.margin>
                         <Insets />
                      </GridPane.margin>
                   </Label>
-                  <ImageView fitHeight="30.0" fitWidth="70.0" layoutX="43.0" layoutY="130.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="12">
+                  <ImageView fitHeight="30.0" fitWidth="70.0" layoutX="43.0" layoutY="130.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="12">
                      <image>
                         <Image url="@API/icons/forms/rdy/A.png" />
                      </image>
                   </ImageView>
-                  <TextField fx:id="tfAreaFPU0" alignment="CENTER" layoutX="68.0" layoutY="133.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#setAreaFPU0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="12">
+                  <TextField fx:id="tfAreaFPU0" alignment="CENTER" layoutX="68.0" layoutY="133.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#startServiceOnTap" promptText="9.000E+02" text="9.000E+02" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="12">
                      <GridPane.margin>
                         <Insets bottom="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </TextField>
-                  <TextField fx:id="tfFefect" alignment="CENTER" layoutX="54.0" layoutY="163.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#setFefect" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="13">
+                  <TextField fx:id="tfFefect" alignment="CENTER" layoutX="54.0" layoutY="163.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#startServiceOnTap" promptText="1.000E+03" text="1.000E+03" GridPane.columnIndex="3" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="13">
                      <GridPane.margin>
                         <Insets bottom="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </TextField>
-                  <ImageView fitHeight="30.0" fitWidth="70.0" layoutX="20.0" layoutY="190.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="13">
+                  <ImageView fitHeight="30.0" fitWidth="70.0" layoutX="20.0" layoutY="190.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="13">
                      <image>
                         <Image url="@API/icons/forms/rdy/fekv.png" />
                      </image>
                   </ImageView>
-                  <TextField fx:id="tfFrameCount" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#setCountFrames" promptText="128" text="128" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="5">
+                  <TextField fx:id="tfFrameCount" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#startServiceOnTap" promptText="128" text="128" GridPane.columnIndex="3" GridPane.columnSpan="3" GridPane.rowIndex="5">
                      <GridPane.margin>
                         <Insets bottom="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </TextField>
-                  <TextField fx:id="tfTemp0" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#setTemp0" promptText="89.97" text="89.97" GridPane.columnIndex="2" GridPane.rowIndex="6">
+                  <TextField fx:id="tfTemp0" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#startServiceOnTap" promptText="300.0" text="300.0" GridPane.columnIndex="3" GridPane.rowIndex="6">
                      <GridPane.margin>
                         <Insets bottom="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </TextField>
-                  <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Количество отсчетов (кадров) в эксперименте" wrapText="true" GridPane.columnIndex="6" GridPane.rowIndex="5" />
-                  <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="начальные" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                  <Label alignment="CENTER" layoutX="550.0" layoutY="23.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="конечные" textAlignment="CENTER" GridPane.columnIndex="4" GridPane.rowIndex="3" />
-                  <TextField fx:id="tfTemp1" alignment="CENTER" layoutX="194.0" layoutY="62.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#setTemp1" promptText="89.97" text="89.97" GridPane.columnIndex="4" GridPane.rowIndex="6">
+                  <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="начальные" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                  <Label alignment="CENTER" layoutX="550.0" layoutY="23.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="конечные" textAlignment="CENTER" GridPane.columnIndex="5" GridPane.rowIndex="3" />
+                  <TextField fx:id="tfTemp1" alignment="CENTER" layoutX="194.0" layoutY="62.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#startServiceOnTap" promptText="300.0" text="300.0" GridPane.columnIndex="5" GridPane.rowIndex="6">
                      <GridPane.margin>
                         <Insets bottom="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </TextField>
-                  <Label contentDisplay="CENTER" layoutX="10.0" layoutY="23.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Температура полости АЧТ, К" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="6" GridPane.rowIndex="6">
-                     <GridPane.margin>
-                        <Insets />
-                     </GridPane.margin>
-                  </Label>
-                  <TextField fx:id="tfPlank1" alignment="CENTER" layoutX="199.0" layoutY="134.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#setPlank1" text="5.67E-8" GridPane.columnIndex="4" GridPane.rowIndex="7">
+                  <TextField fx:id="tfPlank1" alignment="CENTER" layoutX="199.0" layoutY="134.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#startServiceOnTap" promptText="5.67E-08" text="5.67E-8" GridPane.columnIndex="5" GridPane.rowIndex="7">
                      <GridPane.margin>
                         <Insets bottom="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </TextField>
-                  <TextField fx:id="tfEps1" alignment="CENTER" layoutX="282.0" layoutY="173.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#setEps1" text="0.95" GridPane.columnIndex="4" GridPane.rowIndex="8">
+                  <TextField fx:id="tfEps1" alignment="CENTER" layoutX="282.0" layoutY="173.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#startServiceOnTap" promptText="1.0" text="1.0" GridPane.columnIndex="5" GridPane.rowIndex="8">
                      <GridPane.margin>
                         <Insets bottom="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </TextField>
-                  <TextField fx:id="tfAreaACHT1" alignment="CENTER" layoutX="282.0" layoutY="212.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#setAreaACHT1" GridPane.columnIndex="4" GridPane.rowIndex="9">
+                  <TextField fx:id="tfAreaACHT1" alignment="CENTER" layoutX="282.0" layoutY="212.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#startServiceOnTap" promptText="1.200E+01" text="1.200E+01" GridPane.columnIndex="5" GridPane.rowIndex="9">
                      <GridPane.margin>
                         <Insets bottom="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </TextField>
-                  <ImageView fitHeight="30.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="6">
+                  <ImageView fitHeight="30.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="6">
                      <image>
                         <Image url="@API/icons/forms/rdy/T.png" />
                      </image>
                   </ImageView>
-                  <Label fx:id="lb_bolts" contentDisplay="CENTER" layoutX="15.0" layoutY="99.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Постоянная Стефана Больцмана," textAlignment="CENTER" wrapText="true" GridPane.columnIndex="6" GridPane.rowIndex="7" />
-                  <Label contentDisplay="CENTER" layoutX="10.0" layoutY="138.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Коэффициент излучения, отн. ед." textAlignment="CENTER" wrapText="true" GridPane.columnIndex="6" GridPane.rowIndex="8" />
-                  <Label fx:id="lb_areaACHT" contentDisplay="CENTER" layoutX="10.0" layoutY="177.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Площадь отверстия диафрагмы АЧТ," textAlignment="CENTER" wrapText="true" GridPane.columnIndex="6" GridPane.rowIndex="9" />
-                  <Label contentDisplay="CENTER" layoutX="10.0" layoutY="216.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Расстояние между диафрагмой АЧТ и плоскостью фоточувствительного элемента испытуемого образца, м" wrapText="true" GridPane.columnIndex="6" GridPane.rowIndex="10" />
-                  <Label contentDisplay="CENTER" layoutX="10.0" layoutY="255.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Коэффициент поправки, отн.ед." textAlignment="CENTER" wrapText="true" GridPane.columnIndex="6" GridPane.rowIndex="11" />
-                  <Label fx:id="lb_areaFPU" contentDisplay="CENTER" layoutX="10.0" layoutY="294.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Эффективная фоточувствительная площадь испытуемого образца," wrapText="true" GridPane.columnIndex="6" GridPane.rowIndex="12" />
-                  <Label contentDisplay="CENTER" layoutX="10.0" layoutY="333.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Эквивалентная шумовая полоса пропускания, Гц" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="6" GridPane.rowIndex="13" />
-                  <Label contentDisplay="CENTER" layoutX="10.0" layoutY="372.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Итоговый поток излучения, Вт" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="6" GridPane.rowIndex="16" />
-                  <TextField fx:id="tfRasst1" alignment="CENTER" layoutX="272.0" layoutY="259.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#setRasst1" GridPane.columnIndex="4" GridPane.rowIndex="10">
+                  <TextField fx:id="tfRasst1" alignment="CENTER" layoutX="272.0" layoutY="259.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#startServiceOnTap" promptText="1.857E+03" text="1.857E+03" GridPane.columnIndex="5" GridPane.rowIndex="10">
                      <GridPane.margin>
                         <Insets bottom="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </TextField>
-                  <ImageView fitHeight="30.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="16">
+                  <ImageView fitHeight="30.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="17">
                      <image>
                         <Image url="@API/icons/forms/rdy/fi.png" />
                      </image>
                   </ImageView>
-                  <Label fx:id="lab_potok1" alignment="CENTER" layoutX="295.0" layoutY="407.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="--" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="15" />
-                  <Label fx:id="lab_potok" alignment="CENTER" layoutX="401.0" layoutY="402.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="--" textFill="#26b99b" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="16" />
-                  <Label contentDisplay="CENTER" layoutX="10.0" layoutY="449.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Действующее значение потока излучения, Вт" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="6" GridPane.rowIndex="15" />
-                  <TextField fx:id="tfBetta1" alignment="CENTER" layoutX="272.0" layoutY="298.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#setBetta1" text="0.325" GridPane.columnIndex="4" GridPane.rowIndex="11">
+                  <Label fx:id="lab_potok1" alignment="CENTER" layoutX="295.0" layoutY="407.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="--" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.rowIndex="15" />
+                  <Label fx:id="lab_potok" alignment="CENTER" layoutX="401.0" layoutY="402.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="--" textFill="#26b99b" GridPane.columnIndex="3" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="17" />
+                  <TextField fx:id="tfBetta1" alignment="CENTER" layoutX="272.0" layoutY="298.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#startServiceOnTap" promptText="0.1136" text="0.1136" GridPane.columnIndex="5" GridPane.rowIndex="11">
                      <GridPane.margin>
                         <Insets bottom="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </TextField>
-                  <TextField fx:id="tfAreaFPU1" alignment="CENTER" layoutX="272.0" layoutY="336.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#setAreaFPU1" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="12">
+                  <TextField fx:id="tfAreaFPU1" alignment="CENTER" layoutX="272.0" layoutY="336.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#startServiceOnTap" promptText="9.000E+02" text="9.000E+02" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.rowIndex="12">
                      <GridPane.margin>
                         <Insets bottom="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>
                   </TextField>
-                  <Label fx:id="lb_areaExp" contentDisplay="CENTER" layoutX="10.0" layoutY="420.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Итоговая облученность," textAlignment="CENTER" wrapText="true" GridPane.columnIndex="6" GridPane.rowIndex="17" />
-                  <ImageView fitHeight="30.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="17">
+                  <ImageView fitHeight="30.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="16">
                      <image>
-                        <Image url="@API/icons/forms/rdy/E.png" />
+                        <Image url="@API/icons/forms/rdy/Ee.png" />
                      </image>
                   </ImageView>
-                  <Label fx:id="lab_exposure" alignment="CENTER" contentDisplay="CENTER" layoutX="422.0" layoutY="412.0" prefHeight="32.0" prefWidth="281.0" text="--" textFill="#26b99b" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="17" />
-                  <Label alignment="CENTER" layoutX="395.0" layoutY="19.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Условия эксперимента" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                  <ImageView fitHeight="30.0" fitWidth="70.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="5">
+                  <Label fx:id="lab_exposure" alignment="CENTER" contentDisplay="CENTER" layoutX="422.0" layoutY="412.0" prefHeight="32.0" prefWidth="281.0" text="--" textFill="#26b99b" GridPane.columnIndex="3" GridPane.columnSpan="3" GridPane.rowIndex="18" />
+                  <Label alignment="CENTER" layoutX="395.0" layoutY="19.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Условия эксперимента" GridPane.columnIndex="3" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                  <ImageView fitHeight="30.0" fitWidth="70.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="5">
                      <image>
                         <Image url="@API/icons/forms/rdy/N.png" />
                      </image>
@@ -248,15 +235,15 @@
                   </ImageView>
                   <Separator GridPane.columnSpan="7" GridPane.rowIndex="14" />
                   <Separator GridPane.columnSpan="7" GridPane.rowIndex="4" />
-                  <Separator GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="2" />
-                  <Separator prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="4" />
-                  <Separator halignment="RIGHT" orientation="VERTICAL" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowSpan="18" />
-                  <Separator layoutX="55.0" layoutY="23.0" orientation="VERTICAL" GridPane.columnIndex="5" GridPane.rowSpan="18" />
-                  <Separator orientation="VERTICAL" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-                  <Separator orientation="VERTICAL" GridPane.columnIndex="3" GridPane.rowIndex="6" GridPane.rowSpan="7" />
-                  <Separator orientation="VERTICAL" GridPane.columnIndex="3" GridPane.rowIndex="15" />
-                  <Separator GridPane.columnSpan="7" GridPane.rowIndex="18" />
-                  <FlowPane alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="6" GridPane.halignment="RIGHT" GridPane.rowIndex="19">
+                  <Separator GridPane.columnIndex="2" GridPane.columnSpan="4" GridPane.rowIndex="2" />
+                  <Separator prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="4" />
+                  <Separator halignment="RIGHT" orientation="VERTICAL" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowSpan="19" />
+                  <Separator layoutX="55.0" layoutY="23.0" orientation="VERTICAL" GridPane.columnIndex="6" GridPane.rowSpan="19" />
+                  <Separator orientation="VERTICAL" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+                  <Separator orientation="VERTICAL" GridPane.columnIndex="4" GridPane.rowIndex="6" GridPane.rowSpan="7" />
+                  <Separator orientation="VERTICAL" GridPane.columnIndex="4" GridPane.rowIndex="15" GridPane.rowSpan="2" />
+                  <Separator GridPane.columnSpan="7" GridPane.rowIndex="19" />
+                  <FlowPane alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="5" GridPane.columnSpan="2147483647" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="20" GridPane.rowSpan="2147483647" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                      <children>
                         <TextField fx:id="lb_partSize" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="60.0" promptText="Размер" text="1024" />
                         <Button fx:id="btnLoad" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" text="Загрузить прошивку">
@@ -293,6 +280,38 @@
                         </Button>
                      </children>
                   </FlowPane>
+                  <ImageView fitHeight="30.0" fitWidth="70.0" layoutX="15.0" layoutY="352.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="18">
+                     <image>
+                        <Image url="@API/icons/forms/rdy/E.png" />
+                     </image>
+                  </ImageView>
+                  <Label fx:id="lab_exposure0" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="--" GridPane.columnIndex="3" GridPane.rowIndex="16" />
+                  <Label fx:id="lab_exposure1" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="--" GridPane.columnIndex="5" GridPane.rowIndex="16" />
+                  <FlowPane alignment="CENTER" columnHalignment="CENTER" hgap="5.0" GridPane.rowIndex="9" />
+                  <FlowPane alignment="CENTER" columnHalignment="CENTER" hgap="5.0" layoutX="15.0" layoutY="162.0" GridPane.rowIndex="6" />
+                  <FlowPane alignment="CENTER" columnHalignment="CENTER" hgap="5.0" GridPane.rowIndex="8" />
+                  <FlowPane alignment="CENTER" columnHalignment="CENTER" hgap="5.0" GridPane.rowIndex="12" />
+                  <Label fx:id="ib_N" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
+                  <Label fx:id="ib_T" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
+                  <Label fx:id="ib_L" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="10" GridPane.valignment="CENTER" />
+                  <Label fx:id="ib_Sig" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="CENTER" />
+                  <Label fx:id="ib_D" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="9" GridPane.valignment="CENTER" />
+                  <Label fx:id="ib_Eps" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="8" GridPane.valignment="CENTER" />
+                  <Label fx:id="ib_Betta" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="11" GridPane.valignment="CENTER" />
+                  <Label fx:id="ib_S" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="12" GridPane.valignment="CENTER" />
+                  <Label fx:id="ib_f" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="13" GridPane.valignment="CENTER" />
+                  <Label fx:id="ib_Fe" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="15" GridPane.valignment="CENTER" />
+                  <Label fx:id="ib_Ee" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="16" GridPane.valignment="CENTER" />
+                  <Label fx:id="ib_Fe1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="17" GridPane.valignment="CENTER" />
+                  <Label fx:id="ib_Ee1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="18" GridPane.valignment="CENTER" />
+                  <Separator orientation="VERTICAL" GridPane.columnIndex="7" GridPane.rowSpan="19" />
+                  <Label fx:id="ib_N1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Размерность" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                  <Label fx:id="ib_N11" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Обозначение" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <ToggleButton fx:id="tb_Duks" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Дукс" underline="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="20" GridPane.valignment="CENTER">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </ToggleButton>
                </children>
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
