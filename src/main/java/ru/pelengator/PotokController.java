@@ -455,6 +455,25 @@ public class PotokController implements Initializable {
             loadFile(event);
         });
         ////временно/////////
+
+        tb_Duks.selectedProperty().addListener((observable, oldValue, newValue) -> autoConfig(newValue));
+
+    }
+
+    private void autoConfig(boolean b) {
+        fieldOptions.get(1).setText(b?"300.0":"25.0");
+        fieldOptions.get(2).setText(b?"300.0":"240.0");
+        fieldOptions.get(5).setText(b?"1.0":"0.95");
+        fieldOptions.get(6).setText(b?"1.0":"0.95");
+        fieldOptions.get(7).setText(b?"0.390":"5.0");
+        fieldOptions.get(8).setText(b?"0.448":"5.0");
+        fieldOptions.get(9).setText(b?"1857.2":"500.0");
+        fieldOptions.get(10).setText(b?"1857.2":"500.0");
+        fieldOptions.get(11).setText(b?"0.1125":"0.325");
+        fieldOptions.get(12).setText(b?"0.1136":"0.325");
+        fieldOptions.get(13).setText(b?"900":"900");//todo рассчитать размер линзы и коэф. увеличения
+        fieldOptions.get(14).setText(b?"900":"900");
+        resetItogFields();
     }
 
 
@@ -872,6 +891,8 @@ public class PotokController implements Initializable {
             needCalkShow = false;
         }
     }
+
+
 
     public Label getLab_potok0() {
         return lab_potok0;

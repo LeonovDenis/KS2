@@ -1,1050 +1,151 @@
-2022-11-25 09:35:23,203 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@700665df
-2022-11-25 09:35:23,359 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 09:35:23,868 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 09:35:23,918 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 09:35:23,969 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 09:35:23,970 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 09:35:23,970 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 09:35:23,970 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 09:35:30,716 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 09:35:30,736 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 09:35:31,186 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 09:35:31,321 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-3-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 09:35:31,397 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 09:35:31,422 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 09:35:31,494 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-3-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 09:35:31,630 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 09:39:23,111 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 09:39:23,111 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 09:39:23,147 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 09:39:23,205 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 09:39:23,205 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 09:39:23,205 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 09:39:23,227 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 09:39:23,227 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 09:39:23,228 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
-2022-11-25 09:39:44,445 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@700665df
-2022-11-25 09:39:44,449 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 09:39:44,506 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 09:39:44,513 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 09:39:44,518 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 09:39:44,518 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 09:39:44,518 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 09:39:44,518 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 09:39:45,574 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 09:39:45,579 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 09:39:45,583 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 09:39:45,584 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 09:39:45,586 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 09:39:45,683 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 09:39:47,040 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 09:39:47,042 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 09:41:20,616 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 09:41:20,617 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 09:41:20,619 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 09:41:20,620 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 09:41:20,620 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 09:41:20,620 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 09:41:20,620 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 09:41:20,640 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 09:41:20,640 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
-2022-11-25 09:43:05,213 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@1fcf3341
-2022-11-25 09:43:05,217 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 09:43:05,271 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 09:43:05,277 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 09:43:05,281 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 09:43:05,282 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 09:43:05,282 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 09:43:05,282 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 09:43:07,794 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 09:43:07,817 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 09:43:07,839 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 09:43:07,839 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 09:43:07,842 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 09:43:07,903 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 09:43:16,433 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 09:43:16,435 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 09:43:29,790 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 09:43:29,791 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 09:43:29,792 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 09:43:29,793 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 09:43:29,793 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 09:43:29,794 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 09:43:29,795 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 09:43:29,832 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 09:43:29,832 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
-2022-11-25 09:44:05,037 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@5c05352d
-2022-11-25 09:44:05,042 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 09:44:05,096 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 09:44:05,103 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 09:44:05,109 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 09:44:05,109 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 09:44:05,109 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 09:44:05,109 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 09:44:06,106 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 09:44:06,111 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 09:44:06,115 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 09:44:06,116 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 09:44:06,118 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 09:44:06,214 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 09:44:07,673 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 09:44:07,675 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 09:44:19,416 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 09:44:19,416 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 09:44:37,429 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 09:44:37,430 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 09:44:37,432 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 09:44:37,433 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 09:44:37,433 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 09:44:37,433 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 09:44:37,433 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 09:44:37,449 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 09:44:37,450 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
-2022-11-25 09:44:51,990 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@5c05352d
-2022-11-25 09:44:51,995 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 09:44:52,048 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 09:44:52,056 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 09:44:52,061 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 09:44:52,061 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 09:44:52,062 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 09:44:52,062 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 09:44:53,033 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 09:44:53,040 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 09:44:53,043 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 09:44:53,045 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 09:44:53,047 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 09:44:53,146 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 09:44:54,752 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 09:44:54,753 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 09:45:05,144 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 09:45:05,145 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 09:45:05,146 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 09:45:05,146 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 09:45:05,146 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 09:45:05,147 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 09:45:05,148 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 09:45:05,174 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 09:45:05,174 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
-2022-11-25 09:46:56,605 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@5c05352d
-2022-11-25 09:46:56,610 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 09:46:56,665 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 09:46:56,672 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 09:46:56,676 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 09:46:56,677 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 09:46:56,677 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 09:46:56,677 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 09:46:58,044 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 09:46:58,049 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 09:46:58,053 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 09:46:58,055 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 09:46:58,059 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 09:46:58,153 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 09:46:59,793 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 09:46:59,794 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 09:47:22,886 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 09:47:22,887 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 09:48:11,650 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 09:48:11,650 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 09:48:11,653 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 09:48:11,654 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 09:48:11,654 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 09:48:11,654 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 09:48:11,655 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 09:48:11,659 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 09:48:11,662 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
-2022-11-25 09:48:26,510 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@5c05352d
-2022-11-25 09:48:26,515 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 09:48:26,568 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 09:48:26,575 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 09:48:26,580 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 09:48:26,580 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 09:48:26,580 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 09:48:26,581 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 09:48:28,082 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 09:48:28,086 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 09:48:28,089 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 09:48:28,090 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 09:48:28,093 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 09:48:28,191 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 09:48:29,720 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 09:48:29,722 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 09:48:57,634 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 09:48:57,634 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 09:48:57,635 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 09:48:57,636 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 09:48:57,636 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 09:48:57,637 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 09:48:57,637 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 09:48:57,662 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 09:48:57,662 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
-2022-11-25 09:49:53,357 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@5c05352d
-2022-11-25 09:49:53,362 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 09:49:53,415 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 09:49:53,421 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 09:49:53,425 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 09:49:53,425 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 09:49:53,426 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 09:49:53,426 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 09:49:54,982 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 09:49:55,002 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 09:49:55,007 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 09:49:55,008 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 09:49:55,015 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 09:49:55,122 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 09:49:56,973 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 09:49:56,976 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 09:51:16,906 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 09:51:16,907 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 09:51:16,908 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 09:51:16,909 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 09:51:16,909 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 09:51:16,910 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 09:51:16,911 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 09:51:16,925 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 09:51:16,926 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
-2022-11-25 09:51:31,046 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@5c05352d
-2022-11-25 09:51:31,050 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 09:51:31,105 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 09:51:31,112 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 09:51:31,116 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 09:51:31,116 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 09:51:31,116 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 09:51:31,116 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 09:51:33,206 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 09:51:33,221 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 09:51:33,225 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 09:51:33,229 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 09:51:33,231 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 09:51:33,324 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 09:51:35,611 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 09:51:35,612 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 09:51:42,815 ERROR ru.pelengator.PotokController [JavaFX Application Thread] For input string: "572.0R"
-2022-11-25 09:51:42,817 ERROR ru.pelengator.API.utils.Utils [JavaFX Application Thread] Double value not valid
-2022-11-25 09:52:46,503 ERROR ru.pelengator.PotokController [JavaFX Application Thread] For input string: "P"
-2022-11-25 09:52:46,504 ERROR ru.pelengator.API.utils.Utils [JavaFX Application Thread] Double value not valid
-2022-11-25 09:57:42,759 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 09:57:42,760 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 09:57:42,765 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 09:57:42,765 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 09:57:42,765 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 09:57:42,766 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 09:57:42,766 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 09:57:42,788 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 09:57:42,789 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
-2022-11-25 10:06:16,807 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@5c05352d
-2022-11-25 10:06:16,812 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 10:06:16,867 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 10:06:16,874 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 10:06:16,879 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 10:06:16,879 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 10:06:16,880 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 10:06:16,880 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 10:06:18,088 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 10:06:18,094 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 10:06:18,097 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 10:06:18,098 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 10:06:18,102 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 10:06:18,197 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 10:06:19,685 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 10:06:19,687 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 10:07:20,358 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 10:07:20,359 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 10:07:20,360 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 10:07:20,360 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 10:07:20,360 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 10:07:20,361 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 10:07:20,361 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 10:07:20,397 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 10:07:20,397 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
-2022-11-25 10:07:32,144 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@5c05352d
-2022-11-25 10:07:32,149 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 10:07:32,203 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 10:07:32,209 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 10:07:32,213 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 10:07:32,213 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 10:07:32,213 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 10:07:32,214 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 10:07:33,688 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 10:07:33,693 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 10:07:33,697 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 10:07:33,697 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 10:07:33,701 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 10:07:33,799 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 10:07:35,918 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 10:07:35,921 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 10:07:38,781 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Btn load pressed
-2022-11-25 10:07:54,048 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 10:07:54,048 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 10:07:54,049 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 10:07:54,050 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 10:07:54,050 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 10:07:54,051 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 10:07:54,051 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 10:07:54,086 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 10:07:54,086 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
-2022-11-25 10:26:10,650 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@5c05352d
-2022-11-25 10:26:10,655 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 10:26:10,710 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 10:26:10,716 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 10:26:10,720 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 10:26:10,720 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 10:26:10,720 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 10:26:10,720 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 10:26:12,614 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 10:26:12,619 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 10:26:12,622 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 10:26:12,626 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 10:26:12,634 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 10:26:12,727 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 10:26:14,763 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 10:26:14,764 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 10:26:46,960 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 10:26:46,961 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 10:26:46,964 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 10:26:46,965 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 10:26:46,965 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 10:26:46,965 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 10:26:46,965 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 10:26:46,987 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 10:26:46,987 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
-2022-11-25 10:28:37,594 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@5c05352d
-2022-11-25 10:28:37,599 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 10:28:37,652 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 10:28:37,658 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 10:28:37,663 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 10:28:37,663 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 10:28:37,664 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 10:28:37,664 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 10:28:39,485 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 10:28:39,502 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 10:28:39,505 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 10:28:39,506 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 10:28:39,509 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 10:28:39,602 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 10:28:41,932 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 10:28:41,934 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 10:28:59,243 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 10:28:59,243 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 10:28:59,244 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 10:28:59,244 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 10:28:59,244 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 10:28:59,245 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 10:28:59,245 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 10:28:59,259 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 10:28:59,259 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
-2022-11-25 13:20:35,504 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@4ed593f1
-2022-11-25 13:20:35,552 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 13:20:35,770 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 13:20:35,830 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 13:20:35,847 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 13:20:35,847 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 13:20:35,847 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 13:20:35,847 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 13:20:37,349 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 13:20:37,378 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 13:20:37,401 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 13:20:37,458 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 13:20:37,497 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 13:20:37,589 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 13:21:27,920 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 13:21:27,921 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 13:21:27,944 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 13:21:27,971 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 13:21:27,971 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 13:21:27,971 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 13:21:27,992 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 13:21:27,992 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 13:21:27,993 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
-2022-11-25 13:25:46,012 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@7f6ac572
-2022-11-25 13:25:46,018 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 13:25:46,083 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 13:25:46,095 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 13:25:46,104 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 13:25:46,105 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 13:25:46,105 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 13:25:46,106 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 13:25:47,322 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 13:25:47,340 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 13:25:47,344 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 13:25:47,345 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 13:25:47,348 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 13:25:47,454 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 13:25:49,524 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 13:25:49,525 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 13:26:24,528 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 13:26:24,528 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 13:40:52,039 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 13:40:52,039 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 13:40:52,040 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 13:40:52,041 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 13:40:52,041 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 13:40:52,043 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 13:40:52,046 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 13:40:52,059 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 13:40:52,060 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
-2022-11-25 13:41:54,670 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@766dd24f
-2022-11-25 13:41:54,675 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 13:41:54,743 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 13:41:54,754 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 13:41:54,763 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 13:41:54,763 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 13:41:54,764 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 13:41:54,764 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 13:41:56,936 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 13:41:56,942 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 13:41:56,945 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 13:41:56,946 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 13:41:56,951 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 13:41:57,048 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 13:41:59,448 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 13:41:59,449 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 13:43:16,111 ERROR ru.pelengator.PotokController [JavaFX Application Thread] For input string: "1857,2"
-2022-11-25 13:43:16,112 ERROR ru.pelengator.PotokController [JavaFX Application Thread] TextField error tfRasst0
-2022-11-25 14:25:30,668 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 14:25:30,669 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 14:25:30,673 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 14:25:30,674 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 14:25:30,674 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 14:25:30,675 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 14:25:30,678 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 14:25:30,683 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 14:25:30,686 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
-2022-11-25 14:27:17,974 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@2a619935
-2022-11-25 14:27:17,980 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 14:27:18,044 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 14:27:18,056 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 14:27:18,066 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 14:27:18,067 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 14:27:18,067 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 14:27:18,067 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 14:27:20,047 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 14:27:20,077 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 14:27:20,085 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 14:27:20,086 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 14:27:20,089 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 14:27:20,167 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 14:27:22,047 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 14:27:22,049 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 14:29:29,867 ERROR ru.pelengator.PotokController [JavaFX Application Thread] For input string: "0,224"
-2022-11-25 14:29:29,868 ERROR ru.pelengator.PotokController [JavaFX Application Thread] TextField error tfAreaACHT0
-2022-11-25 14:31:53,701 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 14:31:53,702 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 14:31:53,705 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 14:31:53,707 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 14:31:53,707 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 14:31:53,708 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 14:31:53,708 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 14:31:53,747 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 14:31:53,747 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
-2022-11-25 14:32:09,246 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@e9f7592
-2022-11-25 14:32:09,252 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 14:32:09,317 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 14:32:09,329 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 14:32:09,339 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 14:32:09,339 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 14:32:09,339 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 14:32:09,339 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 14:32:10,896 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 14:32:10,925 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 14:32:10,928 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 14:32:10,929 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 14:32:10,932 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 14:32:11,011 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 14:32:14,316 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 14:32:14,318 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 14:37:27,735 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 14:37:27,736 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 14:37:27,739 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 14:37:27,740 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 14:37:27,740 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 14:37:27,741 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 14:37:27,742 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 14:37:27,768 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 14:37:27,768 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
-2022-11-25 14:37:57,494 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@1e28edd1
-2022-11-25 14:37:57,500 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 14:37:57,566 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 14:37:57,577 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 14:37:57,588 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 14:37:57,588 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 14:37:57,589 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 14:37:57,589 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 14:37:59,088 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 14:37:59,095 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 14:37:59,098 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 14:37:59,102 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 14:37:59,111 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 14:37:59,214 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 14:38:02,074 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 14:38:02,076 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 14:38:10,998 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 14:38:10,999 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 14:38:11,002 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 14:38:11,003 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 14:38:11,003 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 14:38:11,004 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 14:43:12,446 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@2a619935
-2022-11-25 14:43:12,452 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 14:43:12,518 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 14:43:12,533 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 14:43:12,542 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 14:43:12,542 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 14:43:12,543 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 14:43:12,543 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 14:43:13,792 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 14:43:13,801 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 14:43:13,806 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 14:43:13,807 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 14:43:13,816 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 14:43:13,947 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 14:43:16,004 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 14:43:16,005 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 15:41:54,347 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 15:41:54,351 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 15:41:54,354 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 15:41:54,355 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 15:41:54,355 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 15:41:54,356 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 15:41:54,357 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 15:41:54,387 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 15:41:54,388 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
-2022-11-25 15:49:04,959 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@766dd24f
-2022-11-25 15:49:04,965 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 15:49:05,030 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 15:49:05,042 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 15:49:05,052 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 15:49:05,052 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 15:49:05,053 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 15:49:05,054 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 15:49:06,897 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 15:49:06,913 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 15:49:06,917 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 15:49:06,918 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 15:49:06,922 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 15:49:07,015 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 15:49:13,088 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 15:49:13,089 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 16:03:59,599 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 16:03:59,599 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 16:03:59,601 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 16:03:59,601 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 16:03:59,601 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 16:03:59,602 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 16:03:59,602 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 16:03:59,616 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 16:03:59,617 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
-2022-11-25 16:45:29,964 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@5c05352d
-2022-11-25 16:45:29,978 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 16:45:30,089 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 16:45:30,105 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 16:45:30,114 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 16:45:30,114 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 16:45:30,115 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 16:45:30,115 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 16:45:31,398 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 16:45:31,425 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 16:45:31,433 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 16:45:31,440 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 16:45:31,448 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 16:45:31,574 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 16:45:34,462 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 16:45:34,463 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 16:58:03,745 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 16:58:03,746 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 16:58:03,763 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 16:58:03,764 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 16:58:03,764 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 16:58:03,770 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 16:58:03,770 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 16:58:03,792 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 16:58:03,793 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
-2022-11-25 16:58:18,555 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@700665df
-2022-11-25 16:58:18,559 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 16:58:18,618 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 16:58:18,624 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 16:58:18,628 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 16:58:18,628 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 16:58:18,628 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 16:58:18,628 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 16:58:20,212 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 16:58:20,226 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 16:58:20,230 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 16:58:20,231 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 16:58:20,237 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 16:58:20,321 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 16:58:22,030 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 16:58:22,031 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 17:06:10,159 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 17:06:10,159 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 17:06:10,161 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 17:06:10,161 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 17:06:10,162 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 17:06:10,162 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 17:06:10,163 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 17:06:10,173 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 17:06:10,174 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
-2022-11-25 17:06:25,228 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@700665df
-2022-11-25 17:06:25,232 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 17:06:25,287 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 17:06:25,293 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 17:06:25,298 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 17:06:25,298 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 17:06:25,298 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 17:06:25,298 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 17:06:27,230 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 17:06:27,241 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 17:06:27,245 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 17:06:27,246 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 17:06:27,249 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 17:06:27,338 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 17:06:29,541 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 17:06:29,542 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 17:08:35,898 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 17:08:35,898 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 17:08:48,036 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 17:08:48,036 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 17:08:56,692 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 17:08:56,692 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 17:09:02,959 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 17:09:02,959 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 17:09:15,473 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 17:09:15,474 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 17:09:26,804 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 17:09:26,805 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 17:09:36,361 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 17:09:36,361 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 17:09:36,365 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 17:09:36,366 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 17:09:36,366 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 17:09:36,367 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 17:09:36,367 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 17:09:36,404 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 17:09:36,404 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
-2022-11-25 17:09:49,852 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@1fcf3341
-2022-11-25 17:09:49,857 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 17:09:49,912 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 17:09:49,918 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 17:09:49,923 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 17:09:49,923 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 17:09:49,924 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 17:09:49,924 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 17:09:51,041 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 17:09:51,046 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 17:09:51,049 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 17:09:51,051 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 17:09:51,053 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 17:09:51,151 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 17:09:53,731 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 17:09:53,732 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 17:09:59,563 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 17:09:59,564 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 17:09:59,565 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 17:09:59,566 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 17:09:59,566 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 17:09:59,567 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 17:09:59,567 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 17:09:59,605 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 17:09:59,605 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
-2022-11-25 17:26:34,808 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@1fcf3341
-2022-11-25 17:26:34,812 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 17:26:34,867 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 17:26:34,873 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 17:26:34,877 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 17:26:34,877 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 17:26:34,877 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 17:26:34,878 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 17:26:37,197 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 17:26:37,202 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 17:26:37,205 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 17:26:37,206 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 17:26:37,209 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 17:26:37,305 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 17:26:39,995 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 17:26:39,996 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 17:30:19,698 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 17:30:19,698 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 17:30:19,699 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 17:30:19,700 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 17:30:19,700 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 17:30:19,702 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 17:30:19,703 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 17:30:19,705 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 17:30:19,707 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
-2022-11-25 17:30:38,817 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@3aa73ba0
-2022-11-25 17:30:38,822 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 17:30:38,876 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 17:30:38,883 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 17:30:38,887 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 17:30:38,887 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 17:30:38,888 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 17:30:38,888 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 17:30:40,479 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 17:30:40,484 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 17:30:40,489 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 17:30:40,490 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 17:30:40,493 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 17:30:40,588 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 17:30:44,218 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 17:30:44,219 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 17:31:21,067 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 17:31:21,068 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 17:31:21,072 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 17:31:21,073 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 17:31:21,073 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 17:31:21,074 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 17:31:21,074 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 17:31:21,077 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 17:31:21,079 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
-2022-11-25 17:36:41,578 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@5c05352d
-2022-11-25 17:36:41,583 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 17:36:41,639 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 17:36:41,644 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 17:36:41,649 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 17:36:41,649 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 17:36:41,649 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 17:36:41,649 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 17:36:42,885 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 17:36:42,903 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 17:36:42,909 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 17:36:42,910 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 17:36:42,912 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 17:36:43,013 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 17:36:44,562 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 17:36:44,564 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 17:37:01,469 ERROR ru.pelengator.PotokController [JavaFX Application Thread] For input string: "300,2"
-2022-11-25 17:37:01,470 ERROR ru.pelengator.PotokController [JavaFX Application Thread] TextField error tfTemp0
-2022-11-25 17:38:53,716 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 17:38:53,719 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 17:38:53,720 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 17:38:53,721 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 17:38:53,721 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 17:38:53,722 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 17:38:53,722 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 17:38:53,727 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 17:38:53,728 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
-2022-11-25 17:39:07,827 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@5c05352d
-2022-11-25 17:39:07,832 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 17:39:07,888 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 17:39:07,894 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 17:39:07,898 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 17:39:07,898 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 17:39:07,898 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 17:39:07,898 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 17:39:08,986 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 17:39:08,990 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 17:39:08,993 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 17:39:08,994 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 17:39:08,997 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 17:39:09,094 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 17:39:12,635 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 17:39:12,636 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 17:43:41,613 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 17:43:41,613 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 17:43:41,614 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 17:43:41,615 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 17:43:41,615 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 17:43:41,615 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 17:43:41,617 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 17:43:41,619 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 17:43:41,621 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
-2022-11-25 17:43:54,603 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@700665df
-2022-11-25 17:43:54,607 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 17:43:54,660 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 17:43:54,668 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 17:43:54,672 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 17:43:54,672 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 17:43:54,672 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 17:43:54,672 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 17:43:56,145 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 17:43:56,149 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 17:43:56,153 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 17:43:56,154 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 17:43:56,156 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 17:43:56,252 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 17:43:57,408 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 17:43:57,410 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 17:44:35,379 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 17:44:35,379 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 17:44:54,548 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 17:44:54,548 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 17:45:42,983 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 17:45:42,983 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 17:46:24,437 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 17:46:24,437 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 17:46:24,442 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 17:46:24,443 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 17:46:24,443 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 17:46:24,444 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 17:46:24,447 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 17:46:24,486 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 17:46:24,486 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
-2022-11-25 17:46:42,500 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@700665df
-2022-11-25 17:46:42,505 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 17:46:42,558 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 17:46:42,565 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 17:46:42,570 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 17:46:42,571 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 17:46:42,571 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 17:46:42,571 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 17:46:45,518 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 17:46:45,526 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 17:46:45,530 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 17:46:45,531 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 17:46:45,534 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 17:46:45,627 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 17:46:47,865 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 17:46:47,867 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 17:46:57,227 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 17:46:57,227 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 17:47:11,722 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 17:47:11,722 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 17:48:21,416 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 17:48:21,416 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 17:48:33,905 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 17:48:33,905 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 17:49:05,310 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 17:49:05,310 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 17:49:49,801 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 17:49:49,801 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 17:50:12,895 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 17:50:12,896 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 17:50:24,515 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 17:50:24,516 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 17:50:37,188 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 17:50:37,188 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 17:50:44,441 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 17:50:44,441 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 17:53:44,131 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 17:53:44,131 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 17:53:58,798 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 17:53:58,798 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 17:54:05,791 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 17:54:05,792 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 17:54:18,812 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 17:54:18,812 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 17:54:36,016 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 17:54:36,017 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 17:54:59,019 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 17:54:59,019 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 17:57:14,901 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 17:57:14,902 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 17:57:49,366 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 17:57:49,366 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 17:57:49,368 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 17:57:49,369 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 17:57:49,369 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 17:57:49,373 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 17:57:49,373 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 17:57:49,375 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 17:57:49,376 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
-2022-11-25 17:58:24,902 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@5c05352d
-2022-11-25 17:58:24,907 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 17:58:24,961 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 17:58:24,968 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 17:58:24,972 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 17:58:24,972 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 17:58:24,973 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 17:58:24,973 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 17:58:26,079 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 17:58:26,087 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 17:58:26,090 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 17:58:26,098 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 17:58:26,105 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 17:58:26,188 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 17:58:27,959 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 17:58:27,960 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 18:03:00,199 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 18:03:00,200 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 18:03:00,202 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 18:03:00,203 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 18:03:00,204 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 18:03:00,204 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 18:03:00,204 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 18:03:00,235 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 18:03:00,235 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
-2022-11-25 18:03:15,702 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@5c05352d
-2022-11-25 18:03:15,707 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 18:03:15,761 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 18:03:15,767 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 18:03:15,771 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 18:03:15,771 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 18:03:15,771 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 18:03:15,771 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 18:03:17,843 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 18:03:17,847 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 18:03:17,851 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 18:03:17,852 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 18:03:17,856 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 18:03:17,952 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 18:03:19,407 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 18:03:19,409 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 18:06:02,136 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 18:06:02,137 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 18:06:02,138 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 18:06:02,138 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 18:06:02,138 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 18:06:02,139 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 18:06:02,139 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 18:06:02,159 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 18:06:02,159 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
-2022-11-25 18:06:16,151 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@5c05352d
-2022-11-25 18:06:16,155 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 18:06:16,211 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 18:06:16,217 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 18:06:16,221 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 18:06:16,222 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 18:06:16,222 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 18:06:16,222 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 18:06:17,341 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 18:06:17,348 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 18:06:17,352 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 18:06:17,354 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 18:06:17,359 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 18:06:17,450 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 18:06:19,384 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 18:06:19,386 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 18:07:04,832 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 18:07:04,833 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 18:07:04,834 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 18:07:04,835 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 18:07:04,835 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 18:07:04,835 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 18:07:04,836 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 18:07:04,874 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 18:07:04,874 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
-2022-11-25 18:07:20,303 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@5c05352d
-2022-11-25 18:07:20,307 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 18:07:20,362 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 18:07:20,369 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 18:07:20,374 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 18:07:20,374 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 18:07:20,374 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 18:07:20,374 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 18:07:21,795 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 18:07:21,800 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 18:07:21,803 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 18:07:21,804 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 18:07:21,806 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 18:07:21,903 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 18:07:23,863 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 18:07:23,865 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 18:08:08,978 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 18:08:08,978 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 18:08:08,980 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 18:08:08,980 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 18:08:08,980 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 18:08:08,981 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 18:08:08,982 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 18:08:09,004 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 18:08:09,004 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
-2022-11-25 18:08:23,759 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@5c05352d
-2022-11-25 18:08:23,763 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 18:08:23,817 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 18:08:23,823 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 18:08:23,828 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 18:08:23,828 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 18:08:23,828 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 18:08:23,828 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 18:08:24,848 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 18:08:24,856 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 18:08:24,859 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 18:08:24,860 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 18:08:24,865 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 18:08:24,958 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 18:08:26,449 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 18:08:26,450 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 18:10:19,651 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 18:10:19,651 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 18:10:19,652 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 18:10:19,653 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 18:10:19,653 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 18:10:19,654 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 18:10:19,655 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 18:10:19,681 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 18:10:19,681 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
-2022-11-25 18:10:39,287 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@7e361d48
-2022-11-25 18:10:39,292 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 18:10:39,345 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 18:10:39,353 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 18:10:39,358 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 18:10:39,358 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 18:10:39,358 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 18:10:39,358 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 18:10:41,254 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 18:10:41,263 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 18:10:41,267 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 18:10:41,268 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 18:10:41,272 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 18:10:41,364 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 18:10:44,615 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 18:10:44,616 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 18:12:41,607 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 18:12:41,607 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 18:12:56,604 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 18:12:56,604 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 18:13:00,252 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 18:13:00,252 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 18:13:00,253 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 18:13:00,253 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 18:13:00,253 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 18:13:00,254 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 18:13:00,255 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 18:13:00,294 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 18:13:00,294 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
-2022-11-25 18:14:07,408 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriver@700665df
-2022-11-25 18:14:07,412 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 18:14:07,515 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Founding devices
-2022-11-25 18:14:07,524 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [[ru.pelengator.API.devises.china.ChinaDevice@2d47725f]]
-2022-11-25 18:14:07,525 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices ДТ10Э ЕАНГ.468424.012
-2022-11-25 18:14:18,991 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@5c05352d
-2022-11-25 18:14:18,996 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 18:14:19,049 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 18:14:19,055 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 18:14:19,060 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 18:14:19,060 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 18:14:19,060 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 18:14:19,060 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 18:14:20,193 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 18:14:20,199 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 18:14:20,202 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 18:14:20,204 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 18:14:20,208 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 18:14:20,301 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 18:14:22,154 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 18:14:22,155 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 18:14:34,902 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 18:14:34,902 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 18:14:38,184 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 18:14:38,184 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 18:14:38,185 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 18:14:38,186 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 18:14:38,186 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 18:14:38,187 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 18:14:38,187 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 18:14:38,193 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 18:14:38,194 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
-2022-11-25 18:14:57,153 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@5c05352d
-2022-11-25 18:14:57,157 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
-2022-11-25 18:14:57,212 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
-2022-11-25 18:14:57,218 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
-2022-11-25 18:14:57,223 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
-2022-11-25 18:14:57,223 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
-2022-11-25 18:14:57,223 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
-2022-11-25 18:14:57,223 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
-2022-11-25 18:15:00,352 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
-2022-11-25 18:15:00,361 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
-2022-11-25 18:15:00,365 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
-2022-11-25 18:15:00,366 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
-2022-11-25 18:15:00,371 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
-2022-11-25 18:15:00,497 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
-2022-11-25 18:15:02,805 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
-2022-11-25 18:15:02,807 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
-2022-11-25 18:29:33,194 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
-2022-11-25 18:29:33,194 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
-2022-11-25 18:29:33,197 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
-2022-11-25 18:29:33,198 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
-2022-11-25 18:29:33,198 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
-2022-11-25 18:29:33,199 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
-2022-11-25 18:29:33,199 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
-2022-11-25 18:29:33,234 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
-2022-11-25 18:29:33,234 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
+2022-11-28 10:26:34,182 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@34d3bc03
+2022-11-28 10:26:36,394 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
+2022-11-28 10:26:36,834 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
+2022-11-28 10:26:36,897 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
+2022-11-28 10:26:37,018 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
+2022-11-28 10:26:37,019 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
+2022-11-28 10:26:37,019 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
+2022-11-28 10:26:37,019 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
+2022-11-28 10:26:41,619 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
+2022-11-28 10:26:41,810 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-3-thread-1] Lock Detector 10.77.100.198 [Test]
+2022-11-28 10:26:41,848 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
+2022-11-28 10:26:41,898 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
+2022-11-28 10:26:41,944 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-3-thread-1] Detector is now open 10.77.100.198 [Test]
+2022-11-28 10:26:42,118 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
+2022-11-28 10:26:45,233 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
+2022-11-28 10:26:45,234 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
+2022-11-28 11:15:03,017 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
+2022-11-28 11:15:03,019 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
+2022-11-28 11:15:03,023 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
+2022-11-28 11:15:03,260 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
+2022-11-28 11:15:03,261 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
+2022-11-28 11:15:03,261 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
+2022-11-28 11:15:03,281 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
+2022-11-28 11:15:03,281 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
+2022-11-28 11:15:03,282 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
+2022-11-28 11:15:33,645 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@700665df
+2022-11-28 11:15:33,665 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
+2022-11-28 11:15:33,770 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
+2022-11-28 11:15:33,786 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
+2022-11-28 11:15:33,795 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
+2022-11-28 11:15:33,796 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
+2022-11-28 11:15:33,796 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
+2022-11-28 11:15:33,796 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
+2022-11-28 11:15:34,921 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
+2022-11-28 11:15:34,944 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
+2022-11-28 11:15:34,967 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
+2022-11-28 11:15:34,972 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
+2022-11-28 11:15:34,979 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
+2022-11-28 11:15:35,088 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
+2022-11-28 11:15:38,690 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
+2022-11-28 11:15:38,692 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
+2022-11-28 11:16:42,068 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
+2022-11-28 11:16:42,068 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
+2022-11-28 11:16:42,070 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
+2022-11-28 11:16:42,070 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
+2022-11-28 11:16:42,070 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
+2022-11-28 11:16:42,071 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
+2022-11-28 11:16:42,071 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
+2022-11-28 11:16:42,080 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
+2022-11-28 11:16:42,081 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
+2022-11-28 11:17:08,632 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@1fcf3341
+2022-11-28 11:17:08,636 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
+2022-11-28 11:17:08,690 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
+2022-11-28 11:17:08,696 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
+2022-11-28 11:17:08,700 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
+2022-11-28 11:17:08,700 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
+2022-11-28 11:17:08,700 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
+2022-11-28 11:17:08,700 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
+2022-11-28 11:17:10,029 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
+2022-11-28 11:17:10,034 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
+2022-11-28 11:17:10,037 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
+2022-11-28 11:17:10,038 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
+2022-11-28 11:17:10,043 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
+2022-11-28 11:17:10,136 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
+2022-11-28 11:17:13,090 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
+2022-11-28 11:17:13,091 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
+2022-11-28 11:33:48,305 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
+2022-11-28 11:33:48,305 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
+2022-11-28 11:33:48,306 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
+2022-11-28 11:33:48,306 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
+2022-11-28 11:33:48,306 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
+2022-11-28 11:33:48,307 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
+2022-11-28 11:33:48,307 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
+2022-11-28 11:33:48,323 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
+2022-11-28 11:33:48,324 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
+2022-11-28 12:42:35,123 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@5c05352d
+2022-11-28 12:42:35,128 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
+2022-11-28 12:42:35,182 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
+2022-11-28 12:42:35,188 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
+2022-11-28 12:42:35,192 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
+2022-11-28 12:42:35,192 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
+2022-11-28 12:42:35,192 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
+2022-11-28 12:42:35,192 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
+2022-11-28 12:42:36,417 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
+2022-11-28 12:42:36,422 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
+2022-11-28 12:42:36,426 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
+2022-11-28 12:42:36,428 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
+2022-11-28 12:42:36,431 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
+2022-11-28 12:42:36,527 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
+2022-11-28 12:42:41,307 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
+2022-11-28 12:42:41,308 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
+2022-11-28 12:42:55,137 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
+2022-11-28 12:42:55,137 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
+2022-11-28 12:50:56,400 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
+2022-11-28 12:50:56,401 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
+2022-11-28 12:50:56,403 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
+2022-11-28 12:50:56,404 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
+2022-11-28 12:50:56,404 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
+2022-11-28 12:50:56,405 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
+2022-11-28 12:50:56,406 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
+2022-11-28 12:50:56,420 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
+2022-11-28 12:50:56,421 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
+2022-11-28 12:51:11,786 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@5c05352d
+2022-11-28 12:51:11,790 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
+2022-11-28 12:51:11,844 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
+2022-11-28 12:51:11,850 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
+2022-11-28 12:51:11,855 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
+2022-11-28 12:51:11,855 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
+2022-11-28 12:51:11,855 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
+2022-11-28 12:51:11,855 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
+2022-11-28 12:51:12,947 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
+2022-11-28 12:51:12,954 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
+2022-11-28 12:51:12,957 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
+2022-11-28 12:51:12,957 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
+2022-11-28 12:51:12,960 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
+2022-11-28 12:51:13,062 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
+2022-11-28 12:51:15,106 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
+2022-11-28 12:51:15,107 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
+2022-11-28 12:51:35,736 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
+2022-11-28 12:51:35,737 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
+2022-11-28 12:51:35,738 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
+2022-11-28 12:51:35,739 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
+2022-11-28 12:51:35,739 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
+2022-11-28 12:51:35,740 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
+2022-11-28 12:51:35,740 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
+2022-11-28 12:51:35,766 WARN ru.pelengator.API.Detector [Detector-panel-scheduled-executor-1] Cannot get image, detector has been already disposed
+2022-11-28 12:51:35,766 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
+2022-11-28 15:30:03,660 DEBUG ru.pelengator.API.Detector [JavaFX Application Thread] Setting new capture driver ru.pelengator.API.devises.china.ChinaDriverEthernet@6609d1cd
+2022-11-28 15:30:05,175 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Searching devices
+2022-11-28 15:30:08,483 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] GetDevices
+2022-11-28 15:30:08,618 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 0, 0] /try 0
+2022-11-28 15:30:09,510 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 0, 0]. ANSWER received: [-95, 5, 0, 0]
+2022-11-28 15:30:09,510 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 0, 0] /try 4
+2022-11-28 15:30:09,510 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Found device [ru.pelengator.API.devises.china.ChinaDevice@a3e587b]
+2022-11-28 15:30:09,511 DEBUG ru.pelengator.API.devises.china.ChinaDriver [Detector-discovery-service] Enabled devices 10.77.100.198 [Test]
+2022-11-28 15:30:12,561 DEBUG ru.pelengator.API.DetectorPanel [Thread-4] Starting panel rendering and trying to open attached detector
+2022-11-28 15:30:12,738 DEBUG ru.pelengator.API.DetectorLock [SwingWorker-pool-2-thread-1] Lock Detector 10.77.100.198 [Test]
+2022-11-28 15:30:12,809 INFO ru.pelengator.API.tasks.DetectorOpenTask [Atomic-processor-1] Opening detector 10.77.100.198 [Test]
+2022-11-28 15:30:12,850 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StartSession
+2022-11-28 15:30:12,911 DEBUG ru.pelengator.API.Detector [SwingWorker-pool-2-thread-1] Detector is now open 10.77.100.198 [Test]
+2022-11-28 15:30:13,077 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Online flag setted in true
+2022-11-28 15:30:14,536 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init potok controller
+2022-11-28 15:30:14,537 DEBUG ru.pelengator.PotokController [JavaFX Application Thread] Init controller
+2022-11-28 15:30:32,142 INFO ru.pelengator.API.DetectorShutdownHook [Shutdown-hook-1] Automatic 10.77.100.198 [Test] deallocation
+2022-11-28 15:30:32,142 INFO ru.pelengator.API.Detector [Shutdown-hook-1] Disposing detector 10.77.100.198 [Test]
+2022-11-28 15:30:32,181 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] sendMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 0
+2022-11-28 15:30:32,181 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] MSG to detector send: [-95, 5, 1, 2, 0, 0, 0, 1, 0]. ANSWER received: [-95, 5, 1, 2]
+2022-11-28 15:30:32,181 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] Exiting from SENDMSG [-95, 5, 1, 2, 0, 0, 0, 1, 0] /try 4
+2022-11-28 15:30:32,193 DEBUG ru.pelengator.API.driver.ethernet.EthernetDriver [Atomic-processor-1] StopSession
+2022-11-28 15:30:32,193 DEBUG ru.pelengator.API.DetectorPanel [Shutdown-hook-1] Stopping panel rendering and closing attached detector
+2022-11-28 15:30:32,194 DEBUG ru.pelengator.API.Detector [Shutdown-hook-1] Detector disposed 10.77.100.198 [Test]
