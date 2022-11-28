@@ -318,7 +318,10 @@
                      <children>
                         <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <center>
-                              <ImageView fitHeight="390.0" fitWidth="450.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" />
+                              <ImageView fitHeight="390.0" fitWidth="450.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+                                 <image>
+                                    <Image url="@API/icons/forms/Инструкция-1.png" />
+                                 </image></ImageView>
                            </center>
                         </BorderPane>
                      </children>
