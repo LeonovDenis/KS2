@@ -322,7 +322,7 @@ public class PotokController implements Initializable {
         addButtonOnAction();
 
         disableFields();
-
+        showNeedCalc(true);
     }
 
     /**
@@ -363,9 +363,9 @@ public class PotokController implements Initializable {
         boolean isValid = false;
         String text = uzel.getText().trim().toUpperCase();
         String replacedText = text.trim().replace(",", ".");
-        if(!text.equals(replacedText)){
+        if (!text.equals(replacedText)) {
             uzel.setText(replacedText);
-            text=replacedText;
+            text = replacedText;
         }
         try {
             if (uzel.getId().equals("tfFrameCount")) {
@@ -461,18 +461,18 @@ public class PotokController implements Initializable {
     }
 
     private void autoConfig(boolean b) {
-        fieldOptions.get(1).setText(b?"300.0":"25.0");
-        fieldOptions.get(2).setText(b?"300.0":"240.0");
-        fieldOptions.get(5).setText(b?"1.0":"0.95");
-        fieldOptions.get(6).setText(b?"1.0":"0.95");
-        fieldOptions.get(7).setText(b?"0.390":"5.0");
-        fieldOptions.get(8).setText(b?"0.448":"5.0");
-        fieldOptions.get(9).setText(b?"1857.2":"500.0");
-        fieldOptions.get(10).setText(b?"1857.2":"500.0");
-        fieldOptions.get(11).setText(b?"0.1125":"0.325");
-        fieldOptions.get(12).setText(b?"0.1136":"0.325");
-        fieldOptions.get(13).setText(b?"900":"900");//todo рассчитать размер линзы и коэф. увеличения
-        fieldOptions.get(14).setText(b?"900":"900");
+        fieldOptions.get(1).setText(b ? "300.0" : "25.0");
+        fieldOptions.get(2).setText(b ? "300.0" : "240.0");
+        fieldOptions.get(5).setText(b ? "1.0" : "0.95");
+        fieldOptions.get(6).setText(b ? "1.0" : "0.95");
+        fieldOptions.get(7).setText(b ? "0.390" : "5.0");
+        fieldOptions.get(8).setText(b ? "0.448" : "5.0");
+        fieldOptions.get(9).setText(b ? "1857.2" : "500.0");
+        fieldOptions.get(10).setText(b ? "1857.2" : "500.0");
+        fieldOptions.get(11).setText(b ? "0.1125" : "0.325");
+        fieldOptions.get(12).setText(b ? "0.1136" : "0.325");
+        fieldOptions.get(13).setText(b ? "900" : "900");//todo рассчитать размер линзы и коэф. увеличения
+        fieldOptions.get(14).setText(b ? "900" : "900");
         resetItogFields();
     }
 
@@ -893,7 +893,6 @@ public class PotokController implements Initializable {
     }
 
 
-
     public Label getLab_potok0() {
         return lab_potok0;
     }
@@ -932,6 +931,7 @@ public class PotokController implements Initializable {
         fileChooser.setTitle("Выбрать файл для загрузки");
         fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
         fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("BIN", "*.bin"),
                 new FileChooser.ExtensionFilter("FS", "*.fs"),
                 new FileChooser.ExtensionFilter("All Files", "*.*"));
 
@@ -961,6 +961,10 @@ public class PotokController implements Initializable {
      */
     private void sendDataArray(byte[] tempByteData, ProgressBar pb_status, Label lab_status) {
 
+        //стоп прослушка кадров
+        if (!mainController.isPaused()) {
+            mainController.stopDetector(null);
+        }
         String partS = lb_partSize.textProperty().get();
 
         int partSize = 0;
@@ -1003,7 +1007,7 @@ public class PotokController implements Initializable {
 
             setStatus(true, "Старт отправки драйвера...", 0.0);
 
-            boolean start = true;
+            boolean start = true;//статус отправки первого пакета
             while (wrappedData.available() > 0) {
 
                 int size = wrappedData.available() < finalPartSize ? wrappedData.available() : finalPartSize;
@@ -1013,27 +1017,55 @@ public class PotokController implements Initializable {
 
                 length = length + read;
                 parts++;
-                LOG.debug("Trying to send Array... {} bytes. Msg #{}", size, parts);
+                //  LOG.debug("Trying to send Array... {} bytes. Msg #{}", size, parts);
                 ft_status = ((DetectorDevice.ChinaSource) mainController.getSelDetector().getDevice()).setID(buff, allLength, start);
-                LOG.debug("MSG # {} sended. Status: {}", parts, ft_status);
-                setStatus(true, "Отправка пакета № " + parts, (1.0 * length) / allLength);
+                //    LOG.debug("MSG # {} sended. Status: {}", parts, ft_status);
+                if (ft_status != FT_STATUS.FT_OK) {
+                    setStatus(true, "Нет ответа на пакет № " + parts + ". Отправка прервана.", (1.0 * length) / allLength);
+                    wrappedData.readAllBytes();
+                } else {
+                    setStatus(true, "Отправка пакета № " + parts, (1.0 * length) / allLength);
+                }
                 start = false;
             }
 
-            LOG.debug("Send Array Finished. {} bytes, {} msges", length, parts);
-            setStatus(true, "Отправлено " + parts + " пакетов. " + allLength + " байт.", (1.0 * length) / allLength);
+            //       LOG.debug("Send Array Finished. {} bytes, {} msges", length, parts);
+            if (ft_status == FT_STATUS.FT_OK) {
+                setStatus(true, "Отправлено " + parts + " пакетов. " + allLength + " байт.", (1.0 * length) / allLength);
+            }
+
+            FT_STATUS finalFt_status = ft_status;
 
             Platform.runLater(() -> {
-                mainController.getPb_exp().visibleProperty().bind(pb_status.visibleProperty());
-                mainController.getPb_exp().progressProperty().bind(pb_status.progressProperty());
-                mainController.getLab_exp_status().textProperty().bind(lab_status.textProperty());
+                String txt = "";
+                String style = "";
+                switch (finalFt_status) {
+                    case FT_OK:
 
-                pb_status.visibleProperty().bind(service.runningProperty());
-                pb_status.progressProperty().bind(service.progressProperty());
-                lab_status.textProperty().bind(service.messageProperty());
+                        mainController.getPb_exp().visibleProperty().bind(pb_status.visibleProperty());
+                        mainController.getPb_exp().progressProperty().bind(pb_status.progressProperty());
+                        mainController.getLab_exp_status().textProperty().bind(lab_status.textProperty());
 
-                btnLoad.setText("Загружено");
-                btnLoad.setStyle("-fx-background-color: green");
+                        pb_status.visibleProperty().bind(service.runningProperty());
+                        pb_status.progressProperty().bind(service.progressProperty());
+                        lab_status.textProperty().bind(service.messageProperty());
+
+
+                        txt = "Загружено";
+                        style = "-fx-background-color: green";
+                        break;
+                    case FT_BUSY:
+                        txt = "Ошибка";
+                        style = "-fx-background-color: red";
+                        break;
+                }
+
+                btnLoad.setText(txt);
+                btnLoad.setStyle(style);
+
+                if (mainController.isPaused()) {
+                    mainController.stopDetector(null);
+                }
             });
 
         });

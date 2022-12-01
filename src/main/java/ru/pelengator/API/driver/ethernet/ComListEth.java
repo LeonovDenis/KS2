@@ -31,7 +31,7 @@ public class ComListEth {
         this.broadcastIp = broadcastIp;
     }
 
-    private boolean isTest = !false;
+    private boolean isTest = false;
     ///////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////методы управления
     private final byte DEV_ID = 0x05;
@@ -214,7 +214,7 @@ public class ComListEth {
         return FT_STATUS.FT_OK;
     }
 
-    public FT_STATUS setID(byte[] data,int size,boolean startPKG) {
+    public FT_STATUS setID(byte[] data, int size, boolean startPKG) {
 
         Bytes headers = startPKG ? DATA_HEADER_ST : DATA_HEADER_EN;
 
@@ -223,14 +223,17 @@ public class ComListEth {
                 .append(FUNC_ID)             //функция
                 .append(size)                //размер данных
                 .append(data);               //данные
-        sendSynhMSGOneTry(msg.array());
+        byte[] bytes = sendSynhMSGOneTry(msg.array());
+        if (bytes == null) {
+            return FT_STATUS.FT_BUSY;
+        }
         return FT_STATUS.FT_OK;
     }
 
     public FT_STATUS setSpecPower(int vR0, int rEF, int rEF1, int vOS) {
 
         float fVR0 = vR0 / 1000f;
-        fVR0=0f;
+        fVR0 = 0f;
         float fREF = rEF / 1000f;
         float fREF1 = rEF1 / 1000f;
         float fVOS = vOS / 1000f;
@@ -243,7 +246,7 @@ public class ComListEth {
         Bytes msg = COM_HEADER                                       //маска+ID
                 .append(COM_BLK_WRITE)                               //команда
                 .append(FUNC_SPEC_POWER)                             //функция
-                .append(4*4)                                         //размер данных
+                .append(4 * 4)                                         //размер данных
                 .append(dVR0).append(dREF).append(dREF1).append(dVOS); //данные
         sendSynhMSGOneTry(msg.array());
 
@@ -577,7 +580,9 @@ public class ComListEth {
             if (read == 4 && (!comIS.getClientIP().equals(myIp))) {//если подтверждение, ошибка, пришли данные
 
                 //Читаем заголовок
-                if (wrapMsg.startsWith(COM_HEADER.array())) {
+                if (wrapMsg.startsWith(COM_HEADER.array())||
+                        wrapMsg.startsWith(DATA_HEADER_ST.array())||
+                        wrapMsg.startsWith(DATA_HEADER_EN.array())) {
 
                     if (isError(wrapMsg, msg)) {// проверяем на наличие ошибки
                         LOG.debug("Error in answer {} /tick {}", wrapMsg, tick);
@@ -594,7 +599,6 @@ public class ComListEth {
 
                             break;
                         case COM_WRITE:
-
                             LOG.debug("COM_WRITE: {}", availableBytes);
                             bAnswer = parseAnswer(comIS, wrapMsg, msg);
 
@@ -816,13 +820,14 @@ public class ComListEth {
     }
 
     /**
-     *  Отправка синхронного сообщения на детектор без повтора
+     * Отправка синхронного сообщения на детектор без повтора
+     *
      * @param MSG сообщение
      * @return ответ от устройства. null если нет ответа
      */
     private byte[] sendSynhMSGOneTry(byte[] MSG) {
 
-        DetectorNetTask detectorNetTask = new DetectorNetTask(grabber.getDriver(), null, MSG,grabber.getClientIp());
+        DetectorNetTask detectorNetTask = new DetectorNetTask(grabber.getDriver(), null, MSG, grabber.getClientIp());
         byte[] incMSG = detectorNetTask.sendCMD();
 
         return incMSG;

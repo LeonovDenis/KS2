@@ -360,18 +360,19 @@ public class EthernetDriver implements Driver {
 
     /**
      * Загрузка прошивки в плату
+     *
      * @param data массив данных
      * @return
      */
     @Override
-    public FT_STATUS setID(byte[] data,int size,boolean startPKG) {
-        return comList.setID(data,size,startPKG);
+    public FT_STATUS setID(byte[] data, int size, boolean startPKG) {
+        return comList.setID(data, size, startPKG);
     }
 
     @Override
     public FT_STATUS setSpecPower(int vR0, int rEF, int rEF1, int vOS) {
 
-        return comList.setSpecPower(vR0,rEF,rEF1,vOS);
+        return comList.setSpecPower(vR0, rEF, rEF1, vOS);
     }
 
 
@@ -386,7 +387,7 @@ public class EthernetDriver implements Driver {
             LOG.debug("Online flag null frame {}", frameCount);
             if (frameCount > 3) {//В случае пустых кадров - выставить флаг на отсутствие сигнала
                 if (online.compareAndSet(true, false)) {
-                    LOG.debug("Online flag setted in false");
+                   LOG.debug("Online flag setted in false");
                 }
                 ;
 
@@ -434,27 +435,32 @@ public class EthernetDriver implements Driver {
 
         do {
             try {//отправка сообщения
-                LOG.debug("sendMSG {} /try {}", Arrays.toString(byteMSG), tick);
+                LOG.debug("sendMSG {} bytes. /try {}", byteMSG.length, tick);
 
                 comOS.write(byteMSG);
                 comOS.setiAdd(Ip);
                 comOS.flush();
 
                 //Прослушивание ответа
+
                 incomMSG = comList.waitAnswer(comIS, byteMSG);
+
                 if (incomMSG != null) {
                     tick = 3;
                 }
-                LOG.debug("MSG to detector send: {}. ANSWER received: {}", Arrays.toString(byteMSG), Arrays.toString(incomMSG));
+                LOG.debug("MSG to detector send: {} bytes. ANSWER received: {}", byteMSG.length, Arrays.toString(incomMSG));
 
             } catch (IOException e) {
 
-                LOG.debug("MSG not delivery. MSG {},/try {}, pending {}", Arrays.toString(byteMSG), tick, PENDING);
+                LOG.debug("MSG not delivery. MSG {} bytes./try {}, pending {}", byteMSG.length, tick, PENDING);
+
+                return null;
+
             }
 
         } while (tick++ < 2 && !onlyOneMSG);
 
-        LOG.debug("Exiting from SENDMSG {} /try {}", Arrays.toString(byteMSG), tick);
+        LOG.debug("Exiting from SENDMSG {} bytes/try {}", byteMSG.length, tick);
 
         return incomMSG;
     }

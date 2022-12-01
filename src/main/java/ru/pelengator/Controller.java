@@ -300,7 +300,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     /**
      * Флаг остановки вывода картинки.
      */
-    private boolean paused = false;
+    private static boolean paused = false;
     /**
      * Масштаб оцифровки АЦП.
      */
@@ -1710,6 +1710,10 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
 
     public Label getLb_online() {
         return lb_online;
+    }
+
+    public static boolean isPaused() {
+        return paused;
     }
 
     /**
